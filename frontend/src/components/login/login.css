@@ -1,0 +1,136 @@
+/* Layout general */
+.split {
+  display: flex;
+  height: 100vh;   /* ocupa toda la altura de la pantalla */
+  width: 100vw;    /* ocupa todo el ancho */
+  overflow: hidden;
+}
+
+/* Panel izquierdo */
+.left {
+  flex: 1;   /* ocupa mitad izquierda */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 80px;
+  background: linear-gradient(180deg, #3b36e6 0%, #2520b2 100%);
+  color: #fff;
+  height: 100%;  /* asegura que llene toda la altura */
+}
+
+.left-inner {
+  max-width: 700px;
+}
+
+.brand-star {
+  font-size: 38px;
+  margin-bottom: 20px;
+  opacity: 0.9;
+}
+
+.hero {
+  font-size: 64px;
+  line-height: 0.9;
+  margin: 0;
+  font-weight: 700;
+}
+
+.hero .wave {
+  font-size: 48px;
+  margin-left: 6px;
+}
+
+.tag {
+  margin-top: 24px;
+  font-size: 18px;
+  opacity: 0.95;
+  max-width: 520px;
+}
+
+/* Panel derecho */
+.right {
+  flex: 1;  /* Ocupa el resto del espacio */
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: -20px 0 60px rgba(70, 70, 90, 0.06);
+}
+
+
+.form-box {
+  width: 320px;
+  padding: 20px;
+}
+
+.form-box h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.form-box h3 {
+  margin-top: 10px;
+  margin-bottom: 6px;
+}
+
+.small {
+  color: #666;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.auth-form {
+  margin-top: 8px;
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 12px 10px;
+  margin: 12px 0;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  outline: none;
+  font-size: 15px;
+}
+
+.btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn.primary {
+  background: #111;
+  color: #fff;
+  margin-top: 8px;
+}
+
+.btn.google {
+  background: #fff;
+  color: #222;
+  border: 1px solid #e6e6e6;
+  margin-top: 10px;
+}
+
+.links {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.links a {
+  color: #111;
+  text-decoration: underline;
+  font-size: 13px;
+} 
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
