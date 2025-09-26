@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # importacions externas
+    "rest_framework",
+    "corsheaders",
+    "accounts", 
 ]
 
 MIDDLEWARE = [
@@ -47,7 +51,22 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #middleware de las importaciones 
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
 ]
+
+#implemetanciones necesarias para las importaciones 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # frontend React
+]
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+}
+
+
 
 ROOT_URLCONF = 'config.urls'
 
