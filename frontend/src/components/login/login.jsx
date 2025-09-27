@@ -38,40 +38,60 @@ export default function Login() {
       {/* Panel derecho */}
       <div className="right">
         <div className="form-box">
-          <h2>SaleSkip</h2>
-          <h3>Welcome Back!</h3>
-          <p className="small">
-            Don't have an account?{" "}
-            <a href="/register">Create a new account now</a>
-          </p>
+          <h2 className="welcome-title">Bienvenido</h2>
+          <p className="subtitle">Inicia sesión en tu cuenta</p>
 
+          {/* Botón Google */}
+          <button className="btn google">
+            <span className="google-icon">🌐</span> Continuar con Google
+          </button>
+
+          <div className="divider">
+            <span>o continúa con email</span>
+          </div>
+
+          {/* Formulario */}
           <form onSubmit={handleSubmit} className="auth-form">
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <div className="input-group">
+              <span className="icon">📧</span>
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="input-group">
+              <span className="icon">🔒</span>
+              <input
+                type="password"
+                placeholder="Contraseña"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="options">
+              <label>
+                <input type="checkbox" /> Recordarme
+              </label>
+              <a href="/forgot-password">¿Olvidaste tu contraseña?</a>
+            </div>
+
             <button type="submit" className="btn primary" disabled={loading}>
-              {loading ? "Loading..." : "Login Now"}
+              {loading ? "Cargando..." : "Iniciar Sesión"}
             </button>
           </form>
 
-          <button className="btn google">G Login with Google</button>
-
-          <div className="small links">
-            <a href="/forgot-password">Forget password? Click here</a>
-          </div>
+          <p className="register">
+            ¿No tienes cuenta? <a href="/register">Regístrate aquí</a>
+          </p>
         </div>
       </div>
     </div>
   );
 }
+
