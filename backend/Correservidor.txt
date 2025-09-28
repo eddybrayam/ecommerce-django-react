@@ -1,0 +1,4 @@
+//recuera primero debe estar prendido el entorno virtual//
+set GOOGLE_CLIENT_ID=27896071217-ipih84iea3b7h9j5fsp8cpbqpi3hucbu.apps.googleusercontent.com
+set GOOGLE_CLIENT_SECRET=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
+python manage.py runserver
