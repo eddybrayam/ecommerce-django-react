@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 
+import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -58,7 +60,8 @@ MIDDLEWARE = [
 
 #implemetanciones necesarias para las importaciones 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # frontend React
+    "http://localhost:5173",  # frontend React
+    "http://127.0.0.1:5173",
 ]
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -66,7 +69,21 @@ REST_FRAMEWORK = {
     ),
 }
 
+#implementacion google
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "")
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+
+# si no lo tienes ya:
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
 
 ROOT_URLCONF = 'config.urls'
 
