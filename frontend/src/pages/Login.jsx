@@ -145,7 +145,7 @@ export default function Login() {
           <div style={styles.helperRow}>
             <span style={styles.helperText}>¿No tienes cuenta?</span>
             <button 
-              onClick={()=>navigate("/registerClient")} 
+              onClick={()=>navigate("/register")} 
               style={styles.linkBtn}
               onMouseEnter={(e) => e.target.style.color = "#0ea5e9"}
               onMouseLeave={(e) => e.target.style.color = "#06b6d4"}

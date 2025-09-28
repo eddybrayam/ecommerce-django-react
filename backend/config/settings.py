@@ -162,10 +162,15 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+# --- Configuración de Email ---
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "flores.klinsman01@gmail.com"  # el Gmail donde generaste la contraseña de app
-EMAIL_HOST_PASSWORD = "uyxa vxpo vuhh kdrf"      # la contraseña de aplicación generada
+EMAIL_HOST_USER = "flores.klinsman01@gmail.com"   # tu correo Gmail
+EMAIL_HOST_PASSWORD = "uyxa vxpo vuhh kdrf"       # contraseña de aplicación (App Password)
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# --- URLs base para construir enlaces en correos ---
+SITE_DOMAIN = "http://127.0.0.1:8000"            # backend en local
+FRONTEND_URL = "http://localhost:5173"           # tu frontend React en local

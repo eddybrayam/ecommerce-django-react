@@ -8,16 +8,28 @@ export default function Register() {
   const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const onSubmit = async (e) => {
-    e.preventDefault();
-    setMsg("");
-    try {
-      await api.post("/api/accounts/register/", form);
-      setMsg("✅ Usuario registrado. Ahora inicia sesión.");
-    } catch (err) {
-      const detail = err?.response?.data;
-      setMsg(`❌ Error: ${JSON.stringify(detail)}`);
-    }
-  };
+  e.preventDefault();
+  setMsg("");
+
+  if (form.password !== form.password2) {
+    setMsg("❌ Las contraseñas no coinciden.");
+    return;
+  }
+
+  try {
+    const payload = {
+      username: form.username,
+      email: form.email,
+      password: form.password,
+    };
+
+    await api.post("/api/accounts/register/", payload);
+    setMsg("✅ Usuario registrado. Revisa tu correo para activarlo.");
+  } catch (err) {
+    const detail = err?.response?.data;
+    setMsg(`❌ Error: ${JSON.stringify(detail)}`);
+  }
+};
 
   return (
     <form onSubmit={onSubmit} style={{display:"grid", gap:8, maxWidth:340}}>

@@ -26,6 +26,5 @@ urlpatterns = [
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 
     # Endpoints de accounts
-    path("api/accounts/", include(("accounts.urls", "accounts"), namespace="accounts")),
+    path("api/accounts/", include("accounts.urls", namespace="accounts")),
 ]
-
