@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Client, Role
+from .models import Client, Role , User, UserPreference,AssistantInteraction
 
 class ClientRegisterSerializer(serializers.Serializer):
     first_name = serializers.CharField(max_length=150)
@@ -52,3 +52,26 @@ class ClientRegisterSerializer(serializers.Serializer):
             phone=phone,
         )
         return user
+
+
+# Serializadores simples para modelos 
+
+class RoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Role
+        fields = '__all__'
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
+class PreferenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserPreference
+        fields = '__all__'
+
+class AssistantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AssistantInteraction
+        fields = '__all__' 
