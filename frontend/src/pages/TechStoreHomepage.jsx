@@ -12,7 +12,7 @@ export default function TechStoreHomepage() {
   const navigate = useNavigate();
 
   const goToLogin = () => { setMobileMenuOpen(false); navigate('/login'); };
-  const goToRegisterClient = () => { setMobileMenuOpen(false); navigate('/registerclient'); };
+  const goToRegisterClient = () => { setMobileMenuOpen(false); navigate('/register'); };
 
   // Datos de productos de ejemplo
   const featuredProducts = [

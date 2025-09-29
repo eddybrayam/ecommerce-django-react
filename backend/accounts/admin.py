@@ -16,3 +16,4 @@ class ClientAdmin(admin.ModelAdmin):
 class GoogleAccountAdmin(admin.ModelAdmin):
     list_display = ("id", "user", "email", "sub", "created_at")
     search_fields = ("email", "sub", "user__username")
+

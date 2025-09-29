@@ -39,10 +39,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # importacions externas
+    # Apps externas
     "rest_framework",
     "corsheaders",
-    "accounts", 
+
+    # Apps del proyecto
+    "accounts",
+   
+
 ]
 
 MIDDLEWARE = [
@@ -156,3 +160,17 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# --- Configuración de Email ---
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "flores.klinsman01@gmail.com"   # tu correo Gmail
+EMAIL_HOST_PASSWORD = "uyxa vxpo vuhh kdrf"       # contraseña de aplicación (App Password)
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# --- URLs base para construir enlaces en correos ---
+SITE_DOMAIN = "http://127.0.0.1:8000"            # backend en local
+FRONTEND_URL = "http://localhost:5173"           # tu frontend React en local

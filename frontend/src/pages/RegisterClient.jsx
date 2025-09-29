@@ -5,7 +5,10 @@ import {
 } from "lucide-react";
 import { GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
-import { registerClient, loginWithGoogle, setTokens, getMe } from "../services/api";
+import { loginWithGoogle, setTokens, getMe } from "../services/api";
+
+import { registerWithEmail } from "../services/api"; // en lugar de registerClient
+
 
 export default function RegisterClient() {
   const [showPassword, setShowPassword] = useState(false);
@@ -42,37 +45,34 @@ export default function RegisterClient() {
     return Object.keys(e).length === 0;
   };
 
-  const handleSubmit = async () => {
-    setApiMsg("");
-    if (!validate()) return;
-    setLoading(true);
-    try {
-      const payload = {
-        first_name: formData.nombres.trim(),
-        last_name: formData.apellidos.trim(),
-        email: formData.email.trim().toLowerCase(),
-        address: formData.direccion.trim(),
-        dni: formData.dni.trim(),
-        phone: formData.celular.trim() || undefined,
-        password: formData.password,
-        password2: formData.confirmPassword,
-      };
-      const data = await registerClient(payload);
-      if (data?.access && data?.refresh) {
-        setTokens({ access: data.access, refresh: data.refresh });
-        const me = await getMe();
-        localStorage.setItem("me", JSON.stringify(me));
-        navigate("/");
-      } else {
-        setApiMsg("✅ Cuenta creada, ahora inicia sesión.");
-        setTimeout(()=>navigate("/login"), 700);
-      }
-    } catch (err) {
-      setApiMsg("❌ " + err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+const handleSubmit = async () => {
+  setApiMsg("");
+  if (!validate()) return;
+  setLoading(true);
+  try {
+    const payload = {
+      username: formData.email.trim().toLowerCase(), // requerido por backend
+      first_name: formData.nombres.trim(),
+      last_name: formData.apellidos.trim(),
+      email: formData.email.trim().toLowerCase(),
+      address: formData.direccion.trim(),
+      dni: formData.dni.trim(),
+      phone: formData.celular.trim() || undefined,
+      password: formData.password,
+      password2: formData.confirmPassword,
+    };
+
+    await registerWithEmail(payload);
+
+    setApiMsg("✅ Cuenta creada. Revisa tu correo para activar tu cuenta.");
+    setTimeout(() => navigate("/login"), 2500);
+  } catch (err) {
+    setApiMsg("❌ " + err.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const onGoogleSuccess = async (res) => {
     setApiMsg("");
