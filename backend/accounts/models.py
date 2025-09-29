@@ -43,3 +43,35 @@ class GoogleAccount(models.Model):
 
     def __str__(self):
         return f"{self.email} (Google)"
+
+# Agregar modelos Usuarios, Preferencia y Asistente
+class User(models.Model):
+    role = models.ForeignKey(Role, on_delete=models.CASCADE, related_name="users")
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    email = models.EmailField(unique=True)
+    password_hash = models.CharField(max_length=128)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    registration_date = models.DateField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
+class AssistantInteraction(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="assistant_interactions")
+    command = models.TextField()
+    response = models.TextField()
+    date = models.DateField(auto_now_add=True)
+   
+    def __str__(self):
+        return f"Interaction {self.user}"
+
+class UserPreference(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="preferences")
+    key = models.CharField(max_length=50)
+    value = models.TextField()
+    date = models.DateField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.user} - {self.key}"
