@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { ShoppingCart, Heart, Eye, Star } from 'lucide-react';
 import './ProductCard.css';
+import { useCart } from "../../context/CartContext";
+import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
     const [isFavorite, setIsFavorite] = useState(false);
@@ -20,16 +22,13 @@ const ProductCard = ({ product }) => {
         inStock = true
     } = product;
 
+    const { addToCart } = useCart();
+
     const handleAddToCart = () => {
-        if (!inStock) return;
-        
-        setIsAdding(true);
-        // Aquí irá tu lógica para agregar al carrito
-        console.log('Agregando al carrito:', product);
-        
-        setTimeout(() => {
-        setIsAdding(false);
-        }, 1000);
+    if (!inStock) return;
+    setIsAdding(true);
+    addToCart(product);
+    setTimeout(() => setIsAdding(false), 800);
     };
 
     const toggleFavorite = () => {
@@ -52,6 +51,7 @@ const ProductCard = ({ product }) => {
         }
         return stars;
     };
+    
 
     return (
         <div className={`product-card ${!inStock ? 'out-of-stock' : ''}`}>
@@ -66,28 +66,33 @@ const ProductCard = ({ product }) => {
 
         {/* Imagen del producto */}
         <div className="product-image-container">
-            <img 
-            src={image || '/placeholder-product.jpg'} 
-            alt={name}
-            className="product-image"
-            loading="lazy"
-            />
-            
-            {/* Acciones rápidas (aparecen en hover) */}
+            {/* ✅ Imagen clickeable */}
+            <Link to={`/product/${product.id}`} className="product-link">
+                <img
+                src={image || "/placeholder-product.jpg"}
+                alt={name}
+                className="product-image"
+                loading="lazy"
+                />
+            </Link>
+
+            {/* Acciones rápidas */}
             <div className="product-actions">
-            <button 
-                className={`action-btn favorite-btn ${isFavorite ? 'active' : ''}`}
+                <button
+                className={`action-btn favorite-btn ${isFavorite ? "active" : ""}`}
                 onClick={toggleFavorite}
                 aria-label="Agregar a favoritos"
-            >
-                <Heart size={18} fill={isFavorite ? '#ef4444' : 'none'} />
-            </button>
-            <button 
+                >
+                <Heart size={18} fill={isFavorite ? "#ef4444" : "none"} />
+                </button>
+
+                {/* 👁️ Vista rápida opcional — la dejamos sin acción de momento */}
+                <button
                 className="action-btn quick-view-btn"
                 aria-label="Vista rápida"
-            >
+                >
                 <Eye size={18} />
-            </button>
+                </button>
             </div>
         </div>
 
@@ -97,7 +102,10 @@ const ProductCard = ({ product }) => {
             <span className="product-category">{category}</span>
 
             {/* Nombre */}
-            <h3 className="product-name">{name}</h3>
+            <Link to={`/product/${product.id}`} className="product-link product-name-link">
+                <h3 className="product-name">{name}</h3>
+                </Link>
+
 
             {/* Rating */}
             <div className="product-rating">

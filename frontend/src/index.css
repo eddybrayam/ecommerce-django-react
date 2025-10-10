@@ -1,20 +1,21 @@
 /* src/index.css */
-* { box-sizing: border-box; }
+/* --- Reset básico --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
+/* --- Estructura base --- */
 html, body, #root {
   height: 100%;
+  width: 100%;
+  background: #f9f9f9; /* color neutro */
+          /* texto legible */
+  font-family: 'Inter', sans-serif;
 }
 
-html, body {
-  margin: 0;                 /* quita el borde blanco de 8px */
-  padding: 0;
-  background: #000;          /* mismo fondo que tu app */
-  color: #fff;
-}
-
-/* anula el CSS del template de Vite */
+/* No max-width, no centrado, no padding global */
 #root {
-  margin: 0;
-  padding: 0;                /* quita el padding de 2rem */
-  max-width: none;           /* quita el max-width:1280px */
+  max-width: none;
 }

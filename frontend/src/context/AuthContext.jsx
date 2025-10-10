@@ -8,17 +8,22 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(getUser());
   const [loading, setLoading] = useState(true);
 
-  // Auto-login al abrir/recargar
   useEffect(() => {
     (async () => {
       try {
         const hasTokens = getAccess() || getRefresh();
-        if (!hasTokens) return;
+        if (!hasTokens) {
+          setLoading(false);
+          return;
+        }
+
         const me = await api.get("/api/accounts/me/");
         setUser(me.data);
         setSession({ access: getAccess(), refresh: getRefresh(), user: me.data });
-      } catch {
+      } catch (err) {
+        console.warn("⚠️ Sesión inválida:", err?.message);
         clearSession();
+        setUser(null);
       } finally {
         setLoading(false);
       }
@@ -44,4 +49,13 @@ export function AuthProvider({ children }) {
   );
 }
 
-export const useAuth = () => useContext(AuthContext);
+// Hook de acceso con fallback seguro
+// eslint-disable-next-line react-refresh/only-export-components
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    console.warn("⚠️ useAuth() usado fuera de <AuthProvider>");
+    return { user: null, loading: false, logout: () => {} };
+  }
+  return context;
+};

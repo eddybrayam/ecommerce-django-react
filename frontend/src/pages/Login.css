@@ -1,0 +1,240 @@
+/* === LOGIN CLARO FINAL FIX === */
+:root {
+  --primary: #2d7ff9;
+  --accent: #00c39a;
+  --bg: #f5f9ff;
+  --card-bg: #ffffff;
+  --text: #1a1a1a;
+  --muted: #6b7280;
+  --radius: 14px;
+  --shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+  --transition: all 0.3s ease;
+}
+
+/* === RESET === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html, body {
+  background: var(--bg) !important;
+  color: var(--text) !important;
+  font-family: "Inter", "Poppins", sans-serif;
+  height: 100%;
+}
+
+/* === CONTENEDOR === */
+.login-container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  background: linear-gradient(120deg, #eaf3ff, #f9fbff);
+}
+
+/* === TARJETA === */
+.login-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  width: 100%;
+  max-width: 440px;
+  padding: 45px 50px;
+  text-align: center;
+  z-index: 2;
+}
+
+/* === CABECERA === */
+.logo-wrapper {
+  position: relative;
+  margin-bottom: 12px;
+}
+.logo {
+  background: var(--primary);
+  color: #fff;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 5px 15px rgba(45, 127, 249, 0.4);
+}
+.glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(45, 127, 249, 0.25), transparent);
+  animation: pulse 2.5s infinite ease-in-out;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+.login-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 5px;
+  margin-bottom: 25px;
+}
+
+/* === GOOGLE LOGIN === */
+.google-login {
+  margin-bottom: 15px;
+}
+
+/* === DIVISOR === */
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 25px 0;
+}
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #e0e6ef;
+  margin: 0 10px;
+}
+
+/* === FORM === */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.input-group {
+  position: relative;
+}
+
+/* === ÍCONO === */
+.input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  width: 18px;
+}
+
+/* === INPUT (CLARO SIEMPRE) === */
+.input {
+  width: 100%;
+  padding: 12px 12px 12px 42px;
+  border-radius: 10px;
+  border: 1.5px solid #d9e4f3;
+  background-color: #ffffff !important;   /* 🔥 fuerza blanco */
+  color: var(--text) !important;          /* 🔥 texto oscuro */
+  font-size: 0.95rem;
+  transition: var(--transition);
+}
+.input::placeholder {
+  color: #9ea8b5;
+}
+.input:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(45, 127, 249, 0.1);
+  background-color: #ffffff !important;   /* sigue blanco al hacer clic */
+}
+
+/* === MOSTRAR/OCULTAR === */
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+}
+
+/* === BOTÓN === */
+.submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  margin-top: 10px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.submit-btn:hover {
+  background: #1f6de0;
+  transform: translateY(-1px);
+}
+
+/* === MENSAJE === */
+.msg {
+  color: #e63946;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+/* === REGISTRO === */
+.register-row {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.register-link {
+  color: var(--primary);
+  background: none;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+/* === FONDO DECORATIVO === */
+.particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+.particle {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  background: radial-gradient(circle, rgba(45,127,249,0.1), transparent);
+  border-radius: 50%;
+  animation: float 10s infinite ease-in-out;
+}
+.particle:nth-child(1) { top: 10%; left: 8%; animation-delay: 0s; }
+.particle:nth-child(2) { bottom: 20%; right: 12%; animation-delay: 3s; }
+.particle:nth-child(3) { top: 55%; right: 35%; animation-delay: 6s; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-25px); }
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 30px 25px;
+    max-width: 92%;
+  }
+  .login-title {
+    font-size: 1.2rem;
+  }
+}
