@@ -1,0 +1,232 @@
+/* 🧭 Estructura general (igual que el tuyo) */
+.product-detail-page {
+  max-width: 1200px;
+  margin: 100px auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  color: #0061ff;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.product-main {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 50px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  padding: 40px;
+}
+
+/* 🖼️ Galería principal */
+.product-gallery {
+  flex: 1 1 45%;
+  display: flex;
+  flex-direction: column; /* antes solo centraba, ahora coloca las miniaturas debajo */
+  justify-content: center;
+  align-items: center;
+}
+
+.main-image {
+  width: 100%;
+  max-width: 450px;
+  border-radius: 16px;
+  object-fit: contain;
+  transition: transform 0.3s ease, opacity 0.5s ease;
+}
+
+.main-image:hover {
+  transform: scale(1.03);
+}
+
+/* 🔁 Animación de cambio automático */
+@keyframes fadeChange {
+  0% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.main-image {
+  animation: fadeChange 0.5s ease;
+}
+
+/* 🧩 Miniaturas */
+.thumbnail-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  justify-content: center;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 6px;
+  scroll-behavior: smooth;
+}
+
+.thumb {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.thumb:hover {
+  transform: scale(1.05);
+}
+
+.thumb.active {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 97, 255, 0.5);
+}
+
+/* Información */
+.product-info {
+  flex: 1 1 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.product-info h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #222;
+}
+
+.stock {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #f5a623;
+  font-weight: 600;
+}
+
+.star {
+  fill: #f5a623;
+}
+
+.price {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #0061ff;
+}
+
+.description {
+  color: #555;
+  line-height: 1.6;
+  margin-top: 10px;
+}
+
+.action-buttons {
+  margin-top: 20px;
+}
+
+.add-cart-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 22px;
+  background: #0061ff;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.add-cart-btn:hover {
+  background: #0044cc;
+}
+
+.add-cart-btn.added {
+  background: #00b85c;
+  cursor: default;
+}
+
+/* 🔸 Productos relacionados */
+.related-section {
+  margin-top: 20px;
+}
+
+.related-section h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.related-carousel {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  scroll-behavior: smooth;
+}
+
+.related-card {
+  min-width: 180px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  text-decoration: none;
+  color: #222;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.related-card:hover {
+  transform: translateY(-3px);
+}
+
+.related-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: contain;
+  border-radius: 12px 12px 0 0;
+}
+
+.related-card p {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 8px 10px 2px;
+}
+
+.related-card span {
+  font-size: 0.85rem;
+  color: #0061ff;
+  margin: 0 10px 10px;
+  display: block;
+}
+
+.loading-center {
+  text-align: center;
+  margin-top: 150px;
+  font-size: 1.1rem;
+  color: #555;
+}

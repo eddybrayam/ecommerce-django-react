@@ -299,3 +299,33 @@
         font-size: 0.8125rem;
     }
 }
+
+.product-link {
+  text-decoration: none;
+}
+
+.product-link img {
+  transition: transform 0.3s ease;
+}
+
+.product-link img:hover {
+  transform: scale(1.05);
+}
+
+.product-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.product-link:hover .product-name {
+  color: #0061ff;
+  transition: color 0.2s ease;
+}
+
+.product-link img {
+  transition: transform 0.3s ease;
+}
+
+.product-link img:hover {
+  transform: scale(1.05);
+}

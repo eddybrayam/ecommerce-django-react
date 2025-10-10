@@ -1,0 +1,181 @@
+/* --- Reset general --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* --- Fondo principal --- */
+body, .register-page {
+  background: linear-gradient(135deg, #f3f4f6, #ffffff);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* --- Contenedor principal --- */
+.register-container {
+  background: #fff;
+  width: 100%;
+  max-width: 440px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  animation: fadeIn 0.6s ease;
+}
+
+/* --- Encabezado --- */
+.register-header {
+  text-align: center;
+}
+
+.register-header h1 {
+  font-size: 1.8rem;
+  color: #111;
+  margin-bottom: 0.25rem;
+}
+
+.register-header p {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* --- Inputs --- */
+.input-group {
+  display: flex;
+  align-items: center;
+  background: #f8f9fa;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.6rem;
+  transition: 0.2s ease;
+}
+
+.input-group:hover,
+.input-group:focus-within {
+  border-color: #3b82f6;
+  background: #f0f7ff;
+}
+
+.input-group svg {
+  color: #6b7280;
+  margin-right: 0.6rem;
+  flex-shrink: 0;
+}
+
+.input-group input {
+  border: none;
+  background: transparent;
+  flex: 1;
+  outline: none;
+  font-size: 0.95rem;
+  color: #111;
+}
+
+/* --- Botón mostrar contraseña --- */
+.input-group button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Errores --- */
+.error-line {
+  display: flex;
+  align-items: center;
+  color: #dc2626;
+  font-size: 0.85rem;
+  margin-top: 2px;
+  gap: 4px;
+}
+
+/* --- Checkbox de términos --- */
+.terms {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #333;
+  margin-top: 0.5rem;
+}
+
+.terms input {
+  transform: scale(1.2);
+  margin-top: 2px;
+}
+
+/* --- Botón principal --- */
+.register-btn {
+  background: #2563eb;
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 0.85rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
+  transition: 0.25s ease;
+  margin-top: 0.3rem;
+}
+
+.register-btn:hover {
+  background: #1d4ed8;
+}
+
+.register-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* --- Mensajes API --- */
+.api-message {
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* --- Enlace login --- */
+.login-link {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.login-link button {
+  background: none;
+  border: none;
+  color: #2563eb;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* --- Transiciones --- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Responsive --- */
+@media (max-width: 480px) {
+  .register-container {
+    padding: 1.5rem;
+  }
+  .register-header h1 {
+    font-size: 1.6rem;
+  }
+}
