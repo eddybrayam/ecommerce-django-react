@@ -1,6 +1,7 @@
 // src/context/CartContext.jsx
 import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const CartContext = createContext();
 
@@ -38,20 +39,32 @@ export const CartProvider = ({ children }) => {
     fetchCart();
   }, []);
 
-  // Add to cart -> call backend and then refresh cart
-  const addToCart = async (product, qty = 1) => {
+    const addToCart = async (product) => {
     try {
-      await axios.post(
-        `${API}/api/cart/add/`,
-        { product_id: product.id ?? product.producto_id ?? product.producto_id, quantity: qty },
-        { withCredentials: true }
-      );
-      await fetchCart();
-    } catch (err) {
-      console.error("Error adding to cart:", err);
-      throw err;
+        const productId = product.id || product.producto_id;
+
+        if (!productId) {
+        console.error(" No se encontró product.id en:", product);
+        return;
+        }
+
+        const payload = {
+        product_id: product.producto?.id || product.id, 
+        quantity: 1,
+        };
+
+        console.log("🛒 Adding to cart:", payload);
+
+        const response = await axios.post(`${API}/api/cart/add_item/`, payload, {
+        withCredentials: true,
+        });
+
+        await fetchCart();
+        navigate("/cart"); // redirige al carrito
+    } catch (error) {
+        console.error("Error adding to cart:", error);
     }
-  };
+};
 
   const removeFromCart = async (productId) => {
     try {

@@ -2,12 +2,13 @@ import { useState } from 'react';
 import { ShoppingCart, Heart, Eye, Star } from 'lucide-react';
 import './ProductCard.css';
 import { useCart } from "../../context/CartContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
     const [isFavorite, setIsFavorite] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
     const { addToCart } = useCart();
+    const navigate = useNavigate();
 
     // 🧠 Normalize product fields from backend
     const normalizedProduct = {
@@ -31,8 +32,17 @@ const ProductCard = ({ product }) => {
     const handleAddToCart = async () => {
         if (!inStock) return;
         setIsAdding(true);
-        await addToCart(normalizedProduct);
-        setTimeout(() => setIsAdding(false), 800);
+
+        try {
+            await addToCart(normalizedProduct);
+            setTimeout(() => {
+                setIsAdding(false);
+                navigate("/cart"); // ✅ Redirigir al carrito
+            }, 500);
+        } catch (error) {
+            console.error("Error adding to cart:", error);
+            setIsAdding(false);
+        }
     };
 
     const toggleFavorite = () => {

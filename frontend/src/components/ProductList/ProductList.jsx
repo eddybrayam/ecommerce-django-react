@@ -54,17 +54,17 @@ const ProductList = ({ viewMode = 'grid' }) => {
       </div>
 
       {/* Grid de productos */}
-      <div className={`product-grid ${currentView === 'list' ? 'list-view' : ''}`}>
+        <div className={`product-grid ${currentView === 'list' ? 'list-view' : ''}`}>
         {products.map((product, index) => (
-          <div
-            key={product.id}
+            <div
+            key={product.id || `product-${index}`}
             className="product-item"
             style={{ animationDelay: `${index * 0.05}s` }}
-          >
+            >
             <ProductCard product={product} />
-          </div>
+            </div>
         ))}
-      </div>
+        </div>
     </div>
   );
 };
