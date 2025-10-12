@@ -45,7 +45,8 @@ INSTALLED_APPS = [
 
     # Apps del proyecto
     "accounts",
-    'products',
+    "products",
+    "cart",
    
 
 ]
