@@ -7,28 +7,32 @@ import { Link } from "react-router-dom";
 const ProductCard = ({ product }) => {
     const [isFavorite, setIsFavorite] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
-
-    const {
-        //id,
-        name,
-        price,
-        oldPrice,
-        image,
-        category,
-        rating = 4.5,
-        reviews = 0,
-        badge, // "new", "sale", "out-of-stock"
-        discount,
-        inStock = true
-    } = product;
-
     const { addToCart } = useCart();
 
-    const handleAddToCart = () => {
-    if (!inStock) return;
-    setIsAdding(true);
-    addToCart(product);
-    setTimeout(() => setIsAdding(false), 800);
+    // 🧠 Normalize product fields from backend
+    const normalizedProduct = {
+        id: product.id,
+        name: product.name || product.nombre || "Unnamed product",
+        price: Number(product.price || product.precio || 0),
+        oldPrice: Number(product.oldPrice || product.precio_anterior || 0),
+        image: product.image || product.imagen || product.imagen_url || "/placeholder-product.jpg",
+        category: product.category || product.categoria || "Sin categoría",
+        rating: product.rating || 4.5,
+        reviews: product.reviews || 0,
+        badge: product.badge || "",
+        discount: product.discount || 0,
+        inStock: product.inStock ?? true,
+    };
+
+    // Destructure normalized values
+    const { id, name, price, oldPrice, image, category, rating, reviews, badge, discount, inStock } =
+        normalizedProduct;
+
+    const handleAddToCart = async () => {
+        if (!inStock) return;
+        setIsAdding(true);
+        await addToCart(normalizedProduct);
+        setTimeout(() => setIsAdding(false), 800);
     };
 
     const toggleFavorite = () => {
