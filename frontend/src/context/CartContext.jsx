@@ -60,7 +60,6 @@ export const CartProvider = ({ children }) => {
         });
 
         await fetchCart();
-        navigate("/cart"); // redirige al carrito
     } catch (error) {
         console.error("Error adding to cart:", error);
     }

@@ -37,7 +37,6 @@ const ProductCard = ({ product }) => {
             await addToCart(normalizedProduct);
             setTimeout(() => {
                 setIsAdding(false);
-                navigate("/cart"); // ✅ Redirigir al carrito
             }, 500);
         } catch (error) {
             console.error("Error adding to cart:", error);
