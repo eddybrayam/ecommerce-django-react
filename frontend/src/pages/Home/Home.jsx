@@ -21,6 +21,7 @@ export default function Home() {
 
     // 🔹 Cargar productos cada vez que cambian los filtros
     useEffect(() => {
+
         fetchProducts();
     }, [filters]);
 

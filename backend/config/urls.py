@@ -31,6 +31,8 @@ urlpatterns = [
     path("api/accounts/", include("accounts.urls", namespace="accounts")),
 
     path('api/', include('products.urls')),
+    path("api/", include("cart.urls")),
+
 ]
 
 if settings.DEBUG:

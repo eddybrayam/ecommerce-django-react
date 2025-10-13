@@ -1,0 +1,75 @@
+.cart-navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #111827; /* gris oscuro elegante */
+  color: #fff;
+  padding: 12px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* --- IZQUIERDA --- */
+.back-button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.back-button:hover {
+  color: #facc15; /* amarillo suave */
+}
+
+/* --- CENTRO --- */
+.store-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+.store-icon {
+  color: #facc15;
+}
+
+/* --- DERECHA --- */
+.right-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logout-button,
+.cart-icon {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.logout-button:hover,
+.cart-icon:hover {
+  color: #facc15;
+}
+
+/* Contador de carrito */
+.cart-count {
+  background: #facc15;
+  color: #111827;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -6px;
+  right: -8px;
+}
