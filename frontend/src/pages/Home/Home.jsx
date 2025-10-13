@@ -14,7 +14,8 @@ export default function Home() {
         .get(`${import.meta.env.VITE_API_URL}/api/products/`)
         .then((res) => {
             // Convertimos los datos del backend al formato que espera ProductCard
-            const formatted = res.data.map((p) => ({
+            const rawData = Array.isArray(res.data) ? res.data : res.data.results || [];
+            const formatted = rawData.map((p) => ({
             id: p.producto_id,
             name: p.nombre,
             price: parseFloat(p.precio),
