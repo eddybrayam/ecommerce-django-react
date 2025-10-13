@@ -1,8 +1,9 @@
 from rest_framework import serializers
-from .models import Product
+from .models import Product, Marca
 import json
 
 class ProductSerializer(serializers.ModelSerializer):
+    marca = serializers.PrimaryKeyRelatedField(queryset=Marca.objects.all(), allow_null=True)
     imagenes = serializers.SerializerMethodField()
 
     class Meta:
@@ -14,3 +15,8 @@ class ProductSerializer(serializers.ModelSerializer):
             return json.loads(obj.imagenes) if obj.imagenes else []
         except:
             return []
+        
+class MarcaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Marca
+        fields = '__all__'

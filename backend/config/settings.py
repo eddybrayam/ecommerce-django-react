@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -78,6 +79,42 @@ REST_FRAMEWORK = {
 #implementacion google
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "")
+
+# --- Configuración para subida y acceso a imágenes ---
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Opcional pero recomendado para producción
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Panel de Tienda",
+    "site_header": "Administración E-Commerce",
+    "welcome_sign": "Bienvenido al panel de tu tienda",
+    "site_brand": "MiTienda",
+    "show_ui_builder": False,  # Oculta el personalizador si no lo necesitas
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "products": "fas fa-boxes",
+        "orders": "fas fa-shopping-cart",
+        "payments": "fas fa-credit-card",
+    },
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "theme": "darkly",  # Ejemplo de tema oscuro
+    "navbar": "navbar-dark bg-primary",
+    "sidebar": "sidebar-dark-primary",
+    "button_classes": {
+        "primary": "btn-primary",
+        "success": "btn-success",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+    },
+}
+
+
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",

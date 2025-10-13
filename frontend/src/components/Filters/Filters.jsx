@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     Search,
     SlidersHorizontal,
@@ -9,16 +9,23 @@ import {
     Tablet,
     Headphones,
     Gamepad2,
-    Heart
-    } from 'lucide-react';
-    import './Filters.css';
+    Heart,
+    Package
+} from 'lucide-react';
+import './Filters.css';
 
-    const Filters = ({ onFilterChange, onSearch, onSort }) => {
+const Filters = ({ onFilterChange, onSearch, onSort }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [priceRange, setPriceRange] = useState([0, 10000]);
     const [sortBy, setSortBy] = useState('featured');
     const [showFilters, setShowFilters] = useState(false);
+
+    // ✅ NUEVO: estados para marcas
+    const [marcas, setMarcas] = useState([]);
+    const [selectedMarca, setSelectedMarca] = useState('');
+
+    const API_URL = 'http://127.0.0.1:8000/api'; // cambia si tu backend usa otro puerto
 
     const categories = [
         { id: 'all', name: 'Todas', icon: SlidersHorizontal },
@@ -27,7 +34,8 @@ import {
         { id: 'tablets', name: 'Tablets', icon: Tablet },
         { id: 'accesorios', name: 'Accesorios', icon: Headphones },
         { id: 'gaming', name: 'Gaming', icon: Gamepad2 },
-        { id: 'smartwatch', name: 'Smartwatches', icon: Heart }
+        { id: 'smartwatch', name: 'Smartwatches', icon: Heart },
+        { id: 'marca', name: 'Marca', icon: Package }
     ];
 
     const sortOptions = [
@@ -40,18 +48,26 @@ import {
         { value: 'rating', label: 'Mejor Valorados' }
     ];
 
+    // ✅ NUEVO: obtener marcas desde el backend
+    useEffect(() => {
+        fetch(`${API_URL}/marcas/`)
+            .then((res) => res.json())
+            .then((data) => setMarcas(data))
+            .catch((err) => console.error('Error al cargar marcas:', err));
+    }, []);
+
     const handleSearch = (e) => {
         const value = e.target.value;
         setSearchTerm(value);
         if (onSearch) {
-        onSearch(value);
+            onSearch(value);
         }
     };
 
     const handleCategoryChange = (categoryId) => {
         setSelectedCategory(categoryId);
         if (onFilterChange) {
-        onFilterChange({ category: categoryId, priceRange });
+            onFilterChange({ category: categoryId, priceRange, marca: selectedMarca });
         }
     };
 
@@ -60,14 +76,23 @@ import {
         newRange[index] = Number(value);
         setPriceRange(newRange);
         if (onFilterChange) {
-        onFilterChange({ category: selectedCategory, priceRange: newRange });
+            onFilterChange({ category: selectedCategory, priceRange: newRange, marca: selectedMarca });
         }
     };
 
     const handleSortChange = (value) => {
         setSortBy(value);
         if (onSort) {
-        onSort(value);
+            onSort(value);
+        }
+    };
+
+    // ✅ NUEVO: manejar filtro por marca
+    const handleMarcaChange = (e) => {
+        const value = e.target.value;
+        setSelectedMarca(value);
+        if (onFilterChange) {
+            onFilterChange({ category: selectedCategory, priceRange, marca: value });
         }
     };
 
@@ -76,14 +101,15 @@ import {
         setSelectedCategory('all');
         setPriceRange([0, 10000]);
         setSortBy('featured');
+        setSelectedMarca('');
         if (onFilterChange) {
-        onFilterChange({ category: 'all', priceRange: [0, 10000] });
+            onFilterChange({ category: 'all', priceRange: [0, 10000], marca: '' });
         }
         if (onSearch) {
-        onSearch('');
+            onSearch('');
         }
         if (onSort) {
-        onSort('featured');
+            onSort('featured');
         }
     };
 
@@ -91,7 +117,8 @@ import {
         selectedCategory !== 'all' || 
         priceRange[0] > 0 || 
         priceRange[1] < 10000 ||
-        searchTerm !== '';
+        searchTerm !== '' ||
+        selectedMarca !== '';
 
     return (
         <div className="filters-container">
@@ -168,6 +195,23 @@ import {
             </div>
             </div>
 
+            {/* ✅ NUEVO: Filtro por Marca */}
+            <div className="filter-section">
+                <h3 className="filter-title">Marca</h3>
+                <select
+                    value={selectedMarca}
+                    onChange={handleMarcaChange}
+                    className="brand-select"
+                >
+                    <option value="">Todas</option>
+                    {marcas.map((marca) => (
+                        <option key={marca.id} value={marca.id}>
+                            {marca.nombre}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
             {/* Rango de precio */}
             <div className="filter-section">
             <h3 className="filter-title">Rango de Precio</h3>
@@ -200,7 +244,6 @@ import {
                 </div>
                 </div>
                 
-                {/* Range slider visual */}
                 <div className="range-slider">
                 <input
                     type="range"
