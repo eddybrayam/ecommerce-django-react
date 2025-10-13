@@ -1,0 +1,597 @@
+[
+{
+  "model": "products.categoria",
+  "pk": 1,
+  "fields": {
+    "nombre": "Laptops",
+    "descripcion": null
+  }
+},
+{
+  "model": "products.categoria",
+  "pk": 2,
+  "fields": {
+    "nombre": "Tablets",
+    "descripcion": null
+  }
+},
+{
+  "model": "products.categoria",
+  "pk": 3,
+  "fields": {
+    "nombre": "Celulares",
+    "descripcion": null
+  }
+},
+{
+  "model": "products.categoria",
+  "pk": 4,
+  "fields": {
+    "nombre": "Smartwatch",
+    "descripcion": null
+  }
+},
+{
+  "model": "products.categoria",
+  "pk": 5,
+  "fields": {
+    "nombre": "Accesorios",
+    "descripcion": null
+  }
+},
+{
+  "model": "products.categoria",
+  "pk": 6,
+  "fields": {
+    "nombre": "Periféricos",
+    "descripcion": null
+  }
+},
+{
+  "model": "products.categoria",
+  "pk": 7,
+  "fields": {
+    "nombre": "Audio",
+    "descripcion": null
+  }
+},
+{
+  "model": "products.categoria",
+  "pk": 8,
+  "fields": {
+    "nombre": "Monitores",
+    "descripcion": null
+  }
+},
+{
+  "model": "products.categoria",
+  "pk": 9,
+  "fields": {
+    "nombre": "Componentes",
+    "descripcion": null
+  }
+},
+{
+  "model": "products.categoria",
+  "pk": 10,
+  "fields": {
+    "nombre": "Consolas",
+    "descripcion": null
+  }
+},
+{
+  "model": "products.product",
+  "pk": 13,
+  "fields": {
+    "categoria": 1,
+    "nombre": "ASUS TUF Gaming F15",
+    "descripcion": "Laptop gamer con Intel i7, RTX 3050, 16GB RAM, SSD 512GB",
+    "precio": "4299.00",
+    "stock": 10,
+    "imagen_url": "https://i5.walmartimages.com/asr/928fa2e0-c1a8-4dca-8964-1376459cb09b.fefb2424f42c1469649fb8b3dacc1750.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF",
+    "imagenes": "[\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNHrjfcHJv7qP4-U9TSlWQOC6LgEN355aQ8ZwxM6MzODBhGadem6HFIEyM3_RP84fk4NY&usqp=CAU\", \"https://alfatechperu.com/wp-content/uploads/2024/07/laptop-hp-victus-16-d0523la-intel-core-i7-11800h-8gb-ram-512gb-ssd-rtx-3050-4gb-16-1-fhd-ips.webp\", \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaIqkL6AKap18sKUYpSlg4LGImCBqaqppxuyuT8ivG2dToLIml9HHKL6y6oU8D4fwtiB0&usqp=CAU\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 14,
+  "fields": {
+    "categoria": 1,
+    "nombre": "Lenovo IdeaPad 3",
+    "descripcion": "Laptop ligera para oficina, AMD Ryzen 5, SSD 256GB",
+    "precio": "1899.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcR-UFzELeraFbjJFVk5LJGvc97xAcsx9dtgdBvpYpa5BWwZBdz2TcDNNjb4dnXiTQBjBnSZnw_HhfihKQHif3BVDC1IMiBJzOu6loysQGZuXk-gFa5CBWyg6Qyldw&usqp=CAc",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/71I6XxkKfOL._AC_SL1500_.jpg\", \"https://p1-ofp.static.pub/medias/200332/ideapad-3-hero.png\", \"https://cdn.lenovo.com/transform/ideapad3.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 15,
+  "fields": {
+    "categoria": 1,
+    "nombre": "HP Pavilion Aero 13",
+    "descripcion": "Ultraportátil 13'', AMD Ryzen 7, 16GB RAM, SSD 512GB",
+    "precio": "2999.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRQ1BUife01nLis_Wd7TfXfJCPeYAf_8s3FA0G6e-sP5hbCnjqwNMOIgGhMz_TU3eIF_aaQdS88xff6rbjhc98e1uuAE6dXTlp_5M2zX-inoNuoa-dfWBDVzc_A0mzS0em8qxax5Bs&usqp=CAc",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/71p1jUHd7zL._AC_SL1500_.jpg\", \"https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c08387508.png\", \"https://cdn.hp.com/aero13/gallery.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 16,
+  "fields": {
+    "categoria": 2,
+    "nombre": "Samsung Galaxy Tab S9",
+    "descripcion": "Pantalla AMOLED 11'', Snapdragon 8 Gen 2, S-Pen incluido",
+    "precio": "3799.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRa0BwdqyCTR2s7L4M6bXBCXKU8whANHkmkNFrG0vi-0KM7pGsho-EgjM4vbjpsSilsCJ2avFK8Q3QEo-KGL8HhNGizlZ0CjsGqRRJHgEeeE2HlOd_6-FLYmlg9BcLhLJBXmXeD0Q&usqp=CAc",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/81F5E5A7g2L._AC_SL1500_.jpg\", \"https://images.samsung.com/is/image/samsung/p6pim/latin/sm-x710nzaalto/gallery/latin-galaxy-tab-s9-11inch-wi-fi-x710-sm-x710nzaalto-537372636\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-148658/s9-tablet.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 17,
+  "fields": {
+    "categoria": 2,
+    "nombre": "Apple iPad 10ª Gen",
+    "descripcion": "Pantalla Retina 10.9'', chip A14 Bionic, USB-C",
+    "precio": "2999.00",
+    "stock": 10,
+    "imagen_url": "https://m.media-amazon.com/images/I/61uA2UVnYWL._AC_SL1500_.jpg",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/61uA2UVnYWL._AC_SL1500_.jpg\", \"https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/ipad-10th-gen-hero-silver\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-148630/ipad10.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05.438Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 18,
+  "fields": {
+    "categoria": 2,
+    "nombre": "Xiaomi Pad 6",
+    "descripcion": "Pantalla 144Hz, Snapdragon 870, batería 8840mAh",
+    "precio": "1899.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcTj67-hD-EJRBjDiZ-lEizgyOvwe0bNJwNGkfWNXcweM7S9nKJ_t6Y8Vebt_BBgKGR6vz9CRxz6o5H5s6JcXcMe-NA5AkfV8_uDZ8VfY5FkpGjz5yXCYVy6Ohe_eQOJrW8C6lB9sg&usqp=CAc",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/71uh-OhfYEL._AC_SL1500_.jpg\", \"https://i02.appmifile.com/314_operatorx_operatorx_upload/19/05/2023/ba17f56f3b35f6d6a4c3dc06f40aa502.png\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-152755/xiaomi-pad6.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 19,
+  "fields": {
+    "categoria": 3,
+    "nombre": "iPhone 15 Pro",
+    "descripcion": "Pantalla Super Retina XDR 6.1'', chip A17 Pro, cámara triple",
+    "precio": "6199.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQNU5eymEaGquV2Jz6SkCqFSbH65d9O0-q2ssQ7j5JXc3rljRYS1VuQBZ04z6YDPmiWV_VDzNcdkI6YF2_Webr7XPL0mcRIA4b9z4Frjveu9geM3-xWR9k7yG2ZS-MR466jnASTXQ&usqp=CAc",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/71v2jVhD7FL._AC_SL1500_.jpg\", \"https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-15-pro-blue-titanium\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-152745/iphone15pro.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 20,
+  "fields": {
+    "categoria": 3,
+    "nombre": "Samsung Galaxy S24 Ultra",
+    "descripcion": "Cámara 200MP, pantalla AMOLED 6.8'', Snapdragon 8 Gen 3",
+    "precio": "5899.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcRu4Oa5MQc1JXwsXKxmS2F5gw5nfzNO2wtRdpEtUH5oZO2Qp4q-0tejQdMTCEL1J4WMmi_cEC7Gw-qkAO0bN0yCoHVPzcaQxQq7rajJV8ceWuQfOkJXWLrgPm62PF50PwAnJOSgV3tg&usqp=CAc",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/71L-5B2nRFL._AC_SL1500_.jpg\", \"https://images.samsung.com/is/image/samsung/p6pim/latin/galaxy-s24-ultra\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-152700/galaxy-s24-ultra.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 21,
+  "fields": {
+    "categoria": 3,
+    "nombre": "Xiaomi 14",
+    "descripcion": "Snapdragon 8 Gen 3, pantalla AMOLED 120Hz, cámara Leica",
+    "precio": "2999.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQ-Et4tKXYCfb_Y5e2AwE1Dps-9Sh1SgwQTylwv0x4N33SclpTmWGKdJr1E_PjxlSmgcJqE75AK9ZIxBevN7rervmsmHP1lSlS1OJPxkiFBe0y7fwfCRe7awlqxAWnWMbVTbRMIBQ&usqp=CAc",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/71Zfw6qkZPL._AC_SL1500_.jpg\", \"https://cdn.cnbj1.fds.api.mi-img.com/product-images/xiaomi-14-pro.png\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-152750/xiaomi14.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 22,
+  "fields": {
+    "categoria": 4,
+    "nombre": "Apple Watch Series 9",
+    "descripcion": "Caja 45mm, GPS, chip S9, pantalla OLED",
+    "precio": "2299.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSgM4dVbD_dvJ1tdjLtrp1Y-Qm99_4518g9SmPWTzfE-SGLBRXhYfQrRuhV8C1qnYpkSHOJm4nn8jrZroXTdA2OPVwJ57XSY1R_shICzppl-9I6fXA7_VmiWbi-f1T-xcESYfvN2w&usqp=CAc",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/71XyG0+XwCL._AC_SL1500_.jpg\", \"https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/apple-watch-series9\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-152770/apple-watch9.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 23,
+  "fields": {
+    "categoria": 4,
+    "nombre": "Xiaomi Watch S1 Active",
+    "descripcion": "Pantalla AMOLED 1.43'', llamadas Bluetooth, resistencia 5ATM",
+    "precio": "899.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcTaYYTEzXEinVV00OpKU64Ouz7HP1Nf848YRhcmAP3b7lBMFz47OJMAydF1UnRPk_6r4tcMnKL6h3q8f5Tsj_dfqtF0BxjRMTpE0ijcKrBXxuLHtrtPe1n9mo5Oac6-cxb84QUsUzWiuA&usqp=CAc",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/71bUlWy1RsL._AC_SL1500_.jpg\", \"https://i01.appmifile.com/webfile/globalimg/products/m/s1-active/s1-active.png\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-148657/s1-active.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 24,
+  "fields": {
+    "categoria": 4,
+    "nombre": "Samsung Galaxy Watch 6",
+    "descripcion": "Pantalla Super AMOLED, Exynos W930, sensor bioactivo",
+    "precio": "1199.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcSf_Qrj37XNa_1KYLW_wIZqtMP1AcCHHASFMyqXDLNeYs-SD3sw1TaLL7nu_1Kc9EOY1ADLsLbOMqXsXNmPON69mIywG9HqeYCPTigjPV2e4WafpYLe2l4OvG6aD4_-T2sRr5k9mBAY&usqp=CAc",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/71iE3tYBkuL._AC_SL1500_.jpg\", \"https://images.samsung.com/is/image/samsung/p6pim/latin/galaxy-watch6\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-152772/galaxywatch6.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 25,
+  "fields": {
+    "categoria": 5,
+    "nombre": "Logitech MX Master 3S",
+    "descripcion": "Mouse inalámbrico ergonómico con carga rápida USB-C",
+    "precio": "499.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcTMht4R6Mwf0M8UGD77WBw698hgODGcXDb2gNqrNRfqA4kv19syIG6VSddOLMx_XmRzi8OpnFb4Z0TLFC1TWee044d_ODX-Y0BOQQ1ekf2EY8-Y_PO1ZNEamRWnTjkUW9eBDPzKExw&usqp=CAc",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/61Dp3-kepUL._AC_SL1500_.jpg\", \"https://resource.logitech.com/content/dam/logitech/en/products/mice/mx-master-3s/gallery/mx-master-3s-top-view.png\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-121038/logitech-mx3s.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 26,
+  "fields": {
+    "categoria": 5,
+    "nombre": "HyperX Cloud II",
+    "descripcion": "Audífonos gamer 7.1 con micrófono desmontable",
+    "precio": "399.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcTaYUOad0z4NXMqB7zfpVqIJ07KznFdy5e869zO32z4ok6Xn65JkR2Gg4gf3AAj-fPAOhjvB8wR71WtttYrKbdZfbr99gaGQifWo5PulQaFFV4OB7VEwTYtsYH1_n85JoJl0ZE0Vw&usqp=CAc",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/71w4+Fh+n7L._AC_SL1500_.jpg\", \"https://hyperx.com/cdn/shop/products/hyperx-cloud-ii-1_1000x1000.png\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-148620/hyperxcloudii.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 27,
+  "fields": {
+    "categoria": 5,
+    "nombre": "Razer Goliathus Chroma",
+    "descripcion": "Mousepad RGB con iluminación personalizable",
+    "precio": "299.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSdCVnMVewyAo-K2QlOY5lvX6ilo15C-dwdcVeSbc3YTC6_hnkBkypcwo-0iWHCdHXxlclRwjyVPgcsluRbPFEs5zTTNxW8qZ_ZY3nm0IUYByQcWYvSxj8LUioPaCG6vb3kJz8wvTYN&usqp=CAc",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/81a+M1phOVL._AC_SL1500_.jpg\", \"https://assets.razerzone.com/eeimages/products/29917/goliathuschroma_gallery02.jpg\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-152788/razer-goliathus.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 28,
+  "fields": {
+    "categoria": 7,
+    "nombre": "Sony WH-1000XM5",
+    "descripcion": "Auriculares inalámbricos con cancelación de ruido",
+    "precio": "1599.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQi4uz9-1zeldFdLiAVacFnSgspQCTojtQGFn60SKU_ZjAeAwL19uZ40vywTqtZUaA9iSB5O5OTJEGQw7-aMgZ8J6XrzrIrqjXlMN1pDPeYrYytziAVtxksYJ7zzNSEvqqT3unpddQ&usqp=CAc",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/61cJc2U1sML._AC_SL1500_.jpg\", \"https://www.sony.com/image/4c567c68e63f31b8b739cabc1b5b7a3e?fmt=pjpeg&wid=1200&hei=630&bgcolor=FFFFFF&bgc=FFFFFF\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-152755/sonywh1000xm5.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 29,
+  "fields": {
+    "categoria": 7,
+    "nombre": "JBL Flip 6",
+    "descripcion": "Parlante Bluetooth portátil con sonido potente y resistente al agua",
+    "precio": "499.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRiHdn0Krmles4goQUh72BxyFkTb2fz_pkhlav1IqvXwKhCZNQZkzOqX7wsD9qoLHMgn843jtZoDADMp-3cn0MRuqRGNARPoMI97pWbuDGTwbj2a4p_6DjUzHxlcZdycyerc0mePQ&usqp=CAc",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/71yyiQ2r8PL._AC_SL1500_.jpg\", \"https://www.jbl.com/on/demandware.static/-/Sites-masterCatalog_Harman/default/dw8f8e4e56/JBL_Flip6_Product%20Image_Hero_Blue_1605x1605px.png\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-152776/jbl-flip6.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 30,
+  "fields": {
+    "categoria": 7,
+    "nombre": "Bose SoundLink Revolve+",
+    "descripcion": "Altavoz Bluetooth 360°, batería 17h, sonido envolvente",
+    "precio": "1199.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcRVdlcb8HOUy2iegR9g9bc5o70FLdfNsZYhnHPxOblqDgURPvbzJoFooSifUxd3HTMCnpn76z67pSCuZRHFqSJNR445wuZQ_Jl5lgSq9qFyr0YxR2qI_TTX2pcAPOxmrOH0ENc6aQk&usqp=CAc",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/71vWdlUq4lL._AC_SL1500_.jpg\", \"https://assets.bose.com/content/dam/Bose_DAM/Web/consumer_electronics/global/products/speakers/soundlink_revolve_plus_ii/product_silo_images/SoundLinkRevolvePlusII_TripleBlack_EC_hero.psd\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-152778/bose-revolve.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 31,
+  "fields": {
+    "categoria": 6,
+    "nombre": "Corsair K70 RGB",
+    "descripcion": "Teclado mecánico gamer con switches Cherry MX y RGB",
+    "precio": "899.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQYJmLDzJ7uHu7nXAfIBN1C_rJKPitMqA6xvKGGf9N24p_ERwecfXE4nC8XTY8xpONf2CATae-qwjZ7SSoidoz95WRUFQv9y1J6sksluWbUpiIN_eFTAfsqbykY&usqp=CAc",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/71K4jK5Jk-L._AC_SL1500_.jpg\", \"https://www.corsair.com/medias/sys_master/images/images/h67/hb1/9254057224222/base-k70-rgb.jpg\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-152780/corsairk70.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 32,
+  "fields": {
+    "categoria": 6,
+    "nombre": "Logitech G Pro X",
+    "descripcion": "Teclado mecánico compacto y desmontable",
+    "precio": "699.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcRU68Hj3AG2PxdGFa_Ur5KeRHN45zcS95qBQJ9az-26pBhoO7fnDC7AZOMfX7fSBUDzU7q3Jh11zihZeYXK92gm7i3kDnExRYR21YNj2awJAxA9hUujt-qRbxGlcCsjFegSzCwv7Q&usqp=CAc",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/71ckhlH5pZL._AC_SL1500_.jpg\", \"https://resource.logitech.com/content/dam/logitech/en/products/gaming/g-pro-x-keyboard/gallery/g-pro-x-keyboard-topdown.jpg\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-152782/logitech-gprox.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 33,
+  "fields": {
+    "categoria": 6,
+    "nombre": "Razer DeathAdder V2",
+    "descripcion": "Mouse ergonómico con sensor óptico Focus+ de 20K DPI",
+    "precio": "499.00",
+    "stock": 10,
+    "imagen_url": "https://m.media-amazon.com/images/I/61UxfXTUyvL._AC_SL1500_.jpg",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/61UxfXTUyvL._AC_SL1500_.jpg\", \"https://assets.razerzone.com/eeimages/products/36129/razer-deathadder-v2-gallery-1500x1000-1.jpg\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-152784/razerdeathadderv2.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05.518Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 34,
+  "fields": {
+    "categoria": 10,
+    "nombre": "PlayStation 5",
+    "descripcion": "Consola de nueva generación con SSD ultra rápido y mando DualSense",
+    "precio": "3899.00",
+    "stock": 10,
+    "imagen_url": "https://m.media-amazon.com/images/I/619BkvKW35L._AC_SL1500_.jpg",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/619BkvKW35L._AC_SL1500_.jpg\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-152790/ps5.jpg\", \"https://gmedia.playstation.com/is/image/SIEPDC/ps5-dualsense-gallery01-en-15jun20?$native$\"]",
+    "fecha_creacion": "2025-10-10T18:09:05.523Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 35,
+  "fields": {
+    "categoria": 10,
+    "nombre": "Xbox Series X",
+    "descripcion": "Consola con resolución 4K y SSD 1TB, rendimiento extremo",
+    "precio": "3799.00",
+    "stock": 10,
+    "imagen_url": "https://m.media-amazon.com/images/I/71NBQ2a52CL._AC_SL1500_.jpg",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/71NBQ2a52CL._AC_SL1500_.jpg\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-152792/xboxseriesx.jpg\", \"https://compass-ssl.xbox.com/assets/88/a8/88a8b8fa-3c9a-4c90-9465-8572e20f6a83.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05.528Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 36,
+  "fields": {
+    "categoria": 10,
+    "nombre": "Nintendo Switch OLED",
+    "descripcion": "Consola híbrida con pantalla OLED de 7'', portátil y doméstica",
+    "precio": "1899.00",
+    "stock": 10,
+    "imagen_url": "https://m.media-amazon.com/images/I/61-PblYntsL._AC_SL1500_.jpg",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/61-PblYntsL._AC_SL1500_.jpg\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-152794/switch-oled.jpg\", \"https://assets.nintendo.com/image/upload/ncom/en_US/switch/system/three-modes\"]",
+    "fecha_creacion": "2025-10-10T18:09:05.532Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 37,
+  "fields": {
+    "categoria": 8,
+    "nombre": "LG UltraGear 27''",
+    "descripcion": "Monitor gamer QHD 165Hz con 1ms y HDR10",
+    "precio": "1499.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcT-Jl3HPr6tHcq-SDa1bXHOUsdBAHrrFWq01ixGDx-gozaeC-p5wivbVIKx7eU0gjuiNYcIrytxePpKDUNxctemc5jZdNUcqLQLO9GF2i1dReIMXBtOXB9shfgelwXWi3jSx50QvZk&usqp=CAc",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/81GL6xYlgwL._AC_SL1500_.jpg\", \"https://www.lg.com/content/dam/channel/wcms/es/images/monitores/27GP850-B_AESP_ES_FF_1.jpg\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-152796/lgultragear27.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 38,
+  "fields": {
+    "categoria": 8,
+    "nombre": "Samsung Odyssey G5",
+    "descripcion": "Monitor curvo 32'' 144Hz WQHD FreeSync Premium",
+    "precio": "1599.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcT_qxkg5u3qa6FClj9GJ0D2K-viUcFbDode2pjsbRK65ECMtLoCG5udOGIXlX1ScGTyx6ndmHYap4QKt7SjCDKk2Diuys4Vv11cU1X45DLaHYUeSCF5UxOiePaJCbDwnAwU3wgUfQ&usqp=CAc",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/71eX+9Z+LXL._AC_SL1500_.jpg\", \"https://images.samsung.com/is/image/samsung/p6pim/latin/odyssey-g5\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-152798/odysseyg5.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 39,
+  "fields": {
+    "categoria": 8,
+    "nombre": "AOC 24G2SPU",
+    "descripcion": "Monitor gamer 24'' Full HD 165Hz con soporte ajustable",
+    "precio": "899.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcRrwvts7tMCFDwUE6CEbTAGvAflSRwsfSwWlh0ALkLD08aVFhYloOg2MEQm0jXYly7LzPm3__OJVAx5L0sPdDGfyHpn0fKU_X0_TF9QOcvSplTp0XXYX1gYywsyms-Uh2yIzQyKU5w&usqp=CAc",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/81Y7pvzYRAL._AC_SL1500_.jpg\", \"https://aoc-pim.s3.amazonaws.com/assets/2021/02/01/24g2spu.png\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-152800/aoc24g2spu.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 40,
+  "fields": {
+    "categoria": 9,
+    "nombre": "Intel Core i9-13900K",
+    "descripcion": "Procesador 24 núcleos 13ª Gen, 5.8GHz Turbo",
+    "precio": "2699.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqYV1AKW55I7Iw38IsjCvoQSPaDtlA0wimRQ&s",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/61g+ojv9BuL._AC_SL1500_.jpg\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-152802/i913900k.jpg\", \"https://www.intel.com/content/dam/www/central-libraries/us/en/images/13th-gen-core-i9-badge.png\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 41,
+  "fields": {
+    "categoria": 9,
+    "nombre": "NVIDIA RTX 4070 Ti",
+    "descripcion": "Tarjeta gráfica 12GB GDDR6X con DLSS 3 y Ray Tracing",
+    "precio": "4899.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSnYDnc6rFG07bwKuCn3mBXIHQIp4f1BK-5xqOl3J-DUTS89j7MVK-T-9tDVGXH6xOkb_F1NN0fhX__4BlZ-gWBuBJfj3MJdNX61SRRZdq4H1AWPEMQhv_LX7g8EYTOdmZWvfkOs6q5S70&usqp=CAc",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/71Y0zKqI4nL._AC_SL1500_.jpg\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-152804/rtx4070ti.jpg\", \"https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/ada-lovelace/rtx-4070-ti/geforce-rtx-4070-ti-gallery-a.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "products.product",
+  "pk": 42,
+  "fields": {
+    "categoria": 9,
+    "nombre": "ASUS ROG Strix Z790",
+    "descripcion": "Placa madre ATX para Intel 13ª Gen con WiFi 6E",
+    "precio": "1699.00",
+    "stock": 10,
+    "imagen_url": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRi2YpF7GAMfYqzJ2RTmniKqdxgNKSZdQaMSw24gt0k-p68dgAJGZtcfOU3mAq46u80NmGBSsDEmEX1eaTTS9RNyEReQNfKvX4bEAsw56Z66EF64vwdVxmQ3Hm2VGpg4ZQ4S3go1x4&usqp=CAc",
+    "imagenes": "[\"https://m.media-amazon.com/images/I/71ZZ0r6bZUL._AC_SL1500_.jpg\", \"https://dlcdnwebimgs.asus.com/gain/ea2b08b9-36a2-4a63-bc3c-9389a7bcd19f/\", \"https://cdn.dxomark.com/wp-content/uploads/medias/post-152806/asusz790.jpg\"]",
+    "fecha_creacion": "2025-10-10T18:09:05Z",
+    "activo": true
+  }
+},
+{
+  "model": "accounts.role",
+  "pk": 1,
+  "fields": {
+    "name": "ADMIN",
+    "description": "Administrador del sistema"
+  }
+},
+{
+  "model": "accounts.role",
+  "pk": 2,
+  "fields": {
+    "name": "SELLER",
+    "description": "Vendedor"
+  }
+},
+{
+  "model": "accounts.role",
+  "pk": 3,
+  "fields": {
+    "name": "CLIENT",
+    "description": "Cliente"
+  }
+},
+{
+  "model": "accounts.client",
+  "pk": 3,
+  "fields": {
+    "user": 11,
+    "role": 3,
+    "first_name": "prueba1",
+    "last_name": "mmmm",
+    "address": "prueba1",
+    "dni": "74852563",
+    "phone": "856325478",
+    "created_at": "2025-09-28T21:11:59.557Z"
+  }
+},
+{
+  "model": "accounts.client",
+  "pk": 8,
+  "fields": {
+    "user": 16,
+    "role": 3,
+    "first_name": "Klinsman Yeltsin",
+    "last_name": "Flores Torres",
+    "address": "",
+    "dni": "GN90888506",
+    "phone": null,
+    "created_at": "2025-10-10T00:30:12.476Z"
+  }
+},
+{
+  "model": "accounts.googleaccount",
+  "pk": 2,
+  "fields": {
+    "user": 16,
+    "sub": "114519472850490888506",
+    "email": "klinsman.flores@tecsup.edu.pe",
+    "picture": "https://lh3.googleusercontent.com/a/ACg8ocJFP6blWBKZoBwgtDayghRI8hAV0bGa_1kRIpNuuyWhZiwZdQ=s96-c",
+    "given_name": "Klinsman Yeltsin",
+    "family_name": "Flores Torres",
+    "created_at": "2025-10-10T00:30:12.482Z"
+  }
+}
+]
