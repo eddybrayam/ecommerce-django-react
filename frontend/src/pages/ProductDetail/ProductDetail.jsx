@@ -35,7 +35,11 @@ export default function ProductDetail() {
         }
 
         setProduct({ ...data, imagenes: extraImgs });
-        setSelectedImage(data.imagen_url || extraImgs[0] || "");
+        setSelectedImage(
+          data.imagen_principal ||
+          data.imagen_url ||
+          (extraImgs.length > 0 ? extraImgs[0] : "")
+        );
       } catch (err) {
         console.error(err);
         setProduct(null);
@@ -138,17 +142,18 @@ export default function ProductDetail() {
 
             {/* Miniaturas */}
             <div className="thumbnail-row">
-              {[product.imagen_url, ...(product.imagenes || [])]
+              {[product.imagen_principal, product.imagen_url, ...(product.imagenes || [])]
                 .filter(Boolean)
                 .map((img, i) => (
                   <img
                     key={i}
-                    src={img}
+                    src={img.startsWith("http") ? img : `http://127.0.0.1:8000${img}`}
                     alt={`Imagen ${i + 1}`}
                     className={`thumb ${img === selectedImage ? "active" : ""}`}
                     onClick={() => setSelectedImage(img)}
                   />
                 ))}
+
             </div>
           </div>
 

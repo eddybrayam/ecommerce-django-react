@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from .models import Product, Categoria
+from .models import Product, Categoria, Marca
 
 
 # 🧾 Formulario personalizado para mostrar mejor el campo JSON de imágenes
@@ -32,3 +32,5 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ("producto_id", "nombre", "precio", "stock", "categoria", "activo")
     search_fields = ("nombre",)
     list_filter = ("activo", "categoria")
+
+admin.site.register(Marca)
