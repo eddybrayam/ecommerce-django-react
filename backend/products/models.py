@@ -1,11 +1,37 @@
 from django.db import models
 from django.utils import timezone
 import json
+from django.utils.translation import gettext_lazy as _
+from django.contrib.admin import SimpleListFilter
 
 class Marca(models.Model):
     nombre = models.CharField(max_length=100)
     def __str__(self):
         return self.nombre
+
+class PriceRangeFilter(SimpleListFilter):
+    title = _('Rango de precio')
+    parameter_name = 'precio_rango'
+
+    def lookups(self, request, model_admin):
+        return [
+            ('0-499', _('S/ 0 - 499')),
+            ('500-999', _('S/ 500 - 999')),
+            ('1000-1999', _('S/ 1000 - 1999')),
+            ('2000+', _('S/ 2000 o más')),
+        ]
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value == '0-499':
+            return queryset.filter(precio__lt=500)
+        elif value == '500-999':
+            return queryset.filter(precio__gte=500, precio__lt=1000)
+        elif value == '1000-1999':
+            return queryset.filter(precio__gte=1000, precio__lt=2000)
+        elif value == '2000+':
+            return queryset.filter(precio__gte=2000)
+        return queryset
 
 class Categoria(models.Model):
     nombre = models.CharField(max_length=100, unique=True)

@@ -16,3 +16,9 @@ requests
 
 # Entorno
 python-dotenv
+
+# Imágenes
+Pillow
+
+# Interfaz de administración moderna
+django-jazzmin
