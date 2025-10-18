@@ -11,6 +11,8 @@ import ProductDetail from "./pages/ProductDetail";
 import AccountPage from "./pages/AccountPage/AccountPage";
 import OrdersPage from "./pages/OrdersPage/OrdersPage";
 import FavoritesPage from "./pages/FavoritesPage/FavoritesPage";
+import Checkout from "./pages/Checkout";
+import PaymentPage from "./pages/PaymentPage";
 
 
 function App() {
@@ -28,10 +30,10 @@ function App() {
         <Route path="/account" element={<AccountPage />} />
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="/favorites" element={<FavoritesPage />} />
-
-
         <Route path="/product/:id" element={<ProductDetail />} />
-
+        {/* 🧾 Nueva ruta de pago */}
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/payment" element={<PaymentPage />} />
       </Routes>
     </BrowserRouter>
   );
