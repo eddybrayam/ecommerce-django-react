@@ -28,8 +28,11 @@ function App() {
 
                 {/* Rutas protegidas (solo accesibles si estás logueado, aunque por ahora no están protegidas aún) */}
         <Route path="/account" element={<AccountPage />} />
-        <Route path="/orders" element={<OrdersPage />} />
+        <Route path="/account/orders" element={<OrdersPage />} />
         <Route path="/favorites" element={<FavoritesPage />} />
+
+
+
         <Route path="/product/:id" element={<ProductDetail />} />
         {/* 🧾 Nueva ruta de pago */}
         <Route path="/checkout" element={<Checkout />} />

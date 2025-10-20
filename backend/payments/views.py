@@ -6,7 +6,14 @@ from products.models import Product
 from .models import PagoSimulado, OrdenPagoSimulada, OrdenItem
 from .serializers import PagoSimuladoSerializer
 
+from orders.models import Order, OrderItem
+from decimal import Decimal
+from rest_framework.permissions import IsAuthenticated
 
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from rest_framework.decorators import permission_classes
 # 🧠 Detectar marca de tarjeta (simulado)
 def detectar_brand(numero):
     if not numero:
@@ -185,3 +192,49 @@ def pagar_orden_tarjeta_simulada(request):
         return Response({"error": "Producto no encontrado"}, status=404)
     except Exception as e:
         return Response({"error": str(e)}, status=400)
+
+
+
+
+def _create_order(user, items):
+    """
+    items = [{"id": product_id, "cantidad": n, "price": opcional}]
+    """
+    order = Order.objects.create(user=user, total=Decimal("0.00"))
+    total = Decimal("0.00")
+    for it in items:
+        p = Product.objects.get(pk=it["id"])
+        price = Decimal(str(p.precio))  
+        qty = int(it["cantidad"])
+        OrderItem.objects.create(order=order, product=p, quantity=qty, price=price)
+        total += price * qty
+    order.total = total
+    order.save(update_fields=["total"])
+    return order
+
+
+def _send_order_email(user, order):
+    html = render_to_string("emails/order_summary.html", {"order": order, "user": user})
+    msg = EmailMultiAlternatives(
+        subject=f"Resumen de tu pedido #{order.id}",
+        body=f"Gracias por tu compra. Total S/ {order.total}",
+        from_email=getattr(settings, "DEFAULT_FROM_EMAIL", None),
+        to=[user.email],
+    )
+    msg.attach_alternative(html, "text/html")
+    msg.send(fail_silently=True)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def confirmar_pago_y_crear_pedido(request):
+    """
+    Endpoint genérico para tu pago con tarjeta/Yape.
+    Espera: {"productos":[{"id":1,"cantidad":2}, ...]}
+    """
+    productos = request.data.get("productos", [])
+    if not productos:
+        return Response({"error": "Productos vacíos"}, status=400)
+    order = _create_order(request.user, productos)
+    _send_order_email(request.user, order)
+    return Response({"mensaje": "Pago confirmado y pedido creado", "order_id": order.id})

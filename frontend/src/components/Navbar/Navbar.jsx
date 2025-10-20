@@ -56,34 +56,58 @@ const Navbar = () => {
 
     // Si estás cargando, puedes mostrar un estado neutro
     if (loading) {
-        return (
-            <nav className={`navbar ${isDarkMode ? 'dark-mode' : ''}`}>
-                <div className="navbar-container">
-                    <div className="navbar-logo">
-                        <Zap className="logo-icon" />
-                        <span className="logo-text">SmartShop</span>
-                    </div>
-                    <div className="navbar-actions">
-                        <div className="action-btn">Cargando...</div>
-                    </div>
-                </div>
-            </nav>
-        );
+    return (
+        <nav className={`navbar ${isDarkMode ? 'dark-mode' : ''}`}>
+        <div className="navbar-container">
+            <div
+  className="navbar-logo"
+  onClick={() => navigate("/")}
+  style={{ cursor: "pointer" }}
+>
+  <Zap className="logo-icon" />
+  <span className="logo-text">SmartShop</span>
+</div>
+            <div className="navbar-actions">
+            {/* Estado neutro mientras carga */}
+            <div className="action-btn" style={{ visibility: 'hidden' }}>
+                Usuario
+            </div>
+            </div>
+        </div>
+        </nav>
+    );
     }
+
 
     return (
         <nav className={`navbar ${isDarkMode ? 'dark-mode' : ''}`}>
             <div className="navbar-container">
                 
                 {/* Logo */}
-                <div className="navbar-logo">
-                    <Zap className="logo-icon" />
-                    <span className="logo-text">SmartShop</span>
-                </div>
+                <div
+  className="navbar-logo"
+  onClick={() => navigate("/")}
+  style={{ cursor: "pointer" }}
+>
+  <Zap className="logo-icon" />
+  <span className="logo-text">SmartShop</span>
+</div>
 
                 {/* Links de navegación - Desktop */}
                 <ul className="nav-links">
-                    <li><a href="#inicio">Inicio</a></li>
+                    <li>
+  <a
+    href="/"
+    onClick={(e) => {
+      e.preventDefault();
+      navigate("/");
+      toggleMenu();
+    }}
+  >
+    Inicio
+  </a>
+</li>
+
                     <li className="dropdown">
                         <a href="#categorias">
                             Categorías <ChevronDown size={16} />
@@ -139,9 +163,16 @@ const Navbar = () => {
                                     <a href="#cuenta" onClick={() => navigate('/account')}>
                                         <Settings size={16} /> Mi Cuenta
                                     </a>
-                                    <a href="#pedidos" onClick={() => navigate('/orders')}>
-                                        <Package size={16} /> Mis Pedidos
-                                    </a>
+                                    <a
+  href="/account/orders"
+  onClick={(e) => {
+    e.preventDefault();
+    navigate("/account/orders");
+    setIsUserMenuOpen(false);
+  }}
+>
+  <Package size={16} /> Mis Pedidos
+</a>
                                     <a href="#favoritos" onClick={() => navigate('/favorites')}>
                                         <Heart size={16} /> Favoritos
                                     </a>
@@ -233,7 +264,19 @@ const Navbar = () => {
             {/* Menú móvil */}
             <div className={`mobile-menu ${isMenuOpen ? 'active' : ''}`}>
                 <ul>
-                    <li><a href="#inicio" onClick={toggleMenu}>Inicio</a></li>
+                    <li>
+  <a
+    href="/"
+    onClick={(e) => {
+      e.preventDefault();
+      navigate("/");
+      toggleMenu();
+    }}
+  >
+    Inicio
+  </a>
+</li>
+
                     <li><a href="#categorias" onClick={toggleMenu}>Categorías</a></li>
                     <li><a href="#ofertas" onClick={toggleMenu}>
                         <Zap size={16} /> Ofertas
@@ -274,10 +317,19 @@ const Navbar = () => {
                                 navigate('/account');
                                 toggleMenu();
                             }}>Mi Cuenta</a></li>
-                            <li><a href="#pedidos" onClick={() => {
-                                navigate('/orders');
-                                toggleMenu();
-                            }}>Mis Pedidos</a></li>
+                            <li>
+  <a
+    href="/account/orders"
+    onClick={(e) => {
+      e.preventDefault();
+      navigate("/account/orders");
+      toggleMenu();
+    }}
+  >
+    Mis Pedidos
+  </a>
+</li>
+
                             <li><a 
                                 href="#logout" 
                                 className="logout" 

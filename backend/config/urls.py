@@ -32,6 +32,14 @@ urlpatterns = [
 
     path('api/', include('products.urls')),
     path("api/pagos/", include("payments.urls")),
+
+    #correo con pedido
+    path("api/", include("orders.urls")),
+    path("api/", include("payments.urls")),
+
+    #categorias filtros
+    path('api/', include('products.urls')),
+
 ]
 
 if settings.DEBUG:

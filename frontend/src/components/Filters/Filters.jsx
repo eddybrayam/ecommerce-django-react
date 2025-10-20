@@ -1,283 +1,268 @@
 import { useState, useEffect } from 'react';
 import {
-    Search,
-    SlidersHorizontal,
-    X,
-    ChevronDown,
-    Laptop,
-    Smartphone,
-    Tablet,
-    Headphones,
-    Gamepad2,
-    Heart,
-    Package
+  Search, SlidersHorizontal, X, ChevronDown,
+  Laptop, Smartphone, Tablet, Headphones, Gamepad2, Watch // puedes ajustar
 } from 'lucide-react';
 import './Filters.css';
 
+const iconByKey = {
+  laptops: Laptop,
+  laptop: Laptop,
+  notebooks: Laptop,
+  celulares: Smartphone,
+  smartphone: Smartphone,
+  phones: Smartphone,
+  tablets: Tablet,
+  accesorios: Headphones,
+  accesorios_tecnologia: Headphones,
+  gaming: Gamepad2,
+  smartwatch: Watch,
+};
+
+const pickIcon = (slugOrName) => {
+  if (!slugOrName) return SlidersHorizontal;
+  const key = String(slugOrName).toLowerCase().replaceAll(' ', '_');
+  return iconByKey[key] || SlidersHorizontal;
+};
+
 const Filters = ({ onFilterChange, onSearch, onSort }) => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('all');
-    const [priceRange, setPriceRange] = useState([0, 10000]);
-    const [sortBy, setSortBy] = useState('featured');
-    const [showFilters, setShowFilters] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [priceRange, setPriceRange] = useState([0, 10000]);
+  const [sortBy, setSortBy] = useState('featured');
+  const [showFilters, setShowFilters] = useState(false);
 
-    // ✅ NUEVO: estados para marcas
-    const [marcas, setMarcas] = useState([]);
-    const [selectedMarca, setSelectedMarca] = useState('');
+  const [marcas, setMarcas] = useState([]);
+  const [selectedMarca, setSelectedMarca] = useState('');
 
-    const API_URL = 'http://127.0.0.1:8000/api'; // cambia si tu backend usa otro puerto
+  // ✅ NUEVO: categorías desde backend
+  const [categories, setCategories] = useState([{ id: 'all', name: 'Todas', slug: 'all' }]);
 
-    const categories = [
-        { id: 'all', name: 'Todas', icon: SlidersHorizontal },
-        { id: 'laptops', name: 'Laptops', icon: Laptop },
-        { id: 'celulares', name: 'Celulares', icon: Smartphone },
-        { id: 'tablets', name: 'Tablets', icon: Tablet },
-        { id: 'accesorios', name: 'Accesorios', icon: Headphones },
-        { id: 'gaming', name: 'Gaming', icon: Gamepad2 },
-        { id: 'smartwatch', name: 'Smartwatches', icon: Heart },
-        { id: 'marca', name: 'Marca', icon: Package }
-    ];
+  const API_URL = 'http://127.0.0.1:8000/api'; // ajusta si corresponde
 
-    const sortOptions = [
-        { value: 'featured', label: 'Destacados' },
-        { value: 'price-asc', label: 'Precio: Menor a Mayor' },
-        { value: 'price-desc', label: 'Precio: Mayor a Menor' },
-        { value: 'name-asc', label: 'Nombre: A-Z' },
-        { value: 'name-desc', label: 'Nombre: Z-A' },
-        { value: 'newest', label: 'Más Recientes' },
-        { value: 'rating', label: 'Mejor Valorados' }
-    ];
+  useEffect(() => {
+    // marcas
+    fetch(`${API_URL}/marcas/`)
+      .then((r) => r.json())
+      .then(setMarcas)
+      .catch((e) => console.error('Error al cargar marcas:', e));
 
-    // ✅ NUEVO: obtener marcas desde el backend
-    useEffect(() => {
-        fetch(`${API_URL}/marcas/`)
-            .then((res) => res.json())
-            .then((data) => setMarcas(data))
-            .catch((err) => console.error('Error al cargar marcas:', err));
-    }, []);
+    // categorías
+    fetch(`${API_URL}/categorias/`)
+    .then(r => r.json())
+    .then(data => {
+        const mapped = data.map(c => ({
+        id: String(c.id),
+        name: c.nombre,
+        slug: (c.nombre || '').toLowerCase().replaceAll(' ', '-'),
+        }));
+        setCategories(prev => [prev[0], ...mapped]);
+    })
+      .catch((e) => console.error('Error al cargar categorías:', e));
+  }, []);
 
-    const handleSearch = (e) => {
-        const value = e.target.value;
-        setSearchTerm(value);
-        if (onSearch) {
-            onSearch(value);
-        }
-    };
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    onSearch?.(value);
+  };
 
-    const handleCategoryChange = (categoryId) => {
-        setSelectedCategory(categoryId);
-        if (onFilterChange) {
-            onFilterChange({ category: categoryId, priceRange, marca: selectedMarca });
-        }
-    };
+  const handleCategoryChange = (categoryId) => {
+    setSelectedCategory(categoryId);
+    onFilterChange?.({ category: categoryId, priceRange, marca: selectedMarca });
+  };
 
-    const handlePriceChange = (index, value) => {
-        const newRange = [...priceRange];
-        newRange[index] = Number(value);
-        setPriceRange(newRange);
-        if (onFilterChange) {
-            onFilterChange({ category: selectedCategory, priceRange: newRange, marca: selectedMarca });
-        }
-    };
+  const handlePriceChange = (index, value) => {
+    const newRange = [...priceRange];
+    newRange[index] = Number(value);
+    setPriceRange(newRange);
+    onFilterChange?.({ category: selectedCategory, priceRange: newRange, marca: selectedMarca });
+  };
 
-    const handleSortChange = (value) => {
-        setSortBy(value);
-        if (onSort) {
-            onSort(value);
-        }
-    };
+  const handleSortChange = (value) => {
+    setSortBy(value);
+    onSort?.(value);
+  };
 
-    // ✅ NUEVO: manejar filtro por marca
-    const handleMarcaChange = (e) => {
-        const value = e.target.value;
-        setSelectedMarca(value);
-        if (onFilterChange) {
-            onFilterChange({ category: selectedCategory, priceRange, marca: value });
-        }
-    };
+  const handleMarcaChange = (e) => {
+    const value = e.target.value;
+    setSelectedMarca(value);
+    onFilterChange?.({ category: selectedCategory, priceRange, marca: value });
+  };
 
-    const clearFilters = () => {
-        setSearchTerm('');
-        setSelectedCategory('all');
-        setPriceRange([0, 10000]);
-        setSortBy('featured');
-        setSelectedMarca('');
-        if (onFilterChange) {
-            onFilterChange({ category: 'all', priceRange: [0, 10000], marca: '' });
-        }
-        if (onSearch) {
-            onSearch('');
-        }
-        if (onSort) {
-            onSort('featured');
-        }
-    };
+  const clearFilters = () => {
+    setSearchTerm('');
+    setSelectedCategory('all');
+    setPriceRange([0, 10000]);
+    setSortBy('featured');
+    setSelectedMarca('');
+    onFilterChange?.({ category: 'all', priceRange: [0, 10000], marca: '' });
+    onSearch?.('');
+    onSort?.('featured');
+  };
 
-    const hasActiveFilters = 
-        selectedCategory !== 'all' || 
-        priceRange[0] > 0 || 
-        priceRange[1] < 10000 ||
-        searchTerm !== '' ||
-        selectedMarca !== '';
+  const hasActiveFilters =
+    selectedCategory !== 'all' ||
+    priceRange[0] > 0 ||
+    priceRange[1] < 10000 ||
+    searchTerm !== '' ||
+    selectedMarca !== '';
 
-    return (
-        <div className="filters-container">
-        {/* Barra de búsqueda y controles principales */}
-        <div className="filters-header">
-            <div className="search-wrapper">
-            <Search className="search-icon" size={20} />
-            <input
-                type="text"
-                placeholder="Buscar productos..."
-                value={searchTerm}
-                onChange={handleSearch}
-                className="search-input-filters"
-            />
-            {searchTerm && (
-                <button 
-                className="clear-search"
-                onClick={() => {
-                    setSearchTerm('');
-                    if (onSearch) onSearch('');
-                }}
-                >
-                <X size={18} />
-                </button>
-            )}
-            </div>
-
-            <div className="filter-controls">
-            <button 
-                className={`filters-toggle ${showFilters ? 'active' : ''}`}
-                onClick={() => setShowFilters(!showFilters)}
+  return (
+    <div className="filters-container">
+      {/* Header */}
+      <div className="filters-header">
+        <div className="search-wrapper">
+          <Search className="search-icon" size={20} />
+          <input
+            type="text"
+            placeholder="Buscar productos..."
+            value={searchTerm}
+            onChange={handleSearch}
+            className="search-input-filters"
+          />
+          {searchTerm && (
+            <button
+              className="clear-search"
+              onClick={() => { setSearchTerm(''); onSearch?.(''); }}
             >
-                <SlidersHorizontal size={20} />
-                <span>Filtros</span>
-                {hasActiveFilters && <span className="filter-badge"></span>}
+              <X size={18} />
             </button>
+          )}
+        </div>
 
-            <div className="sort-dropdown">
-                <select 
-                value={sortBy} 
-                onChange={(e) => handleSortChange(e.target.value)}
-                className="sort-select"
+        <div className="filter-controls">
+          <button
+            className={`filters-toggle ${showFilters ? 'active' : ''}`}
+            onClick={() => setShowFilters(!showFilters)}
+          >
+            <SlidersHorizontal size={20} />
+            <span>Filtros</span>
+            {hasActiveFilters && <span className="filter-badge"></span>}
+          </button>
+
+          <div className="sort-dropdown">
+            <select
+              value={sortBy}
+              onChange={(e) => handleSortChange(e.target.value)}
+              className="sort-select"
+            >
+              <option value="featured">Destacados</option>
+              <option value="price-asc">Precio: Menor a Mayor</option>
+              <option value="price-desc">Precio: Mayor a Menor</option>
+              <option value="name-asc">Nombre: A-Z</option>
+              <option value="name-desc">Nombre: Z-A</option>
+              <option value="newest">Más Recientes</option>
+              <option value="rating">Mejor Valorados</option>
+            </select>
+            <ChevronDown className="dropdown-icon" size={18} />
+          </div>
+        </div>
+      </div>
+
+      {/* Panel */}
+      <div className={`filters-panel ${showFilters ? 'show' : ''}`}>
+        {/* Categorías */}
+        <div className="filter-section">
+          <h3 className="filter-title">Categorías</h3>
+          <div className="categories-grid">
+            {categories.map((category) => {
+              const Icon = pickIcon(category.slug || category.name);
+              return (
+                <button
+                  key={category.id}
+                  className={`category-btn ${selectedCategory === category.id ? 'active' : ''}`}
+                  onClick={() => handleCategoryChange(category.id)}
+                  title={category.name}
                 >
-                {sortOptions.map(option => (
-                    <option key={option.value} value={option.value}>
-                    {option.label}
-                    </option>
-                ))}
-                </select>
-                <ChevronDown className="dropdown-icon" size={18} />
-            </div>
-            </div>
+                  <Icon size={20} />
+                  <span>{category.name}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Panel de filtros expandible */}
-        <div className={`filters-panel ${showFilters ? 'show' : ''}`}>
-            {/* Categorías */}
-            <div className="filter-section">
-            <h3 className="filter-title">Categorías</h3>
-            <div className="categories-grid">
-                {categories.map(category => {
-                const IconComponent = category.icon;
-                return (
-                    <button
-                    key={category.id}
-                    className={`category-btn ${selectedCategory === category.id ? 'active' : ''}`}
-                    onClick={() => handleCategoryChange(category.id)}
-                    >
-                    <IconComponent size={20} />
-                    <span>{category.name}</span>
-                    </button>
-                );
-                })}
-            </div>
-            </div>
+        {/* Marca */}
+        <div className="filter-section">
+          <h3 className="filter-title">Marca</h3>
+          <select
+            value={selectedMarca}
+            onChange={handleMarcaChange}
+            className="brand-select"
+          >
+            <option value="">Todas</option>
+            {marcas.map((m) => (
+              <option key={m.id} value={m.id}>{m.nombre}</option>
+            ))}
+          </select>
+        </div>
 
-            {/* ✅ NUEVO: Filtro por Marca */}
-            <div className="filter-section">
-                <h3 className="filter-title">Marca</h3>
-                <select
-                    value={selectedMarca}
-                    onChange={handleMarcaChange}
-                    className="brand-select"
-                >
-                    <option value="">Todas</option>
-                    {marcas.map((marca) => (
-                        <option key={marca.id} value={marca.id}>
-                            {marca.nombre}
-                        </option>
-                    ))}
-                </select>
-            </div>
-
-            {/* Rango de precio */}
-            <div className="filter-section">
-            <h3 className="filter-title">Rango de Precio</h3>
-            <div className="price-range">
-                <div className="price-inputs">
-                <div className="price-input-group">
-                    <label>Mínimo</label>
-                    <input
-                    type="number"
-                    min="0"
-                    max={priceRange[1]}
-                    value={priceRange[0]}
-                    onChange={(e) => handlePriceChange(0, e.target.value)}
-                    className="price-input"
-                    />
-                    <span className="currency">S/</span>
-                </div>
-                <div className="price-separator">-</div>
-                <div className="price-input-group">
-                    <label>Máximo</label>
-                    <input
-                    type="number"
-                    min={priceRange[0]}
-                    max="10000"
-                    value={priceRange[1]}
-                    onChange={(e) => handlePriceChange(1, e.target.value)}
-                    className="price-input"
-                    />
-                    <span className="currency">S/</span>
-                </div>
-                </div>
-                
-                <div className="range-slider">
+        {/* Precio */}
+        <div className="filter-section">
+          <h3 className="filter-title">Rango de Precio</h3>
+          <div className="price-range">
+            <div className="price-inputs">
+              <div className="price-input-group">
+                <label>Mínimo</label>
                 <input
-                    type="range"
-                    min="0"
-                    max="10000"
-                    step="100"
-                    value={priceRange[0]}
-                    onChange={(e) => handlePriceChange(0, e.target.value)}
-                    className="range-input range-min"
+                  type="number"
+                  min="0"
+                  max={priceRange[1]}
+                  value={priceRange[0]}
+                  onChange={(e) => handlePriceChange(0, e.target.value)}
+                  className="price-input"
                 />
+                <span className="currency">S/</span>
+              </div>
+              <div className="price-separator">-</div>
+              <div className="price-input-group">
+                <label>Máximo</label>
                 <input
-                    type="range"
-                    min="0"
-                    max="10000"
-                    step="100"
-                    value={priceRange[1]}
-                    onChange={(e) => handlePriceChange(1, e.target.value)}
-                    className="range-input range-max"
+                  type="number"
+                  min={priceRange[0]}
+                  max="10000"
+                  value={priceRange[1]}
+                  onChange={(e) => handlePriceChange(1, e.target.value)}
+                  className="price-input"
                 />
-                <div className="range-track"></div>
-                </div>
-            </div>
+                <span className="currency">S/</span>
+              </div>
             </div>
 
-            {/* Botón limpiar filtros */}
-            {hasActiveFilters && (
-            <button className="clear-filters-btn" onClick={clearFilters}>
-                <X size={18} />
-                <span>Limpiar Filtros</span>
-            </button>
-            )}
+            <div className="range-slider">
+              <input
+                type="range"
+                min="0"
+                max="10000"
+                step="100"
+                value={priceRange[0]}
+                onChange={(e) => handlePriceChange(0, e.target.value)}
+                className="range-input range-min"
+              />
+              <input
+                type="range"
+                min="0"
+                max="10000"
+                step="100"
+                value={priceRange[1]}
+                onChange={(e) => handlePriceChange(1, e.target.value)}
+                className="range-input range-max"
+              />
+              <div className="range-track"></div>
+            </div>
+          </div>
         </div>
-        </div>
-    );
+
+        {hasActiveFilters && (
+          <button className="clear-filters-btn" onClick={clearFilters}>
+            <X size={18} />
+            <span>Limpiar Filtros</span>
+          </button>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default Filters;

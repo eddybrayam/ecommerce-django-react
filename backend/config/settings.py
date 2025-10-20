@@ -11,9 +11,12 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
+
 
 import os
-
+import dj_database_url
+from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -43,6 +46,8 @@ INSTALLED_APPS = [
     # Apps externas
     "rest_framework",
     "corsheaders",
+    "orders",
+
 
     # Apps del proyecto
     "accounts",
@@ -151,14 +156,15 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
+# Cargar variables del .env
+load_dotenv()
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL'),
+        conn_max_age=600,
+        ssl_require=True
+    )
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -214,3 +220,14 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # --- URLs base para construir enlaces en correos ---
 SITE_DOMAIN = "http://127.0.0.1:8000"            # backend en local
 FRONTEND_URL = "http://localhost:5173"           # tu frontend React en local
+
+
+
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),   # antes 5-15m
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),      # o 30 días
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}
