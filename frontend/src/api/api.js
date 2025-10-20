@@ -1,6 +1,6 @@
 // src/api/api.js
 import axios from "axios";
-
+import api from "../services/api"; 
 const API_URL = "http://127.0.0.1:8000/api";
 
 export const pagarConTarjeta = async (productos, tarjeta) => {
@@ -18,3 +18,8 @@ export const pagarConYape = async (formData) => {
         headers: { "Content-Type": "multipart/form-data" },
     });
 };
+
+
+// --- NUEVO: confirmar pedido y enviar correo en backend ---
+export const confirmarPago = (productos) =>
+  api.post("/api/payments/confirm/", { productos });

@@ -22,3 +22,9 @@ Pillow
 
 # Interfaz de administración moderna
 django-jazzmin
+
+
+
+dj-database-url
+python-dotenv
+psycopg2-binary

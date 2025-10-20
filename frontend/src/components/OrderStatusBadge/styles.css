@@ -1,0 +1,4 @@
+.badge { padding:.25rem .5rem; border-radius:.5rem; border:1px solid #ccc; font-size:.85rem }
+.PENDIENTE { background:#fff9e6 }
+.ENVIADO { background:#e6f4ff }
+.ENTREGADO { background:#e8ffe6 }

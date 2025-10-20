@@ -123,6 +123,17 @@ class GoogleOAuthView(APIView):
             created_user = True
 
         role_client, _ = Role.objects.get_or_create(name="CLIENT", defaults={"description": "Cliente"})
+        # Generar DNI de 8 dígitos máximo sin el prefijo "GN"
+        seed = sub or ""
+        base = (seed[-8:] if seed else "00000000")
+        dni = base
+        i = 0
+        # Evitar colisión por unique=True (raro, pero por si acaso)
+        while Client.objects.filter(dni=dni).exists():
+            dni = base[:-1] + str(i % 10)
+            i += 1
+
+        role_client, _ = Role.objects.get_or_create(name="CLIENT", defaults={"description": "Cliente"})
         Client.objects.get_or_create(
             user=user,
             defaults={
@@ -130,10 +141,11 @@ class GoogleOAuthView(APIView):
                 "first_name": first_name or user.first_name or "",
                 "last_name":  last_name or user.last_name or "",
                 "address": "",
-                "dni": f"GN{sub[-8:]}" if sub else "",
+                "dni": dni,     # ✅ ya es válido (8 chars máximo)
                 "phone": None,
             },
         )
+
 
         if sub:
             GoogleAccount.objects.get_or_create(

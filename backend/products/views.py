@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from .models import Product, Marca
-from .serializers import ProductSerializer, MarcaSerializer
+from .models import Product, Marca, Categoria
+from .serializers import ProductSerializer, MarcaSerializer,CategoriaSerializer
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
@@ -46,3 +46,8 @@ class ProductViewSet(viewsets.ModelViewSet):
 class MarcaViewSet(viewsets.ModelViewSet):
     queryset = Marca.objects.all()
     serializer_class = MarcaSerializer
+
+
+class CategoriaViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Categoria.objects.all().order_by("nombre")
+    serializer_class = CategoriaSerializer

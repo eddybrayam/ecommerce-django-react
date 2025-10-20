@@ -1,0 +1,7 @@
+.orders-page { padding:2rem }
+.orders-list { display:grid; gap:1rem }
+.order-card { border:1px solid #e5e7eb; border-radius:.75rem; padding:1rem; background:#fff }
+.order-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:.5rem }
+.order-meta { display:flex; gap:1rem; color:#555; font-size:.9rem; margin-bottom:.5rem }
+.item-row { display:grid; grid-template-columns:1fr 80px 100px; padding:.25rem 0; border-top:1px dashed #eee }
+.item-row:first-child { border-top:none }
