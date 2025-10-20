@@ -1,7 +1,7 @@
 // src/pages/ProductDetail.jsx
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { ShoppingCart, ArrowLeft, Star, Check } from "lucide-react";
+import { ShoppingCart, ArrowLeft, Star, Check, AlertTriangle } from "lucide-react";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import { useCart } from "../../context/CartContext";
@@ -17,7 +17,9 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const [added, setAdded] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
-  const [isPaused, setIsPaused] = useState(false); // 👈 pausa con hover
+  const [isPaused, setIsPaused] = useState(false);
+  const [quantity, setQuantity] = useState(1); // 👈 cantidad seleccionada
+  const [warning, setWarning] = useState(""); // 👈 mensaje de advertencia
 
   // 🔹 1. Obtener producto
   useEffect(() => {
@@ -37,8 +39,8 @@ export default function ProductDetail() {
         setProduct({ ...data, imagenes: extraImgs });
         setSelectedImage(
           data.imagen_principal ||
-          data.imagen_url ||
-          (extraImgs.length > 0 ? extraImgs[0] : "")
+            data.imagen_url ||
+            (extraImgs.length > 0 ? extraImgs[0] : "")
         );
       } catch (err) {
         console.error(err);
@@ -56,7 +58,7 @@ export default function ProductDetail() {
 
     let currentIndex = 0;
     const interval = setInterval(() => {
-      if (isPaused) return; // ⏸️ pausa mientras el mouse está encima
+      if (isPaused) return;
       const allImages = [product.imagen_url, ...(product.imagenes || [])].filter(Boolean);
       if (allImages.length === 0) return;
       currentIndex = (currentIndex + 1) % allImages.length;
@@ -86,16 +88,43 @@ export default function ProductDetail() {
     fetchRelated();
   }, [product]);
 
+  // 🔸 Controlar cantidad y stock
+  const handleQuantityChange = (e) => {
+    const value = parseInt(e.target.value) || 1;
+    setQuantity(value);
+
+    if (value > product.stock) {
+      setWarning(`⚠️ Solo quedan ${product.stock} unidades disponibles`);
+    } else if (value <= 0) {
+      setWarning("❗ Ingresa una cantidad válida");
+    } else {
+      setWarning("");
+    }
+  };
+
+  // 🔸 Agregar al carrito con control de stock
   const handleAddToCart = () => {
+    if (product.stock === 0) {
+      setWarning("❌ Producto agotado");
+      return;
+    }
+    if (quantity > product.stock) {
+      setWarning(`⚠️ Solo hay ${product.stock} unidades en stock`);
+      return;
+    }
+
     const formatted = {
       id: product.producto_id,
       name: product.nombre,
       price: parseFloat(product.precio),
       image: selectedImage,
       description: product.descripcion,
+      quantity: quantity,
     };
+
     addToCart(formatted);
     setAdded(true);
+    setWarning("");
     setTimeout(() => setAdded(false), 1500);
   };
 
@@ -153,15 +182,16 @@ export default function ProductDetail() {
                     onClick={() => setSelectedImage(img)}
                   />
                 ))}
-
             </div>
           </div>
 
           {/* 🔸 Información */}
           <div className="product-info">
             <h2>{product.nombre}</h2>
-            <p className="stock">
-              <strong>Stock:</strong> {product.estado_stock}
+
+            <p className={`stock ${product.stock === 0 ? "out" : ""}`}>
+              <strong>Stock:</strong>{" "}
+              {product.stock > 0 ? product.stock : "Agotado"}
             </p>
 
             <div className="rating">
@@ -172,14 +202,39 @@ export default function ProductDetail() {
             <h3 className="price">S/ {parseFloat(product.precio).toFixed(2)}</h3>
             <p className="description">{product.descripcion}</p>
 
+            {/* 🔸 Cantidad */}
+            <div className="quantity-section">
+              <label htmlFor="quantity">Cantidad:</label>
+              <input
+                type="number"
+                id="quantity"
+                min="1"
+                value={quantity}
+                onChange={handleQuantityChange}
+              />
+            </div>
+
+            {/* 🔸 Mensaje de advertencia */}
+            {warning && (
+              <div className="stock-warning">
+                <AlertTriangle size={18} /> {warning}
+              </div>
+            )}
+
+            {/* 🔸 Botón agregar */}
             <div className="action-buttons">
               <button
                 className={`add-cart-btn ${added ? "added" : ""}`}
                 onClick={handleAddToCart}
+                disabled={product.stock === 0}
               >
                 {added ? (
                   <>
                     <Check size={18} /> Agregado
+                  </>
+                ) : product.stock === 0 ? (
+                  <>
+                    <AlertTriangle size={18} /> Agotado
                   </>
                 ) : (
                   <>
