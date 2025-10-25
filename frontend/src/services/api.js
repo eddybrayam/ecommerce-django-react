@@ -85,8 +85,10 @@ export async function getMe() {
 // Axios (para manejo de refresh automático)
 // -------------------------
 export { BASE_URL };
+
+// 🟨 CAMBIO MÍNIMO: baseURL robusta (usa API_BASE si existe, si no BASE_URL)
 const api = axios.create({
-  baseURL: API_BASE,
+  baseURL: API_BASE || BASE_URL, // <- antes: API_BASE fijo
   withCredentials: false,
 });
 
@@ -95,6 +97,7 @@ let refreshingPromise = null;
 async function refreshAccess() {
   const refresh = getRefresh();
   if (!refresh) throw new Error("No refresh token");
+  // importante: usar el mismo cliente para respetar baseURL
   const r = await api.post("/api/token/refresh/", { refresh });
 
   const { access } = r.data || {};
@@ -103,19 +106,26 @@ async function refreshAccess() {
   return access;
 }
 
+// 🟨 CAMBIO MÍNIMO: si está expirado, refresca antes de enviar; añade Bearer siempre que haya token
 api.interceptors.request.use(async (config) => {
   let token = getAccess();
 
-  // Si el access está vencido, refresca antes de enviar el request
   if (token && isExpired(token)) {
     refreshingPromise =
-      refreshingPromise || refreshAccess().finally(() => {
+      refreshingPromise ||
+      refreshAccess().finally(() => {
         refreshingPromise = null;
       });
-    token = await refreshingPromise;
+    token = await refreshingPromise; // <- token actualizado
   }
 
-  if (token) config.headers.Authorization = `Bearer ${getAccess()}`;
+  if (token) config.headers.Authorization = `Bearer ${token}`; // <- antes tomaba getAccess() otra vez
+
+  // 🟨 CAMBIO MÍNIMO: normaliza url (por si se pasa sin slash)
+  if (config.url && !config.url.startsWith("/")) {
+    config.url = `/${config.url}`;
+  }
+
   return config;
 });
 
@@ -128,6 +138,12 @@ api.interceptors.response.use(
         const newAccess = await (refreshingPromise || refreshAccess());
         config.headers.Authorization = `Bearer ${newAccess}`;
         config.__isRetry = true;
+
+        // 🟨 CAMBIO MÍNIMO: normaliza url también en retry
+        if (config.url && !config.url.startsWith("/")) {
+          config.url = `/${config.url}`;
+        }
+
         return api.request(config);
       } catch (e) {
         clearSession();
@@ -164,4 +180,62 @@ export async function verifyEmailByQuery(uidb64, token) {
   return request(`/api/accounts/verify-email/?uidb64=${uidb64}&token=${token}`, {
     method: "GET",
   });
+}
+
+// -------------------------------------------------
+// 🔸 Helper para exigir autenticación en POST/DELETE
+// -------------------------------------------------
+function ensureAuthOrThrow() {
+  const t = getAccess();
+  if (!t) {
+    const err = new Error("Debes iniciar sesión para realizar esta acción.");
+    err.code = "NO_AUTH";
+    throw err;
+  }
+}
+
+// -------------------------
+// Reseñas y calificaciones
+// -------------------------
+export async function getProductReviews(productId) {
+  try {
+    const r = await api.get(`/api/products/${productId}/reviews/`);
+    return r.data;
+  } catch (e) {
+    // Si el endpoint no existe o el producto no tiene handler → trata como "sin reseñas"
+    if (e?.response?.status === 404) return [];
+    throw e;
+  }
+}
+
+export async function createOrUpdateReview(productId, payload) {
+  // Asegura token antes de tocar la red (mensaje claro para el usuario)
+  ensureAuthOrThrow();
+  const r = await api.post(`/api/products/${productId}/reviews/`, payload);
+  return r.data;
+}
+
+export async function deleteMyReview(productId) {
+  ensureAuthOrThrow();
+  const r = await api.delete(`/api/products/${productId}/reviews/mine/`);
+  return r.data;
+}
+
+// -------------------------
+// Comentarios de reseña
+// -------------------------
+export async function getReviewComments(productId, reviewId) {
+  try {
+    const r = await api.get(`/api/products/${productId}/reviews/${reviewId}/comments/`);
+    return r.data;
+  } catch (e) {
+    if (e?.response?.status === 404) return [];
+    throw e;
+  }
+}
+
+export async function addReviewComment(productId, reviewId, payload) {
+  ensureAuthOrThrow();
+  const r = await api.post(`/api/products/${productId}/reviews/${reviewId}/comments/`, payload);
+  return r.data;
 }
