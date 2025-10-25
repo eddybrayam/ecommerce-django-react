@@ -1,0 +1,19 @@
+/* src/components/Stars/Stars.css */
+.stars-container {
+  display: inline-flex;
+  align-items: center;
+  color: #f5c518; /* color dorado */
+  font-weight: bold;
+}
+
+.stars-container .half {
+  color: #f5c518;
+  position: relative;
+}
+
+.stars-number {
+  margin-left: 6px;
+  font-size: 0.85em;
+  color: #555;
+}
+

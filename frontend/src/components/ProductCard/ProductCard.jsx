@@ -3,10 +3,12 @@ import { ShoppingCart, Heart, Eye, Star } from 'lucide-react';
 import './ProductCard.css';
 import { useCart } from "../../context/CartContext";
 import { Link } from "react-router-dom";
+import Stars from "../Stars"; // <-- NUEVO
 
 const ProductCard = ({ product }) => {
     const [isFavorite, setIsFavorite] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
+    
 
     const {
         //id,
@@ -35,23 +37,29 @@ const ProductCard = ({ product }) => {
         setIsFavorite(!isFavorite);
     };
 
+    {/** 
+    // ⚠️ LEGADO: función antigua para dibujar estrellas con <Star/>. La dejo por compatibilidad pero YA NO se usa.
     const renderStars = (rating) => {
         const stars = [];
         const fullStars = Math.floor(rating);
         const hasHalfStar = rating % 1 !== 0;
 
         for (let i = 0; i < 5; i++) {
-        if (i < fullStars) {
-            stars.push(<Star key={i} size={14} fill="#f59e0b" color="#f59e0b" />);
-        } else if (i === fullStars && hasHalfStar) {
-            stars.push(<Star key={i} size={14} fill="url(#half)" color="#f59e0b" />);
-        } else {
-            stars.push(<Star key={i} size={14} color="#d1d5db" />);
+            if (i < fullStars) {
+                stars.push(<Star key={i} size={14} fill="#f59e0b" color="#f59e0b" />);
+            } else if (i === fullStars && hasHalfStar) {
+                stars.push(<Star key={i} size={14} fill="url(#half)" color="#f59e0b" />);
+            } else {
+                stars.push(<Star key={i} size={14} color="#d1d5db" />);
+            }
         }
-        }
-        return stars;
+    return stars;
     };
-    
+    */}
+
+    // 🟨 NUEVO: tomar los valores del backend si existen (rating_avg, rating_count); si no, usar los que ya tenías (rating, reviews)
+    const ratingAvg = product?.rating_avg ?? rating;
+    const ratingCount = product?.rating_count ?? reviews;
 
     return (
         <div className={`product-card ${!inStock ? 'out-of-stock' : ''}`}>
@@ -107,22 +115,28 @@ const ProductCard = ({ product }) => {
                 </Link>
 
 
-            {/* Rating */}
+            {/* ⭐ Rating */}
             <div className="product-rating">
-            <div className="stars">
-                <svg width="0" height="0">
-                <defs>
-                    <linearGradient id="half">
-                    <stop offset="50%" stopColor="#f59e0b" />
-                    <stop offset="50%" stopColor="#d1d5db" />
-                    </linearGradient>
-                </defs>
-                </svg>
-                {renderStars(rating)}
-            </div>
-            <span className="rating-text">
-                {rating} {reviews > 0 && `(${reviews})`}
-            </span>
+                {/* 🟨 NUEVO: usamos <Stars/> con el promedio real del backend */}
+                <Stars value={Number(ratingAvg) || 0} />
+                <span className="rating-text">
+                    {/* Mostramos también el número de reseñas */}
+                    {Number(ratingAvg || 0).toFixed(1)} {ratingCount > 0 && `(${ratingCount})`}
+                </span>
+
+                {/* ⚠️ LEGADO: bloque SVG y renderStars ya no se usa. Lo dejo comentado por si lo quieres recuperar.
+                <div className="stars">
+                    <svg width="0" height="0">
+                    <defs>
+                        <linearGradient id="half">
+                        <stop offset="50%" stopColor="#f59e0b" />
+                        <stop offset="50%" stopColor="#d1d5db" />
+                        </linearGradient>
+                    </defs>
+                    </svg>
+                    {renderStars(rating)}
+                </div>
+                */}
             </div>
 
             {/* Precio */}

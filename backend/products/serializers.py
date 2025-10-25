@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Product, Marca, Categoria
+from django.db.models import Avg, Count
+from .models import Product, Marca, Categoria,Review, ReviewComment
 import json
 
 
@@ -14,6 +15,9 @@ class ProductSerializer(serializers.ModelSerializer):
     imagenes = serializers.SerializerMethodField()
     categoria = serializers.PrimaryKeyRelatedField(queryset=Categoria.objects.all(), allow_null=False)
     
+    # 🆕 Campos agregados
+    rating_avg = serializers.FloatField(read_only=True)
+    rating_count = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Product
@@ -30,4 +34,28 @@ class MarcaSerializer(serializers.ModelSerializer):
         model = Marca
         fields = '__all__'
 
+# 🟨 Reseña
+class ReviewSerializer(serializers.ModelSerializer):
+    usuario_nombre = serializers.CharField(source="usuario.username", read_only=True)
+    comentarios_count = serializers.IntegerField(source="comentarios.count", read_only=True)
 
+    class Meta:
+        model = Review
+        fields = [
+            "id", "usuario", "usuario_nombre",
+            "calificacion", "comentario",
+            "creado_en", "actualizado_en",
+            "comentarios_count",  # 👈
+        ]
+        read_only_fields = ["usuario", "creado_en", "actualizado_en"]
+
+
+
+
+class ReviewCommentSerializer(serializers.ModelSerializer):
+    usuario_nombre = serializers.CharField(source="usuario.username", read_only=True)
+
+    class Meta:
+        model = ReviewComment
+        fields = ["id", "usuario", "usuario_nombre", "texto", "creado_en"]
+        read_only_fields = ["usuario", "creado_en"]

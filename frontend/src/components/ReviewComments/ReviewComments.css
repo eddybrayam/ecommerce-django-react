@@ -1,0 +1,18 @@
+.review-comments { margin-top: 8px; }
+.rc-hint { color: #666; font-size: 14px; margin: 4px 0; }
+
+.rc-list { list-style: none; padding: 0; margin: 6px 0 10px 0; }
+.rc-item { padding: 6px 0; border-bottom: 1px solid #eee; }
+
+.rc-head { display: flex; gap: 8px; align-items: baseline; }
+.rc-user { font-size: 13px; }
+.rc-date { color: #888; font-size: 12px; }
+
+.rc-text { margin: 4px 0 0 0; font-size: 14px; }
+
+.rc-error { color: #b00020; font-size: 13px; margin: 6px 0; }
+
+.rc-form { margin-top: 8px; }
+.rc-textarea { width: 100%; padding: 8px; font-size: 14px; resize: vertical; }
+.rc-actions { margin-top: 6px; }
+.rc-btn { padding: 6px 12px; font-size: 14px; cursor: pointer; }

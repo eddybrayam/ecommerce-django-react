@@ -1,29 +1,39 @@
 // src/pages/ProductDetail.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { ShoppingCart, ArrowLeft, Star, Check } from "lucide-react";
+import { ShoppingCart, ArrowLeft, Check } from "lucide-react";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import { useCart } from "../../context/CartContext";
+import Stars from "../../components/Stars";
+import { getProductReviews, createOrUpdateReview, deleteMyReview } from "../../services/api";
+import { useAuth } from "../../context/AuthContext";
+import ReviewComments from "../../components/ReviewComments";
 import "./ProductDetail.css";
+
+const API = "http://127.0.0.1:8000/api";
 
 export default function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { user, token } = useAuth?.() || {};
 
   const [product, setProduct] = useState(null);
   const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
   const [added, setAdded] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
-  const [isPaused, setIsPaused] = useState(false); // 👈 pausa con hover
+  const [isPaused, setIsPaused] = useState(false);
+  const [reviews, setReviews] = useState([]);
+  const [myRating, setMyRating] = useState(5);
+  const [myComment, setMyComment] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  // 🔹 1. Obtener producto
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/api/products/${id}/`);
+        const res = await fetch(`${API}/products/${id}/`);
         if (!res.ok) throw new Error("Producto no encontrado");
         const data = await res.json();
 
@@ -37,8 +47,8 @@ export default function ProductDetail() {
         setProduct({ ...data, imagenes: extraImgs });
         setSelectedImage(
           data.imagen_principal ||
-          data.imagen_url ||
-          (extraImgs.length > 0 ? extraImgs[0] : "")
+            data.imagen_url ||
+            (extraImgs.length > 0 ? extraImgs[0] : "")
         );
       } catch (err) {
         console.error(err);
@@ -50,13 +60,30 @@ export default function ProductDetail() {
     fetchProduct();
   }, [id]);
 
-  // 🔁 2. Rotar imágenes automáticamente cada 5s
+  useEffect(() => {
+    const loadReviews = async () => {
+      try {
+        const data = await getProductReviews(id);
+        setReviews(data || []);
+        const mine = (data || []).find(r => r.usuario === user?.id);
+        if (mine) {
+          setMyRating(mine.calificacion);
+          setMyComment(mine.comentario || "");
+        }
+      } catch (e) {
+        console.error("Error cargando reseñas:", e);
+      }
+    };
+    if (id) loadReviews();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, user?.id]);
+
   useEffect(() => {
     if (!product?.imagenes || product.imagenes.length === 0) return;
 
     let currentIndex = 0;
     const interval = setInterval(() => {
-      if (isPaused) return; // ⏸️ pausa mientras el mouse está encima
+      if (isPaused) return;
       const allImages = [product.imagen_url, ...(product.imagenes || [])].filter(Boolean);
       if (allImages.length === 0) return;
       currentIndex = (currentIndex + 1) % allImages.length;
@@ -66,12 +93,11 @@ export default function ProductDetail() {
     return () => clearInterval(interval);
   }, [product, isPaused]);
 
-  // 🔹 3. Productos relacionados
   useEffect(() => {
     if (!product?.categoria_id) return;
     const fetchRelated = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/api/products/`);
+        const res = await fetch(`${API}/products/`);
         const all = await res.json();
         const filtered = all.filter(
           (p) =>
@@ -86,6 +112,15 @@ export default function ProductDetail() {
     fetchRelated();
   }, [product]);
 
+  const ratingAvg = useMemo(
+    () => Number(product?.rating_avg ?? 0) || 0,
+    [product]
+  );
+  const ratingCount = useMemo(
+    () => Number(product?.rating_count ?? 0) || 0,
+    [product]
+  );
+
   const handleAddToCart = () => {
     const formatted = {
       id: product.producto_id,
@@ -99,11 +134,52 @@ export default function ProductDetail() {
     setTimeout(() => setAdded(false), 1500);
   };
 
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    
+    try {
+      setSubmitting(true);
+      
+      const access = token || localStorage.getItem("access");
+      if (!access) { console.error("Sin token. Inicia sesión."); return; }
+      await createOrUpdateReview(id, { calificacion: myRating, comentario: myComment }, access);
+      const data = await getProductReviews(id);
+      setReviews(data || []);
+      const res = await fetch(`${API}/products/${id}/`);
+      const prod = await res.json();
+      setProduct(prod);
+    } catch (err) {
+      console.error("Error guardando reseña:", err);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDeleteMyReview = async () => {
+    try {
+      const access = token || localStorage.getItem("access");
+      if (!access) { console.error("Sin token. Inicia sesión."); return; }
+      await deleteMyReview(id, access);
+      const data = await getProductReviews(id);
+      setReviews(data || []);
+      setMyRating(5);
+      setMyComment("");
+      const res = await fetch(`${API}/products/${id}/`);
+      const prod = await res.json();
+      setProduct(prod);
+    } catch (err) {
+      console.error("Error borrando reseña:", err);
+    }
+  };
+
   if (loading) {
     return (
       <>
         <Navbar />
-        <div className="loading-center">Cargando producto...</div>
+        <div className="loading-center">
+          <div className="loading-spinner"></div>
+          <p>Cargando producto...</p>
+        </div>
         <Footer />
       </>
     );
@@ -128,11 +204,10 @@ export default function ProductDetail() {
 
       <div className="product-detail-page">
         <button className="back-btn" onClick={() => navigate(-1)}>
-          <ArrowLeft size={20} /> Volver
+          <ArrowLeft size={22} /> Volver
         </button>
 
         <div className="product-main">
-          {/* 🔸 Galería */}
           <div
             className="product-gallery"
             onMouseEnter={() => setIsPaused(true)}
@@ -140,7 +215,6 @@ export default function ProductDetail() {
           >
             <img src={selectedImage} alt={product.nombre} className="main-image" />
 
-            {/* Miniaturas */}
             <div className="thumbnail-row">
               {[product.imagen_principal, product.imagen_url, ...(product.imagenes || [])]
                 .filter(Boolean)
@@ -153,20 +227,18 @@ export default function ProductDetail() {
                     onClick={() => setSelectedImage(img)}
                   />
                 ))}
-
             </div>
           </div>
 
-          {/* 🔸 Información */}
           <div className="product-info">
             <h2>{product.nombre}</h2>
-            <p className="stock">
-              <strong>Stock:</strong> {product.estado_stock}
-            </p>
 
             <div className="rating">
-              <Star className="star" /> <span>4.5</span>{" "}
-              <small>(23 reseñas)</small>
+              <Stars value={ratingAvg} />
+              <span className="rating-value">{Number(ratingAvg || 0).toFixed(1)} / 5</span>
+              <span className="rating-count">
+                {ratingCount > 0 ? `(${ratingCount} reseñas)` : "(0 reseñas)"}
+              </span>
             </div>
 
             <h3 className="price">S/ {parseFloat(product.precio).toFixed(2)}</h3>
@@ -179,11 +251,11 @@ export default function ProductDetail() {
               >
                 {added ? (
                   <>
-                    <Check size={18} /> Agregado
+                    <Check size={22} /> Agregado
                   </>
                 ) : (
                   <>
-                    <ShoppingCart size={18} /> Agregar al carrito
+                    <ShoppingCart size={22} /> Agregar al carrito
                   </>
                 )}
               </button>
@@ -191,7 +263,86 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        {/* 🔹 Relacionados */}
+        <div className="reviews-section">
+          <h3>Reseñas de clientes</h3>
+
+          {reviews.length === 0 ? (
+            <p className="no-reviews">No hay reseñas aún. ¡Sé el primero en opinar!</p>
+          ) : (
+            <ul className="reviews-list">
+              {reviews.map((r) => (
+                <li key={r.id} className="review-item">
+                  <div className="review-header">
+                    <strong>{r.usuario_nombre || `Usuario #${r.usuario}`}</strong>
+                    <span className="review-date">
+                      {new Date(r.creado_en).toLocaleDateString()}
+                    </span>
+                  </div>
+
+                  <div className="review-stars">
+                    <Stars value={r.calificacion} showNumber={false} size={20} />
+                  </div>
+
+                  {r.comentario && <p className="review-comment">{r.comentario}</p>}
+
+                  <ReviewComments
+                    productId={id}
+                    reviewId={r.id}
+                    canComment={!!user}
+                  />
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {!user ? (
+            <div className="login-hint">
+              <p>
+                Inicia sesión para dejar tu reseña.{" "}
+                <Link to="/login">Ir a iniciar sesión</Link>
+              </p>
+            </div>
+          ) : (
+            <form className="review-form" onSubmit={handleSubmitReview}>
+              <h4>{reviews.some(r => r.usuario === user?.id) ? "Editar mi reseña" : "Escribir una reseña"}</h4>
+
+              <label>Calificación</label>
+              <select
+                value={myRating}
+                onChange={(e) => setMyRating(Number(e.target.value))}
+              >
+                {[5, 4, 3, 2, 1].map((v) => (
+                  <option key={v} value={v}>{v} estrellas</option>
+                ))}
+              </select>
+
+              <label>Comentario (opcional)</label>
+              <textarea
+                rows={5}
+                value={myComment}
+                onChange={(e) => setMyComment(e.target.value)}
+                placeholder="¿Qué te pareció este producto?"
+              />
+
+              <div className="review-actions">
+                <button type="submit" disabled={submitting}>
+                  {submitting ? "Guardando..." : "Guardar reseña"}
+                </button>
+
+                {reviews.some(r => r.usuario === user?.id) && (
+                  <button
+                    type="button"
+                    className="danger"
+                    onClick={handleDeleteMyReview}
+                  >
+                    Eliminar mi reseña
+                  </button>
+                )}
+              </div>
+            </form>
+          )}
+        </div>
+
         {related.length > 0 && (
           <div className="related-section">
             <h3>Productos similares</h3>

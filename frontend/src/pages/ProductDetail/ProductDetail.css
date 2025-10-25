@@ -1,232 +1,1160 @@
-/* 🧭 Estructura general (igual que el tuyo) */
-.product-detail-page {
-  max-width: 1200px;
-  margin: 100px auto;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
+/* ============================================
+   🎨 PRODUCT DETAIL - ELEGANT & SPACIOUS
+   Diseño elegante con tipografía grande y espacios generosos
+   ============================================ */
+
+:root {
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --success: #10b981;
+  --danger: #ef4444;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --border: #e2e8f0;
+  --bg-main: #f8fafc;
+  --bg-white: #ffffff;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+/* ============================================
+   📐 ESTRUCTURA PRINCIPAL
+   ============================================ */
+
+.product-detail-page {
+  max-width: 1600px;
+  margin: 100px auto 80px;
+  padding: 0 40px;
+  background: var(--bg-main);
+}
+
+/* 🔙 Botón Volver */
 .back-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 12px;
   background: transparent;
   border: none;
-  color: #0061ff;
+  color: var(--primary);
+  font-size: 18px;
   font-weight: 600;
   cursor: pointer;
-  margin-bottom: 10px;
+  padding: 14px 24px;
+  margin-bottom: 32px;
+  border-radius: var(--radius-sm);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+.back-btn:hover {
+  background: rgba(37, 99, 235, 0.08);
+  transform: translateX(-6px);
+}
+
+/* ============================================
+   📦 CONTENEDOR PRINCIPAL
+   ============================================ */
 
 .product-main {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 50px;
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-  padding: 40px;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 80px;
+  background: var(--bg-white);
+  border-radius: var(--radius-lg);
+  padding: 60px;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 50px;
+  border: 1px solid var(--border);
 }
 
-/* 🖼️ Galería principal */
+/* ============================================
+   🖼️ GALERÍA DE IMÁGENES
+   ============================================ */
+
 .product-gallery {
-  flex: 1 1 45%;
   display: flex;
-  flex-direction: column; /* antes solo centraba, ahora coloca las miniaturas debajo */
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  gap: 28px;
+  position: sticky;
+  top: 120px;
+  align-self: flex-start;
 }
 
 .main-image {
   width: 100%;
-  max-width: 450px;
-  border-radius: 16px;
+  max-height: 650px;
+  min-height: 500px;
   object-fit: contain;
-  transition: transform 0.3s ease, opacity 0.5s ease;
+  border-radius: var(--radius-md);
+  background: var(--bg-white);
+  padding: 40px;
+  border: 2px solid var(--border);
+  cursor: zoom-in;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .main-image:hover {
-  transform: scale(1.03);
+  transform: scale(1.02);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary);
 }
 
-/* 🔁 Animación de cambio automático */
-@keyframes fadeChange {
-  0% {
-    opacity: 0.6;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-.main-image {
-  animation: fadeChange 0.5s ease;
-}
-
-/* 🧩 Miniaturas */
 .thumbnail-row {
   display: flex;
-  gap: 10px;
-  margin-top: 15px;
-  justify-content: center;
-  flex-wrap: nowrap;
+  gap: 16px;
   overflow-x: auto;
-  padding: 6px;
-  scroll-behavior: smooth;
+  padding: 10px 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) transparent;
+}
+
+.thumbnail-row::-webkit-scrollbar {
+  height: 10px;
+}
+
+.thumbnail-row::-webkit-scrollbar-track {
+  background: var(--bg-main);
+  border-radius: 5px;
+}
+
+.thumbnail-row::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 5px;
 }
 
 .thumb {
-  width: 70px;
-  height: 70px;
-  object-fit: cover;
-  border-radius: 10px;
-  border: 2px solid transparent;
-  cursor: pointer;
-  transition: all 0.2s;
   flex-shrink: 0;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border: 3px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: var(--bg-white);
+  padding: 8px;
 }
 
 .thumb:hover {
-  transform: scale(1.05);
+  border-color: var(--primary);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
 }
 
 .thumb.active {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 97, 255, 0.5);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+  transform: scale(1.05);
 }
 
-/* Información */
+/* ============================================
+   📝 INFORMACIÓN DEL PRODUCTO
+   ============================================ */
+
 .product-info {
-  flex: 1 1 50%;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 28px;
+  padding: 20px 0;
 }
 
 .product-info h2 {
-  font-size: 1.8rem;
+  font-size: 38px;
   font-weight: 700;
-  color: #222;
+  color: var(--text-primary);
+  line-height: 1.25;
+  margin: 0;
+  letter-spacing: -0.8px;
 }
 
-.stock {
-  font-size: 0.95rem;
-  color: #555;
-}
-
+/* ⭐ Rating Completo */
 .rating {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: #f5a623;
-  font-weight: 600;
+  gap: 16px;
+  padding: 20px 0;
+  border-bottom: 2px solid var(--border);
+  flex-wrap: wrap;
 }
 
-.star {
-  fill: #f5a623;
-}
-
-.price {
-  font-size: 1.7rem;
+.rating-value {
+  font-size: 20px;
   font-weight: 700;
-  color: #0061ff;
+  color: var(--text-primary);
 }
 
+.rating-count {
+  font-size: 18px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* 💰 Precio */
+.price {
+  font-size: 56px;
+  font-weight: 800;
+  color: var(--primary);
+  margin: 20px 0;
+  line-height: 1;
+  letter-spacing: -1.5px;
+}
+
+/* 📄 Descripción */
 .description {
-  color: #555;
-  line-height: 1.6;
-  margin-top: 10px;
+  color: var(--text-secondary);
+  font-size: 20px;
+  line-height: 1.8;
+  margin: 20px 0;
+  padding: 24px 0;
+  border-top: 2px solid var(--border);
 }
 
+/* 🛒 Botón Agregar */
 .action-buttons {
-  margin-top: 20px;
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 2px solid var(--border);
 }
 
 .add-cart-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 14px 22px;
-  background: #0061ff;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  gap: 14px;
   width: 100%;
+  padding: 22px 40px;
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 22px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-md);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .add-cart-btn:hover {
-  background: #0044cc;
+  background: var(--primary-hover);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
 }
 
 .add-cart-btn.added {
-  background: #00b85c;
-  cursor: default;
+  background: var(--success);
+  animation: successBounce 0.6s ease;
 }
 
-/* 🔸 Productos relacionados */
+@keyframes successBounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+/* ============================================
+   📝 SECCIÓN DE RESEÑAS
+   ============================================ */
+
+.reviews-section {
+  background: var(--bg-white);
+  border-radius: var(--radius-lg);
+  padding: 60px;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 50px;
+  border: 1px solid var(--border);
+}
+
+.reviews-section h3 {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 40px 0;
+  padding-bottom: 24px;
+  border-bottom: 3px solid var(--primary);
+  letter-spacing: -0.8px;
+}
+
+.no-reviews {
+  font-size: 20px;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 60px 20px;
+  font-style: italic;
+}
+
+/* 📋 Lista de Reseñas */
+.reviews-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 50px 0;
+}
+
+.review-item {
+  padding: 40px 0;
+  border-bottom: 2px solid var(--border);
+  transition: all 0.3s ease;
+}
+
+.review-item:last-child {
+  border-bottom: none;
+}
+
+.review-item:hover {
+  background: var(--bg-main);
+  margin: 0 -30px;
+  padding: 40px 30px;
+  border-radius: var(--radius-md);
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.review-header strong {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.review-date {
+  font-size: 18px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.review-stars {
+  margin-bottom: 20px;
+}
+
+.review-comment {
+  color: var(--text-primary);
+  font-size: 19px;
+  line-height: 1.75;
+  margin: 0 0 24px 0;
+}
+
+/* ============================================
+   💬 COMENTARIOS EN RESEÑAS
+   ============================================ */
+
+.review-comments-section {
+  margin-top: 28px;
+  padding-top: 28px;
+  border-top: 2px dashed var(--border);
+}
+
+.comments-toggle {
+  background: transparent;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 12px 28px;
+  border-radius: var(--radius-sm);
+  transition: all 0.3s ease;
+}
+
+.comments-toggle:hover {
+  background: var(--primary);
+  color: #ffffff;
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-sm);
+}
+
+.comments-list {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0 0 0;
+}
+
+.comment-item {
+  background: var(--bg-main);
+  border-left: 5px solid var(--primary);
+  padding: 24px 28px;
+  margin-bottom: 20px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.comment-item:hover {
+  transform: translateX(8px);
+  box-shadow: var(--shadow-md);
+}
+
+.comment-item strong {
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 19px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.comment-item p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.comment-form {
+  margin-top: 24px;
+}
+
+.comment-form textarea {
+  width: 100%;
+  padding: 18px 24px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 18px;
+  font-family: inherit;
+  background: var(--bg-white);
+  resize: vertical;
+  min-height: 120px;
+  transition: all 0.3s ease;
+  line-height: 1.6;
+}
+
+.comment-form textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.1);
+}
+
+.comment-form-actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.comment-form button {
+  padding: 14px 30px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.comment-form button[type="submit"] {
+  background: var(--primary);
+  color: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+.comment-form button[type="submit"]:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.comment-form button[type="submit"]:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.comment-form button[type="button"] {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 2px solid var(--border);
+}
+
+.comment-form button[type="button"]:hover {
+  background: var(--bg-main);
+  border-color: var(--text-secondary);
+}
+
+/* 🔐 Login Hint */
+.login-hint {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-md);
+  padding: 32px;
+  text-align: center;
+  margin: 40px 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.login-hint p {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.login-hint a {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.3s ease;
+}
+
+.login-hint a:hover {
+  border-bottom-color: var(--primary);
+}
+
+/* ✍️ Formulario de Reseña */
+.review-form {
+  background: linear-gradient(135deg, var(--bg-main) 0%, var(--bg-white) 100%);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 40px;
+  margin-top: 40px;
+  box-shadow: var(--shadow-sm);
+}
+
+.review-form h4 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 32px 0;
+  letter-spacing: -0.5px;
+}
+
+.review-form label {
+  display: block;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  margin-top: 24px;
+}
+
+.review-form label:first-of-type {
+  margin-top: 0;
+}
+
+.review-form select,
+.review-form textarea {
+  width: 100%;
+  padding: 16px 22px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 18px;
+  font-family: inherit;
+  background: var(--bg-white);
+  transition: all 0.3s ease;
+}
+
+.review-form select:focus,
+.review-form textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.1);
+}
+
+.review-form textarea {
+  resize: vertical;
+  min-height: 140px;
+  line-height: 1.7;
+}
+
+.review-actions {
+  display: flex;
+  gap: 18px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+
+.review-form button {
+  padding: 16px 36px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 19px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 200px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.review-form button[type="submit"] {
+  background: var(--primary);
+  color: #ffffff;
+  box-shadow: var(--shadow-md);
+}
+
+.review-form button[type="submit"]:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.review-form button[type="submit"]:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.review-form button.danger {
+  background: transparent;
+  color: var(--danger);
+  border: 2px solid var(--danger);
+}
+
+review-form button.danger:hover {
+  background: var(--danger);
+  color: #ffffff;
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   🔸 PRODUCTOS RELACIONADOS
+   ============================================ */
+
 .related-section {
-  margin-top: 20px;
+  background: var(--bg-white);
+  border-radius: var(--radius-lg);
+  padding: 60px;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 50px;
+  border: 1px solid var(--border);
 }
 
 .related-section h3 {
-  font-size: 1.4rem;
+  font-size: 36px;
   font-weight: 700;
-  margin-bottom: 15px;
+  color: var(--text-primary);
+  margin: 0 0 40px 0;
+  letter-spacing: -0.8px;
 }
 
 .related-carousel {
   display: flex;
-  gap: 20px;
+  gap: 28px;
   overflow-x: auto;
-  padding-bottom: 10px;
+  padding: 16px 0 30px;
   scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--bg-main);
+}
+
+.related-carousel::-webkit-scrollbar {
+  height: 12px;
+}
+
+.related-carousel::-webkit-scrollbar-track {
+  background: var(--bg-main);
+  border-radius: 6px;
+}
+
+.related-carousel::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 6px;
+}
+
+.related-carousel::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hover);
 }
 
 .related-card {
-  min-width: 180px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-  text-decoration: none;
-  color: #222;
   flex-shrink: 0;
-  transition: transform 0.2s ease;
+  width: 280px;
+  background: var(--bg-white);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
 
 .related-card:hover {
-  transform: translateY(-3px);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-10px);
 }
 
 .related-card img {
   width: 100%;
-  height: 150px;
+  height: 240px;
   object-fit: contain;
-  border-radius: 12px 12px 0 0;
+  background: var(--bg-main);
+  padding: 20px;
+  border-bottom: 2px solid var(--border);
+  transition: transform 0.4s ease;
+}
+
+.related-card:hover img {
+  transform: scale(1.12);
 }
 
 .related-card p {
-  font-size: 0.9rem;
+  font-size: 18px;
   font-weight: 600;
-  margin: 8px 10px 2px;
+  color: var(--text-primary);
+  margin: 20px 18px 10px;
+  line-height: 1.4;
+  height: 50px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .related-card span {
-  font-size: 0.85rem;
-  color: #0061ff;
-  margin: 0 10px 10px;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0 18px 20px;
   display: block;
 }
 
+/* ============================================
+   🔄 ESTADOS DE CARGA Y VACÍO
+   ============================================ */
+
 .loading-center {
-  text-align: center;
-  margin-top: 150px;
-  font-size: 1.1rem;
-  color: #555;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.loading-center p {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 5px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.product-detail-empty {
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-white);
+  border-radius: var(--radius-lg);
+  padding: 80px;
+  margin: 80px auto;
+  max-width: 700px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
+}
+
+.product-detail-empty p {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 40px;
+}
+
+.product-detail-empty button {
+  padding: 18px 48px;
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-md);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.product-detail-empty button:hover {
+  background: var(--primary-hover);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ============================================
+   📱 RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 1400px) {
+  .product-detail-page {
+    max-width: 1200px;
+    padding: 0 30px;
+  }
+
+  .product-main {
+    gap: 60px;
+    padding: 50px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .product-detail-page {
+    margin: 90px auto 60px;
+    padding: 0 24px;
+  }
+
+  .product-main {
+    grid-template-columns: 1fr;
+    gap: 50px;
+    padding: 40px;
+  }
+
+  .product-gallery {
+    position: static;
+  }
+
+  .main-image {
+    max-height: 550px;
+    min-height: 400px;
+  }
+
+  .product-info h2 {
+    font-size: 32px;
+  }
+
+  .price {
+    font-size: 48px;
+  }
+
+  .reviews-section,
+  .related-section {
+    padding: 50px;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-detail-page {
+    margin: 80px auto 40px;
+    padding: 0 20px;
+  }
+
+  .product-main {
+    padding: 30px 24px;
+    gap: 40px;
+  }
+
+  .product-info h2 {
+    font-size: 28px;
+  }
+
+  .price {
+    font-size: 42px;
+  }
+
+  .description {
+    font-size: 18px;
+  }
+
+  .add-cart-btn {
+    font-size: 19px;
+    padding: 18px 32px;
+  }
+
+  .reviews-section,
+  .related-section,
+  .review-form {
+    padding: 36px 28px;
+  }
+
+  .reviews-section h3,
+  .related-section h3 {
+    font-size: 30px;
+  }
+
+  .review-header strong {
+    font-size: 19px;
+  }
+
+  .review-comment {
+    font-size: 17px;
+  }
+
+  .review-actions,
+  .comment-form-actions {
+    flex-direction: column;
+  }
+
+  .review-form button,
+  .comment-form button {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .related-card {
+    width: 240px;
+  }
+
+  .related-card img {
+    height: 200px;
+  }
+
+  .related-card p {
+    font-size: 16px;
+  }
+
+  .related-card span {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 640px) {
+  .product-detail-page {
+    padding: 0 16px;
+  }
+
+  .product-main {
+    padding: 24px 20px;
+  }
+
+  .product-info h2 {
+    font-size: 24px;
+  }
+
+  .price {
+    font-size: 36px;
+  }
+
+  .description {
+    font-size: 17px;
+  }
+
+  .add-cart-btn {
+    font-size: 17px;
+    padding: 16px 28px;
+  }
+
+  .thumb {
+    width: 80px;
+    height: 80px;
+  }
+
+  .reviews-section,
+  .related-section,
+  .review-form {
+    padding: 28px 20px;
+  }
+
+  .reviews-section h3,
+  .related-section h3 {
+    font-size: 26px;
+  }
+
+  .review-form h4 {
+    font-size: 24px;
+  }
+
+  .related-card {
+    width: 200px;
+  }
+
+  .related-card img {
+    height: 170px;
+  }
+}
+
+@media (max-width: 480px) {
+  .back-btn {
+    font-size: 16px;
+    padding: 10px 18px;
+  }
+
+  .product-info h2 {
+    font-size: 22px;
+  }
+
+  .price {
+    font-size: 32px;
+  }
+
+  .rating {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .rating-value,
+  .rating-count {
+    font-size: 16px;
+  }
+
+  .description {
+    font-size: 16px;
+  }
+
+  .add-cart-btn {
+    font-size: 16px;
+    padding: 14px 24px;
+  }
+
+  .reviews-section h3,
+  .related-section h3 {
+    font-size: 24px;
+  }
+
+  .review-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .review-header strong {
+    font-size: 18px;
+  }
+
+  .review-date {
+    font-size: 15px;
+  }
+
+  .review-comment {
+    font-size: 16px;
+  }
+
+  .comment-item strong {
+    font-size: 17px;
+  }
+
+  .comment-item p {
+    font-size: 16px;
+  }
+}
+
+/* ============================================
+   🎨 ANIMACIONES Y EFECTOS
+   ============================================ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.product-main {
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reviews-section {
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s backwards;
+}
+
+.related-section {
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.2s backwards;
+}
+
+.review-item {
+  animation: fadeInUp 0.4s ease;
+}
+
+.comment-item {
+  animation: slideInRight 0.4s ease;
+}
+
+/* Efecto de pulsación en botones deshabilitados */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+button:disabled {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Efecto de brillo en hover de cards */
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.related-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.related-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.related-card:hover::before {
+  left: 100%;
+}
+
+/* Smooth scroll para toda la página */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus visible mejorado para accesibilidad */
+*:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Selección de texto personalizada */
+::selection {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background: var(--primary);
+  color: #ffffff;
 }

@@ -3,6 +3,7 @@ from django.utils import timezone
 import json
 from django.utils.translation import gettext_lazy as _
 from django.contrib.admin import SimpleListFilter
+from django.conf import settings  # 🟩 Para enlazar con el modelo de usuario
 
 class Marca(models.Model):
     nombre = models.CharField(max_length=100)
@@ -32,6 +33,7 @@ class PriceRangeFilter(SimpleListFilter):
         elif value == '2000+':
             return queryset.filter(precio__gte=2000)
         return queryset
+
 
 class Categoria(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
@@ -76,3 +78,35 @@ class ImagenProducto(models.Model):
 
     def __str__(self):
         return f"Imagen de {self.producto.nombre}"
+
+
+# 🟨 NUEVO MODELO: Reseñas y calificaciones de productos
+class Review(models.Model):
+    producto = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='resenas',   # ascii para evitar problemas
+    )
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='resenas',
+    )
+    calificacion = models.PositiveIntegerField(default=5)
+    comentario = models.TextField(blank=True, null=True)
+    creado_en = models.DateTimeField(auto_now_add=True)
+    actualizado_en = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('producto', 'usuario')
+        ordering = ['-creado_en']
+
+
+class ReviewComment(models.Model):
+    review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name="comentarios")
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="comentarios_resena")
+    texto = models.TextField()
+    creado_en = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['creado_en']

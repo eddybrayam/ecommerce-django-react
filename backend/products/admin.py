@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from .models import Product, Categoria, Marca
+from .models import Product, Categoria, Marca, Review
 
 
 # 🧾 Formulario personalizado para mostrar mejor el campo JSON de imágenes
@@ -58,3 +58,14 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ("activo", "categoria")
 
 admin.site.register(Marca)
+
+
+
+
+# 🟧 NUEVO: Admin para reseñas
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ("producto", "usuario", "calificacion", "creado_en", "actualizado_en")
+    list_filter = ("calificacion", "creado_en")
+    search_fields = ("producto__nombre", "usuario__username", "comentario")
+    readonly_fields = ("creado_en", "actualizado_en")
