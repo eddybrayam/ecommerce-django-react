@@ -6,17 +6,29 @@ import "./PaymentPage.css";
 
 // Impots para PDF
 import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";// <-- ¡ESTA ES LA LÍNEA CRÍTICA QUE FALTA O ES INCORRECTA!
+import autoTable from "jspdf-autotable"; 
+// ❌ Eliminamos la importación de useAuth
 
+// ✅ 1. ARRAY DE USUARIOS DE EJEMPLO
+const sampleCustomers = [
+  { name: "Juan Pérez García", dni: "71234567" },
+  { name: "María López Rodríguez", dni: "72345678" },
+  { name: "Carlos Sánchez Quispe", dni: "73456789" },
+  { name: "Ana Torres Mendoza", dni: "74567890" },
+  { name: "Luis Gonzales Flores", dni: "75678901" },
+];
 
 export default function PaymentPage() {
   const { cartItems, total, clearCart } = useCart();
   const [paid, setPaid] = useState(false);
+  
+  // ❌ Ya no necesitamos obtener el 'user' aquí
+  // const { user } = useAuth() || {}; 
 
-  // ✅ 2. Nuevo estado para guardar los datos del pedido ANTES de limpiar el carrito
+  // Estado para guardar datos del pedido (sin 'customer')
   const [completedOrder, setCompletedOrder] = useState(null);
 
-  // ✅ Función generatePDF corregida
+  // ✅ 2. FUNCIÓN generatePDF MODIFICADA
   const generatePDF = () => {
     console.log("Iniciando generatePDF...");
 
@@ -30,6 +42,7 @@ export default function PaymentPage() {
       console.log("Datos del pedido:", completedOrder);
 
       const doc = new jsPDF();
+      // Obtenemos solo 'items' y 'orderTotal' (ya no hay 'customer')
       const { items, orderTotal } = completedOrder;
 
       // --- Configuración de la Tienda ---
@@ -51,13 +64,20 @@ export default function PaymentPage() {
       doc.setFont("helvetica", "bold");
       doc.text("COMPROBANTE DE PAGO", 105, 45, { align: "center" });
 
+      // --- Datos del Documento ---
       const date = new Date().toLocaleDateString("es-PE");
       doc.setFontSize(11);
       doc.setFont("helvetica", "normal");
       doc.text(`Fecha: ${date}`, 20, 55);
       
-      doc.text("Cliente: Varios", 20, 60);
-      doc.text("DNI/RUC: -", 20, 65);
+      // ✅ 3. SELECCIONA UN CLIENTE AL AZAR
+      const randomIndex = Math.floor(Math.random() * sampleCustomers.length);
+      const randomCustomer = sampleCustomers[randomIndex];
+
+      // --- Datos del Cliente (usando el cliente aleatorio) ---
+      doc.text(`Cliente: ${randomCustomer.name}`, 20, 62);
+      doc.text(`DNI: ${randomCustomer.dni}`, 20, 69); 
+      // Quitamos el email o puedes añadir uno si lo pones en sampleCustomers
 
       // --- Tabla de Productos ---
       const tableColumn = ["Cant.", "Descripción", "P. Unit.", "Total"];
@@ -73,19 +93,15 @@ export default function PaymentPage() {
         tableRows.push(itemData);
       });
 
-      // ✅ ¡AQUÍ ESTÁ EL CAMBIO!
-      // Se llama a autoTable() como función, pasando 'doc'
       autoTable(doc, {
         head: [tableColumn],
         body: tableRows,
-        startY: 75,
+        startY: 75, // Ajustamos startY ya que quitamos una línea de cliente
         headStyles: { fillColor: [37, 99, 235] },
       });
 
       // --- Totales ---
-      // No te preocupes, 'doc.autoTable.previous.finalY' seguirá funcionando
-      // porque autoTable() modifica el objeto 'doc' que le pasaste.
-      const finalY = doc.lastAutoTable.finalY;
+      const finalY = doc.lastAutoTable.finalY; 
       const subtotal = orderTotal / 1.18;
       const igv = orderTotal - subtotal;
 
@@ -115,7 +131,7 @@ export default function PaymentPage() {
     }
   };
 
-  // ✅ 4. Pantalla de pago exitoso (MODIFICADA)
+  // Pantalla de pago exitoso (sin cambios)
   if (paid) {
     return (
       <div className="payment-success-container">
@@ -127,18 +143,16 @@ export default function PaymentPage() {
           <p className="success-message">
             Gracias por tu compra. Tu pedido está siendo procesado.
           </p>
-          
-          {/* --- NUEVOS BOTONES --- */}
           <div className="success-actions">
             <button
               onClick={() => (window.location.href = "/")}
-              className="success-button secondary" // Botón secundario
+              className="success-button secondary"
             >
               Volver al inicio
             </button>
             <button
-              onClick={generatePDF} // Llama a la función de generar PDF
-              className="success-button" // Botón principal
+              onClick={generatePDF}
+              className="success-button"
             >
               Descargar Comprobante (PDF)
             </button>
@@ -148,11 +162,11 @@ export default function PaymentPage() {
     );
   }
 
-  // --- Página de Pago (sin cambios, excepto 'onSuccess') ---
+  // Página de Pago
   return (
     <div className="payment-page">
       <div className="payment-container">
-        {/* 🧾 Resumen de compra (sin cambios) */}
+        {/* Resumen de compra (sin cambios) */}
         <div className="order-summary">
           <h2 className="section-title">
             <span className="icon">🛍️</span>
@@ -192,7 +206,7 @@ export default function PaymentPage() {
           </div>
         </div>
 
-        {/* 💳 Sección de pago */}
+        {/* Sección de pago */}
         <div className="payment-section">
           <h2 className="section-title">
             <span className="icon">💳</span>
@@ -204,9 +218,16 @@ export default function PaymentPage() {
               total={total}
               onClose={() => {}}
               onSuccess={() => {
-                // ✅ 5. Lógica de 'onSuccess' ACTUALIZADA
-                // Guardamos los datos ANTES de limpiar el carrito
-                setCompletedOrder({ items: cartItems, orderTotal: total });
+                console.log("Pago exitoso. Guardando datos del pedido...");
+                
+                // ✅ 4. onSuccess MODIFICADO
+                // Ya NO guardamos el 'user'.
+                setCompletedOrder({ 
+                  items: cartItems, 
+                  orderTotal: total 
+                  // customer: user // <-- Eliminado
+                });
+                
                 clearCart();
                 setPaid(true);
               }}
