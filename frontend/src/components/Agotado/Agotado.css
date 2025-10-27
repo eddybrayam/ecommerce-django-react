@@ -1,0 +1,30 @@
+/* 💡 Estilos para el componente Agotado */
+
+.agotado-alert {
+  color: #d32f2f;
+  background-color: #ffebee;
+  border: 1px solid #f44336;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-top: 10px;
+  font-weight: 600;
+  text-align: center;
+  animation: parpadeo 1.2s infinite;
+}
+
+.agotado-warning {
+  color: #e65100;
+  background-color: #fff3e0;
+  border: 1px solid #ff9800;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-top: 10px;
+  font-weight: 600;
+  text-align: center;
+}
+
+@keyframes parpadeo {
+  0% { opacity: 1; }
+  50% { opacity: 0.4; }
+  100% { opacity: 1; }
+}

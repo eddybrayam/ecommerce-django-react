@@ -76,3 +76,20 @@ class ImagenProducto(models.Model):
 
     def __str__(self):
         return f"Imagen de {self.producto.nombre}"
+
+
+# 🟨 NUEVO MODELO: CUPONES
+class Coupon(models.Model):
+    code = models.CharField(max_length=20, unique=True)
+    discount_percent = models.PositiveIntegerField(default=0)  # ejemplo: 10 = 10%
+    valid_from = models.DateTimeField()
+    valid_to = models.DateTimeField()
+    active = models.BooleanField(default=True)
+    min_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    def is_valid(self):
+        now = timezone.now()
+        return self.active and self.valid_from <= now <= self.valid_to
+
+    def __str__(self):
+        return f"{self.code} ({self.discount_percent}%)"

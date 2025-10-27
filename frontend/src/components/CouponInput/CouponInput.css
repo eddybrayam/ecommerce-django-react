@@ -1,0 +1,15 @@
+.coupon-box {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.coupon-applied {
+  background: #d1fadf;
+  padding: 0.75rem;
+  border-radius: 8px;
+}
+.discount-msg {
+  color: green;
+  font-weight: 500;
+}

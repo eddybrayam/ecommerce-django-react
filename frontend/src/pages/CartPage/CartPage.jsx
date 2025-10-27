@@ -1,9 +1,8 @@
+// src/pages/CartPage/CartPage.jsx
 import { useCart } from "../../context/CartContext";
 import { Trash2 } from "lucide-react";
 import "./CartPage.css";
 import { useNavigate } from "react-router-dom";
-
-
 
 export default function CartPage() {
     const navigate = useNavigate();
@@ -55,11 +54,30 @@ export default function CartPage() {
                             <button className="btn-clear" onClick={clearCart}>
                                 Vaciar carrito
                             </button>
+
+                            {/* 🛒 Botón existente */}
                             <button
                                 className="btn-checkout"
-                                onClick={() => navigate("/checkout")} // ✅ redirige al checkout
+                                onClick={() => alert('Aquí iría la vista completa del carrito')}
                             >
-                                Proceder al pago
+                                Ver Carrito Completo
+                            </button>
+
+                            {/* 💳 NUEVO BOTÓN para ir al Checkout y aplicar cupón */}
+                            <button
+                                onClick={() => navigate("/checkout")}
+                                className="btn-go-checkout"
+                                style={{
+                                    marginTop: "10px",
+                                    backgroundColor: "#4CAF50",
+                                    color: "white",
+                                    padding: "10px 20px",
+                                    border: "none",
+                                    borderRadius: "8px",
+                                    cursor: "pointer",
+                                }}
+                            >
+                                Ir al Checkout / Aplicar Cupón 💳
                             </button>
                         </div>
                     </div>
@@ -68,3 +86,4 @@ export default function CartPage() {
         </div>
     );
 }
+

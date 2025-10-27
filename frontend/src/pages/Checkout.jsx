@@ -1,10 +1,13 @@
 // src/pages/Checkout.jsx
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useCoupon } from "../context/CouponContext"; // 🧩 agregado
+import CouponInput from "../components/CouponInput/CouponInput"; // 🧩 agregado
 import "./Checkout.css";
 
 export default function Checkout() {
   const { cartItems, total } = useCart();
+  const { appliedCoupon, discount, discountAmount } = useCoupon(); // 🧩 agregado
   const navigate = useNavigate();
 
   return (
@@ -19,7 +22,7 @@ export default function Checkout() {
           <div className="empty-cart">
             <div className="empty-icon">🛍️</div>
             <p className="empty-message">Tu carrito está vacío</p>
-            <button 
+            <button
               onClick={() => navigate("/")}
               className="back-button"
             >
@@ -42,6 +45,11 @@ export default function Checkout() {
               ))}
             </div>
 
+            {/* 🧩 Campo para ingresar cupón */}
+            <div className="coupon-section">
+              <CouponInput cartTotal={total} />
+            </div>
+
             <div className="total-section">
               <div className="total-row">
                 <span>Subtotal:</span>
@@ -51,9 +59,20 @@ export default function Checkout() {
                 <span>IGV (18%):</span>
                 <span>S/ {(total - total / 1.18).toFixed(2)}</span>
               </div>
+
+              {/* 🧩 Mostrar descuento si hay cupón */}
+              {appliedCoupon && (
+                <div className="total-row discount">
+                  <span>Descuento ({discount * 100}%):</span>
+                  <span>- S/ {discountAmount.toFixed(2)}</span>
+                </div>
+              )}
+
               <div className="total-row final">
                 <span>Total a pagar:</span>
-                <span className="total-amount">S/ {total.toFixed(2)}</span>
+                <span className="total-amount">
+                  S/ {(total - discountAmount).toFixed(2)}
+                </span>
               </div>
             </div>
 
