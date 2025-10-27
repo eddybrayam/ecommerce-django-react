@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react"; // ✅ 1. Importa useCallback
 import axios from "axios";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
@@ -9,44 +9,54 @@ export default function Home() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // 🔹 Estado que guarda todos los filtros activos
-    const [filters, setFilters] = useState({
-        search: "",
-        category: "all",
+    // ✅ 2. Estado de filtros dividido para evitar bucles
+    const [activeFilters, setActiveFilters] = useState({
+        categories: ["all"],
+        marcas: [],
         priceRange: [0, 10000],
-        marca: "",
     });
+    const [searchTerm, setSearchTerm] = useState("");
+    const [sortBy, setSortBy] = useState("featured"); // Añadido para 'onSort'
 
     const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
-    // 🔹 Cargar productos cada vez que cambian los filtros
+    // ✅ 3. useEffect ahora vigila los 3 estados
     useEffect(() => {
         fetchProducts();
-    }, [filters]);
+    }, [activeFilters, searchTerm, sortBy]); 
 
     const fetchProducts = async () => {
         setLoading(true);
         try {
             let url = `${API_URL}/api/products/?`;
 
-            // 🔸 Buscar por nombre
-            if (filters.search) {
-                url += `search=${filters.search}&`;
+            // 🔸 1. Buscar por nombre
+            if (searchTerm) {
+                url += `search=${searchTerm}&`;
             }
 
-            // 🔸 Filtrar por categoría (si el backend lo soporta)
-            if (filters.category && filters.category !== "all") {
-                url += `categoria=${filters.category}&`;
+             // 🔸 2. Ordenar
+            if (sortBy && sortBy !== "featured") {
+                url += `sort_by=${sortBy}&`; // Ajusta 'sort_by' al nombre de tu parámetro de API
             }
 
-            // 🔸 Filtrar por marca
-            if (filters.marca) {
-                url += `marca=${filters.marca}&`;
+            // ✅ 4. Lógica de array para categorías
+            if (activeFilters.categories && !activeFilters.categories.includes("all")) {
+                activeFilters.categories.forEach(catId => {
+                    url += `categoria=${catId}&`; 
+                });
             }
 
-            // 🔸 Filtrar por rango de precios
-            if (filters.priceRange) {
-                url += `min_precio=${filters.priceRange[0]}&max_precio=${filters.priceRange[1]}&`;
+            // ✅ 5. Lógica de array para marcas
+            if (activeFilters.marcas && activeFilters.marcas.length > 0) {
+                activeFilters.marcas.forEach(marcaId => {
+                    url += `marca=${marcaId}&`; 
+                });
+            }
+
+            // 🔸 6. Filtrar por rango de precios
+            if (activeFilters.priceRange) {
+                url += `min_precio=${activeFilters.priceRange[0]}&max_precio=${activeFilters.priceRange[1]}&`;
             }
 
             const res = await axios.get(url);
@@ -57,9 +67,13 @@ export default function Home() {
                 image: p.imagen_principal
                     ? p.imagen_principal
                     : p.imagen_url || "/placeholder.jpg",
-                category: p.categoria ? `Cat. ${p.categoria}` : "Sin categoría",
+                category: p.categoria_nombre || (p.categoria ? `Cat. ${p.categoria}` : "Sin categoría"),
                 inStock: p.stock > 0,
                 badge: p.stock <= 0 ? "out-of-stock" : undefined,
+                // Pasa también estos datos por si ProductCard los usa
+                rating_avg: p.rating_avg, 
+                rating_count: p.rating_count,
+                ...p
             }));
             setProducts(formatted);
         } catch (err) {
@@ -69,30 +83,35 @@ export default function Home() {
         }
     };
 
-    // 🔹 Recibir cambios desde Filters
-    const handleFilterChange = (newFilters) => {
-        setFilters((prev) => ({ ...prev, ...newFilters }));
-    };
+    // ✅ 6. USA USECALLBACK para "memorizar" las funciones
+    // Esto es lo que rompe el bucle infinito.
+    const handleFilterChange = useCallback((newFilters) => {
+        setActiveFilters(newFilters);
+    }, []); // El array vacío [] significa que esta función NUNCA cambia
 
-    const handleSearch = (value) => {
-        setFilters((prev) => ({ ...prev, search: value }));
-    };
+    const handleSearch = useCallback((value) => {
+        setSearchTerm(value);
+    }, []); // Esta función NUNCA cambia
+
+    const handleSort = useCallback((value) => {
+        setSortBy(value);
+    }, []); // Esta función NUNCA cambia
 
     return (
         <div>
             <Navbar />
-
             <main className="home-layout">
                 <aside className="filters-sidebar">
+                    {/* ✅ 7. Pasa los 3 handlers memorizados */}
                     <Filters
                         onFilterChange={handleFilterChange}
                         onSearch={handleSearch}
+                        onSort={handleSort}
                     />
                 </aside>
 
                 <section className="products-section">
                     <h1>Página principal de TechStore</h1>
-
                     {loading ? (
                         <p style={{ textAlign: "center" }}>Cargando productos...</p>
                     ) : (
@@ -100,7 +119,6 @@ export default function Home() {
                     )}
                 </section>
             </main>
-
             <Footer />
         </div>
     );
