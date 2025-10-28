@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
   Search, SlidersHorizontal, X, ChevronDown,
-  Laptop, Smartphone, Tablet, Headphones, Gamepad2, Watch // puedes ajustar
+  Laptop, Smartphone, Tablet, Headphones, Gamepad2, Watch
 } from 'lucide-react';
 import './Filters.css';
 
@@ -25,41 +25,51 @@ const pickIcon = (slugOrName) => {
   return iconByKey[key] || SlidersHorizontal;
 };
 
+// Componente
 const Filters = ({ onFilterChange, onSearch, onSort }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategories, setSelectedCategories] = useState(['all']);
   const [priceRange, setPriceRange] = useState([0, 10000]);
   const [sortBy, setSortBy] = useState('featured');
   const [showFilters, setShowFilters] = useState(false);
-
   const [marcas, setMarcas] = useState([]);
-  const [selectedMarca, setSelectedMarca] = useState('');
-
-  // ✅ NUEVO: categorías desde backend
+  const [selectedMarcas, setSelectedMarcas] = useState([]);
+  const [isMarcasOpen, setIsMarcasOpen] = useState(false);
   const [categories, setCategories] = useState([{ id: 'all', name: 'Todas', slug: 'all' }]);
+  
+  const API_URL = 'http://127.0.0.1:8000/api';
 
-  const API_URL = 'http://127.0.0.1:8000/api'; // ajusta si corresponde
-
+  // Carga de datos
   useEffect(() => {
-    // marcas
     fetch(`${API_URL}/marcas/`)
       .then((r) => r.json())
       .then(setMarcas)
       .catch((e) => console.error('Error al cargar marcas:', e));
-
-    // categorías
+    
     fetch(`${API_URL}/categorias/`)
-    .then(r => r.json())
-    .then(data => {
-        const mapped = data.map(c => ({
-        id: String(c.id),
-        name: c.nombre,
-        slug: (c.nombre || '').toLowerCase().replaceAll(' ', '-'),
-        }));
-        setCategories(prev => [prev[0], ...mapped]);
-    })
+      .then(r => r.json())
+      .then(data => {
+          const mapped = data.map(c => ({
+            id: String(c.id),
+            name: c.nombre,
+            slug: (c.nombre || '').toLowerCase().replaceAll(' ', '-'),
+          }));
+          setCategories(prev => [prev[0], ...mapped]);
+      })
       .catch((e) => console.error('Error al cargar categorías:', e));
   }, []);
+
+  // useEffect centralizado para enviar filtros
+  useEffect(() => {
+    onFilterChange?.({
+      categories: selectedCategories,
+      marcas: selectedMarcas,
+      priceRange: priceRange, // <-- El rango de precio se sigue enviando aquí
+    });
+  }, [selectedCategories, selectedMarcas, priceRange, onFilterChange]);
+
+
+  // --- Handlers ---
 
   const handleSearch = (e) => {
     const value = e.target.value;
@@ -67,50 +77,81 @@ const Filters = ({ onFilterChange, onSearch, onSort }) => {
     onSearch?.(value);
   };
 
-  const handleCategoryChange = (categoryId) => {
-    setSelectedCategory(categoryId);
-    onFilterChange?.({ category: categoryId, priceRange, marca: selectedMarca });
-  };
-
-  const handlePriceChange = (index, value) => {
-    const newRange = [...priceRange];
-    newRange[index] = Number(value);
-    setPriceRange(newRange);
-    onFilterChange?.({ category: selectedCategory, priceRange: newRange, marca: selectedMarca });
-  };
-
-  const handleSortChange = (value) => {
+  const handleSortChange = (e) => {
+    const value = e.target.value;
     setSortBy(value);
     onSort?.(value);
   };
+  
+  const handleCategoryChange = (categoryId) => {
+    setSelectedCategories((prev) => {
+      if (categoryId === 'all') return ['all'];
+      const newCategories = prev.filter(c => c !== 'all');
+      const index = newCategories.indexOf(categoryId);
+      if (index > -1) {
+        newCategories.splice(index, 1);
+      } else {
+        newCategories.push(categoryId);
+      }
+      if (newCategories.length === 0) return ['all'];
+      return newCategories;
+    });
+  };
 
   const handleMarcaChange = (e) => {
-    const value = e.target.value;
-    setSelectedMarca(value);
-    onFilterChange?.({ category: selectedCategory, priceRange, marca: value });
+    const marcaId = e.target.value;
+    const isChecked = e.target.checked;
+    setSelectedMarcas((prev) => {
+      if (isChecked) {
+        return [...prev, marcaId];
+      } else {
+        return prev.filter(id => id !== marcaId);
+      }
+    });
+  };
+
+  // La lógica del precio sigue igual, solo actualiza el estado local.
+  // El useEffect se encarga de enviarlo.
+  const handlePriceChange = (index, value) => {
+    const newRange = [...priceRange];
+    newRange[index] = Number(value);
+    
+    if (index === 0 && Number(value) > newRange[1]) newRange[1] = Number(value);
+    if (index === 1 && Number(value) < newRange[0]) newRange[0] = Number(value);
+
+    setPriceRange(newRange); // <-- Solo actualiza el estado
   };
 
   const clearFilters = () => {
     setSearchTerm('');
-    setSelectedCategory('all');
+    setSelectedCategories(['all']);
     setPriceRange([0, 10000]);
     setSortBy('featured');
-    setSelectedMarca('');
-    onFilterChange?.({ category: 'all', priceRange: [0, 10000], marca: '' });
+    setSelectedMarcas([]);
     onSearch?.('');
     onSort?.('featured');
   };
 
   const hasActiveFilters =
-    selectedCategory !== 'all' ||
+    (selectedCategories.length > 1 || (selectedCategories.length === 1 && selectedCategories[0] !== 'all')) ||
     priceRange[0] > 0 ||
     priceRange[1] < 10000 ||
     searchTerm !== '' ||
-    selectedMarca !== '';
+    selectedMarcas.length > 0;
 
+  const getMarcasLabel = () => {
+    if (selectedMarcas.length === 0) return 'Todas las marcas';
+    if (selectedMarcas.length === 1) {
+      const marca = marcas.find(m => String(m.id) === selectedMarcas[0]);
+      return marca ? marca.nombre : '1 seleccionada';
+    }
+    return `${selectedMarcas.length} marcas seleccionadas`;
+  };
+
+  // --- JSX ---
   return (
     <div className="filters-container">
-      {/* Header */}
+      {/* ... Header (sin cambios) ... */}
       <div className="filters-header">
         <div className="search-wrapper">
           <Search className="search-icon" size={20} />
@@ -144,7 +185,7 @@ const Filters = ({ onFilterChange, onSearch, onSort }) => {
           <div className="sort-dropdown">
             <select
               value={sortBy}
-              onChange={(e) => handleSortChange(e.target.value)}
+              onChange={handleSortChange}
               className="sort-select"
             >
               <option value="featured">Destacados</option>
@@ -162,7 +203,7 @@ const Filters = ({ onFilterChange, onSearch, onSort }) => {
 
       {/* Panel */}
       <div className={`filters-panel ${showFilters ? 'show' : ''}`}>
-        {/* Categorías */}
+        {/* ... Categorías (sin cambios) ... */}
         <div className="filter-section">
           <h3 className="filter-title">Categorías</h3>
           <div className="categories-grid">
@@ -171,7 +212,7 @@ const Filters = ({ onFilterChange, onSearch, onSort }) => {
               return (
                 <button
                   key={category.id}
-                  className={`category-btn ${selectedCategory === category.id ? 'active' : ''}`}
+                  className={`category-btn ${selectedCategories.includes(category.id) ? 'active' : ''}`}
                   onClick={() => handleCategoryChange(category.id)}
                   title={category.name}
                 >
@@ -182,23 +223,42 @@ const Filters = ({ onFilterChange, onSearch, onSort }) => {
             })}
           </div>
         </div>
-
-        {/* Marca */}
+        
+        {/* ... Marcas (sin cambios) ... */}
         <div className="filter-section">
           <h3 className="filter-title">Marca</h3>
-          <select
-            value={selectedMarca}
-            onChange={handleMarcaChange}
-            className="brand-select"
-          >
-            <option value="">Todas</option>
-            {marcas.map((m) => (
-              <option key={m.id} value={m.id}>{m.nombre}</option>
-            ))}
-          </select>
+          <div className="checkbox-dropdown">
+            <button
+              type="button"
+              className="dropdown-toggle"
+              onClick={() => setIsMarcasOpen(!isMarcasOpen)}
+            >
+              <span>{getMarcasLabel()}</span>
+              <ChevronDown 
+                size={18} 
+                className={`dropdown-icon ${isMarcasOpen ? 'rotate' : ''}`} 
+              />
+            </button>
+            
+            {isMarcasOpen && (
+              <div className="dropdown-panel">
+                {marcas.map((m) => (
+                  <label key={m.id} className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      value={m.id}
+                      checked={selectedMarcas.includes(String(m.id))}
+                      onChange={handleMarcaChange}
+                    />
+                    <span>{m.nombre}</span>
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Precio */}
+        {/* ✅ INICIO: SECCIÓN DE PRECIO RESTAURADA */}
         <div className="filter-section">
           <h3 className="filter-title">Rango de Precio</h3>
           <div className="price-range">
@@ -253,6 +313,7 @@ const Filters = ({ onFilterChange, onSearch, onSort }) => {
             </div>
           </div>
         </div>
+        {/* ✅ FIN: SECCIÓN DE PRECIO RESTAURADA */}
 
         {hasActiveFilters && (
           <button className="clear-filters-btn" onClick={clearFilters}>
