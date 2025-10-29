@@ -24,7 +24,7 @@ Pillow
 django-jazzmin
 
 
-
+# Configuración de entorno y conexión
 dj-database-url
 python-dotenv
-psycopg2-binary
+mysqlclient>=2.2.0
