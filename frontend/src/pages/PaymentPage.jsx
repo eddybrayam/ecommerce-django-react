@@ -4,10 +4,12 @@ import { useCart } from "../context/CartContext";
 import PaymentModal from "../components/PaymentModal";
 import "./PaymentPage.css";
 
-// Impots para PDF
+// Imports para PDF
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable"; 
-// ❌ Eliminamos la importación de useAuth
+
+// 🟢 Importar el componente del cupón
+import CouponInput from "../components/Coupon/CouponInput";
 
 // ✅ 1. ARRAY DE USUARIOS DE EJEMPLO
 const sampleCustomers = [
@@ -21,12 +23,15 @@ const sampleCustomers = [
 export default function PaymentPage() {
   const { cartItems, total, clearCart } = useCart();
   const [paid, setPaid] = useState(false);
-  
-  // ❌ Ya no necesitamos obtener el 'user' aquí
-  // const { user } = useAuth() || {}; 
-
-  // Estado para guardar datos del pedido (sin 'customer')
   const [completedOrder, setCompletedOrder] = useState(null);
+
+  // 🟢 Nuevo estado para manejar descuento
+  const [discountedTotal, setDiscountedTotal] = useState(total);
+
+  // Función para manejar cuando se aplica un cupón
+  const handleDiscountApplied = (newTotal) => {
+    setDiscountedTotal(newTotal);
+  };
 
   // ✅ 2. FUNCIÓN generatePDF MODIFICADA
   const generatePDF = () => {
@@ -42,7 +47,6 @@ export default function PaymentPage() {
       console.log("Datos del pedido:", completedOrder);
 
       const doc = new jsPDF();
-      // Obtenemos solo 'items' y 'orderTotal' (ya no hay 'customer')
       const { items, orderTotal } = completedOrder;
 
       // --- Configuración de la Tienda ---
@@ -64,20 +68,17 @@ export default function PaymentPage() {
       doc.setFont("helvetica", "bold");
       doc.text("COMPROBANTE DE PAGO", 105, 45, { align: "center" });
 
-      // --- Datos del Documento ---
       const date = new Date().toLocaleDateString("es-PE");
       doc.setFontSize(11);
       doc.setFont("helvetica", "normal");
       doc.text(`Fecha: ${date}`, 20, 55);
       
-      // ✅ 3. SELECCIONA UN CLIENTE AL AZAR
+      // ✅ Cliente aleatorio
       const randomIndex = Math.floor(Math.random() * sampleCustomers.length);
       const randomCustomer = sampleCustomers[randomIndex];
 
-      // --- Datos del Cliente (usando el cliente aleatorio) ---
       doc.text(`Cliente: ${randomCustomer.name}`, 20, 62);
       doc.text(`DNI: ${randomCustomer.dni}`, 20, 69); 
-      // Quitamos el email o puedes añadir uno si lo pones en sampleCustomers
 
       // --- Tabla de Productos ---
       const tableColumn = ["Cant.", "Descripción", "P. Unit.", "Total"];
@@ -96,31 +97,51 @@ export default function PaymentPage() {
       autoTable(doc, {
         head: [tableColumn],
         body: tableRows,
-        startY: 75, // Ajustamos startY ya que quitamos una línea de cliente
+        startY: 75,
         headStyles: { fillColor: [37, 99, 235] },
       });
 
-      // --- Totales ---
       const finalY = doc.lastAutoTable.finalY; 
       const subtotal = orderTotal / 1.18;
       const igv = orderTotal - subtotal;
 
       doc.setFontSize(12);
       doc.setFont("helvetica", "bold");
-
       doc.text("Subtotal:", 140, finalY + 10, { align: "right" });
       doc.text(`S/ ${subtotal.toFixed(2)}`, 190, finalY + 10, { align: "right" });
 
       doc.text("IGV (18%):", 140, finalY + 17, { align: "right" });
       doc.text(`S/ ${igv.toFixed(2)}`, 190, finalY + 17, { align: "right" });
 
+      // 🟢 NUEVO: mostrar descuento si se aplicó cupón
+      const discountData = JSON.parse(localStorage.getItem("discountData") || "{}");
+      let discountTextY = finalY + 25;
+
+      if (discountData.code && discountData.discountAmount > 0) {
+        doc.text(
+          `Descuento (${discountData.code} -${discountData.discountPercent || 0}%):`,
+          140,
+          discountTextY,
+          { align: "right" }
+        );
+        doc.text(
+          `-S/ ${discountData.discountAmount.toFixed(2)}`,
+          190,
+          discountTextY,
+          { align: "right" }
+        );
+        discountTextY += 8;
+      }
+
+      const totalFinal = discountData.totalAfterDiscount || orderTotal;
+
       doc.setFontSize(14);
-      doc.text("TOTAL:", 140, finalY + 25, { align: "right" });
-      doc.text(`S/ ${orderTotal.toFixed(2)}`, 190, finalY + 25, { align: "right" });
+      doc.text("TOTAL:", 140, discountTextY + 8, { align: "right" });
+      doc.text(`S/ ${totalFinal.toFixed(2)}`, 190, discountTextY + 8, { align: "right" });
 
       doc.setFontSize(10);
       doc.setFont("helvetica", "italic");
-      doc.text("¡Gracias por su compra!", 105, finalY + 40, { align: "center" });
+      doc.text("¡Gracias por su compra!", 105, discountTextY + 25, { align: "center" });
 
       doc.save(`comprobante-${storeName}-${new Date().getTime()}.pdf`);
       console.log("PDF generado y descarga iniciada.");
@@ -166,7 +187,7 @@ export default function PaymentPage() {
   return (
     <div className="payment-page">
       <div className="payment-container">
-        {/* Resumen de compra (sin cambios) */}
+        {/* Resumen de compra */}
         <div className="order-summary">
           <h2 className="section-title">
             <span className="icon">🛍️</span>
@@ -177,9 +198,7 @@ export default function PaymentPage() {
               <div key={item.id} className="cart-item">
                 <div className="item-info">
                   <p className="item-name">{item.name}</p>
-                  <p className="item-quantity">
-                    Cantidad: {item.quantity}
-                  </p>
+                  <p className="item-quantity">Cantidad: {item.quantity}</p>
                 </div>
                 <p className="item-price">
                   S/ {(item.price * item.quantity).toFixed(2)}
@@ -187,6 +206,7 @@ export default function PaymentPage() {
               </div>
             ))}
           </div>
+
           <div className="totals-section">
             <div className="total-row">
               <span>Subtotal:</span>
@@ -199,9 +219,15 @@ export default function PaymentPage() {
               <span>IGV (18%):</span>
               <span>S/ {(total - total / 1.18).toFixed(2)}</span>
             </div>
+
+            {/* 🟢 Campo para ingresar cupón */}
+            <CouponInput total={total} onDiscountApplied={handleDiscountApplied} />
+
             <div className="total-row final-total">
               <span>Total:</span>
-              <span className="total-amount">S/ {total.toFixed(2)}</span>
+              <span className="total-amount">
+                S/ {discountedTotal.toFixed(2)}
+              </span>
             </div>
           </div>
         </div>
@@ -215,19 +241,14 @@ export default function PaymentPage() {
           <div className="payment-form-wrapper">
             <PaymentModal
               cartItems={cartItems}
-              total={total}
+              total={discountedTotal} // 🟢 total actualizado con cupón
               onClose={() => {}}
               onSuccess={() => {
                 console.log("Pago exitoso. Guardando datos del pedido...");
-                
-                // ✅ 4. onSuccess MODIFICADO
-                // Ya NO guardamos el 'user'.
-                setCompletedOrder({ 
-                  items: cartItems, 
-                  orderTotal: total 
-                  // customer: user // <-- Eliminado
+                setCompletedOrder({
+                  items: cartItems,
+                  orderTotal: discountedTotal,
                 });
-                
                 clearCart();
                 setPaid(true);
               }}

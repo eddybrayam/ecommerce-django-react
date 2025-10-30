@@ -19,7 +19,8 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-
+# ✅ Importación para el endpoint de cupones
+from products.views_coupon import validate_coupon
 urlpatterns = [
     path("admin/", admin.site.urls),
 
@@ -39,6 +40,9 @@ urlpatterns = [
 
     #categorias filtros
     path('api/', include('products.urls')),
+    
+    # ✅ Nueva ruta para validar cupones
+    path("api/coupon/", validate_coupon, name="validate-coupon"),
 
 ]
 

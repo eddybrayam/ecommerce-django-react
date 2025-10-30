@@ -9,6 +9,7 @@ import Stars from "../../components/Stars";
 import { getProductReviews, createOrUpdateReview, deleteMyReview } from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
 import ReviewComments from "../../components/ReviewComments";
+import Agotado from "../../components/Agotado/Agotado"; // 🟢 AGREGADO
 import "./ProductDetail.css";
 
 const API = "http://127.0.0.1:8000/api";
@@ -29,6 +30,7 @@ export default function ProductDetail() {
   const [myRating, setMyRating] = useState(5);
   const [myComment, setMyComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [cantidad, setCantidad] = useState(1); // 🟢 AGREGADO
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -75,7 +77,6 @@ export default function ProductDetail() {
       }
     };
     if (id) loadReviews();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, user?.id]);
 
   useEffect(() => {
@@ -122,12 +123,18 @@ export default function ProductDetail() {
   );
 
   const handleAddToCart = () => {
+    if (cantidad > product.stock) {
+      alert(`Solo hay ${product.stock} unidades disponibles.`);
+      return;
+    }
+
     const formatted = {
       id: product.producto_id,
       name: product.nombre,
       price: parseFloat(product.precio),
       image: selectedImage,
       description: product.descripcion,
+      quantity: cantidad,
     };
     addToCart(formatted);
     setAdded(true);
@@ -136,10 +143,8 @@ export default function ProductDetail() {
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
-    
     try {
       setSubmitting(true);
-      
       const access = token || localStorage.getItem("access");
       if (!access) { console.error("Sin token. Inicia sesión."); return; }
       await createOrUpdateReview(id, { calificacion: myRating, comentario: myComment }, access);
@@ -244,10 +249,25 @@ export default function ProductDetail() {
             <h3 className="price">S/ {parseFloat(product.precio).toFixed(2)}</h3>
             <p className="description">{product.descripcion}</p>
 
+            {/* 🟢 Mostrar aviso de stock */}
+            <Agotado stock={product.stock} cantidad={cantidad} />
+
+            {/* 🟢 Selector de cantidad */}
+            <div className="quantity-selector">
+              <label>Cantidad:</label>
+              <input
+                type="number"
+                min="1"
+                value={cantidad}
+                onChange={(e) => setCantidad(Number(e.target.value))}
+              />
+            </div>
+
             <div className="action-buttons">
               <button
                 className={`add-cart-btn ${added ? "added" : ""}`}
                 onClick={handleAddToCart}
+                disabled={product.stock === 0}
               >
                 {added ? (
                   <>
@@ -263,6 +283,7 @@ export default function ProductDetail() {
           </div>
         </div>
 
+        {/* resto de tu código sin cambios */}
         <div className="reviews-section">
           <h3>Reseñas de clientes</h3>
 
@@ -278,18 +299,11 @@ export default function ProductDetail() {
                       {new Date(r.creado_en).toLocaleDateString()}
                     </span>
                   </div>
-
                   <div className="review-stars">
                     <Stars value={r.calificacion} showNumber={false} size={20} />
                   </div>
-
                   {r.comentario && <p className="review-comment">{r.comentario}</p>}
-
-                  <ReviewComments
-                    productId={id}
-                    reviewId={r.id}
-                    canComment={!!user}
-                  />
+                  <ReviewComments productId={id} reviewId={r.id} canComment={!!user} />
                 </li>
               ))}
             </ul>
