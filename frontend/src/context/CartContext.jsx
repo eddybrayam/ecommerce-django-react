@@ -16,9 +16,9 @@ export const CartProvider = ({ children }) => {
   });
 
   const [total, setTotal] = useState(0);
-  const [ready, setReady] = useState(false); // 👈 para evitar escribir antes de tiempo
+  const [ready, setReady] = useState(false); // 👈 evita guardar antes de leer
 
-  // 🔹 Calcular total
+  // 🔹 Calcular total automáticamente
   useEffect(() => {
     const newTotal = cartItems.reduce(
       (sum, item) => sum + Number(item.price) * item.quantity,
@@ -27,25 +27,29 @@ export const CartProvider = ({ children }) => {
     setTotal(newTotal);
   }, [cartItems]);
 
-  // 🔹 Guardar carrito cuando ya se haya leído
+  // 🔹 Guardar carrito solo después de haber cargado
   useEffect(() => {
     if (ready) {
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
     } else {
-      // la primera vez solo marca que ya cargó, no guarda nada
       setReady(true);
     }
   }, [cartItems, ready]);
 
+  // ✅ Actualizado: respeta cantidad seleccionada desde el producto
   const addToCart = (product) => {
     setCartItems((prev) => {
       const itemExists = prev.find((p) => p.id === product.id);
       if (itemExists) {
+        // si ya existe, suma la cantidad enviada (product.quantity)
         return prev.map((p) =>
-          p.id === product.id ? { ...p, quantity: p.quantity + 1 } : p
+          p.id === product.id
+            ? { ...p, quantity: p.quantity + (product.quantity || 1) }
+            : p
         );
       }
-      return [...prev, { ...product, quantity: 1 }];
+      // si no existe, lo agrega con la cantidad seleccionada
+      return [...prev, { ...product, quantity: product.quantity || 1 }];
     });
   };
 
@@ -67,4 +71,5 @@ export const CartProvider = ({ children }) => {
   );
 };
 
+// Hook personalizado
 export const useCart = () => useContext(CartContext);

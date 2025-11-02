@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django import forms
-from .models import Product, Categoria, Marca, Review
-
+from .models import Product, Categoria, Marca, Review, Coupon  # 🟢 Agregamos Coupon
 
 # 🧾 Formulario personalizado para mostrar mejor el campo JSON de imágenes
 class ProductAdminForm(forms.ModelForm):
@@ -16,6 +15,7 @@ class ProductAdminForm(forms.ModelForm):
                 "placeholder": '[ "https://...", "https://..." ]'
             })
         }
+
 # --- Filtro personalizado por rango de precio ---
 class PriceRangeFilter(admin.SimpleListFilter):
     title = 'Rango de precios'  # Título que aparecerá en el panel
@@ -60,8 +60,6 @@ class ProductAdmin(admin.ModelAdmin):
 admin.site.register(Marca)
 
 
-
-
 # 🟧 NUEVO: Admin para reseñas
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
@@ -69,3 +67,11 @@ class ReviewAdmin(admin.ModelAdmin):
     list_filter = ("calificacion", "creado_en")
     search_fields = ("producto__nombre", "usuario__username", "comentario")
     readonly_fields = ("creado_en", "actualizado_en")
+
+
+# 🟩 NUEVO: Admin para cupones
+@admin.register(Coupon)
+class CouponAdmin(admin.ModelAdmin):
+    list_display = ("code", "discount_percent", "valid_from", "valid_to", "active")
+    list_filter = ("active", "valid_from", "valid_to")
+    search_fields = ("code",)

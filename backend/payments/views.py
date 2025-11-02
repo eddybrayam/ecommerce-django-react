@@ -14,6 +14,7 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from rest_framework.decorators import permission_classes
+from products.models import Coupon
 # 🧠 Detectar marca de tarjeta (simulado)
 def detectar_brand(numero):
     if not numero:
@@ -222,6 +223,14 @@ def _send_order_email(user, order):
         to=[user.email],
     )
     msg.attach_alternative(html, "text/html")
+        # 🟢 Agregar información del cupón (si existe)
+    if hasattr(order, "coupon") and order.coupon:
+        try:
+            coupon = order.coupon
+            descuento = getattr(order, "discount", 0)
+            msg.body += f"\n\n🎟️ Cupón aplicado: {coupon.code}\nDescuento: S/ {descuento:.2f}"
+        except Exception as e:
+            print(f"Error agregando cupón al correo: {e}")
     msg.send(fail_silently=True)
 
 
@@ -238,3 +247,26 @@ def confirmar_pago_y_crear_pedido(request):
     order = _create_order(request.user, productos)
     _send_order_email(request.user, order)
     return Response({"mensaje": "Pago confirmado y pedido creado", "order_id": order.id})
+
+# backend/products/views_coupon.py  o  backend/orders/views.py
+@api_view(['POST'])
+def apply_coupon(request):
+    code = request.data.get('code')
+    order_id = request.data.get('order_id')
+    order = Order.objects.get(id=order_id)
+    coupon = Coupon.objects.filter(code=code, active=True).first()
+
+    if not coupon:
+        return Response({'error': 'Cupón inválido o vencido'}, status=400)
+
+    descuento = (coupon.discount_percent / 100) * order.total
+    order.discount = descuento
+    order.total -= descuento
+    order.coupon = coupon  # 🟢 Guarda el cupón en la orden
+    order.save()
+
+    return Response({
+        'message': 'Cupón aplicado',
+        'discount_applied': True,
+        'new_total': order.total
+    })

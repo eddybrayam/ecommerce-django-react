@@ -1,0 +1,14 @@
+.coupon-box {
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  max-width: 350px;
+}
+
+.input-coupon {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}

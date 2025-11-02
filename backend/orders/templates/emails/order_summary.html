@@ -9,11 +9,16 @@
         <tr>
             <td align="center">
                 <table width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.08);overflow:hidden">
+                    
                     <!-- Header -->
                     <tr>
                         <td style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:40px 30px;text-align:center">
-                            <h1 style="margin:0;color:#ffffff;font-size:28px;font-weight:600;letter-spacing:-0.5px">¡Gracias por tu compra!</h1>
-                            <p style="margin:10px 0 0 0;color:#ffffff;font-size:16px;opacity:0.95">{{ user.get_full_name|default:user.email }} 👋</p>
+                            <h1 style="margin:0;color:#ffffff;font-size:28px;font-weight:600;letter-spacing:-0.5px">
+                                ¡Gracias por tu compra!
+                            </h1>
+                            <p style="margin:10px 0 0 0;color:#ffffff;font-size:16px;opacity:0.95">
+                                {{ user.get_full_name|default:user.email }} 👋
+                            </p>
                         </td>
                     </tr>
                     
@@ -28,7 +33,9 @@
                                     </td>
                                     <td align="right">
                                         <p style="margin:0;font-size:14px;color:#666;text-transform:uppercase;letter-spacing:0.5px;font-weight:500">Estado</p>
-                                        <p style="margin:5px 0 0 0;font-size:16px;color:#667eea;font-weight:600">{{ order.status|title }}</p>
+                                        <p style="margin:5px 0 0 0;font-size:16px;color:#667eea;font-weight:600">
+                                            {{ order.status|default:"Pendiente" }}
+                                        </p>
                                     </td>
                                 </tr>
                             </table>
@@ -46,22 +53,44 @@
                                 <tbody>
                                 {% for it in order.items.all %}
                                     <tr style="border-bottom:1px solid #f0f0f0">
-                                        <td style="padding:15px 12px;color:#333;font-size:15px">{{ it.product.nombre }}</td>
+                                        <td style="padding:15px 12px;color:#333;font-size:15px">{{ it.product.name|default:it.product.nombre }}</td>
                                         <td align="center" style="padding:15px 12px;color:#666;font-size:15px;font-weight:500">{{ it.quantity }}</td>
                                         <td align="right" style="padding:15px 12px;color:#333;font-size:15px;font-weight:600">S/ {{ it.price }}</td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="3" align="center" style="padding:15px;color:#999;">No se encontraron productos en la orden.</td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
                             </table>
                             
-                            <!-- Total -->
-                            <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px">
+                            <!-- Totales -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px;background-color:#f8f9fa;border-radius:8px;padding:20px">
+                                {% if order.coupon %}
                                 <tr>
-                                    <td align="right" style="padding:20px 12px;background-color:#f8f9fa;border-radius:8px">
-                                        <span style="font-size:16px;color:#666;margin-right:15px">Total:</span>
-                                        <span style="font-size:24px;color:#667eea;font-weight:700">S/ {{ order.total }}</span>
+                                    <td align="right" style="padding-top:10px">
+                                        <p style="margin:0;font-size:15px;color:#333;">
+                                            <strong>Cupón aplicado:</strong> {{ order.coupon.code }}
+                                        </p>
+                                        {% if order.discount %}
+                                        <p style="margin:4px 0 0 0;font-size:15px;color:#333;">
+                                            <strong>Descuento:</strong> -S/ {{ order.discount|floatformat:2 }}
+                                        </p>
+                                        {% endif %}
+                                        <p style="margin:4px 0 0 0;font-size:16px;color:#667eea;font-weight:600;">
+                                            <strong>Total con descuento:</strong> S/ {{ order.total|floatformat:2 }}
+                                        </p>
                                     </td>
                                 </tr>
+                                {% else %}
+                                <tr>
+                                    <td align="right">
+                                        <span style="font-size:16px;color:#666;margin-right:15px">Total:</span>
+                                        <span style="font-size:24px;color:#667eea;font-weight:700">S/ {{ order.total|floatformat:2 }}</span>
+                                    </td>
+                                </tr>
+                                {% endif %}
                             </table>
                             
                             <!-- Mensaje informativo -->
@@ -69,7 +98,8 @@
                                 <tr>
                                     <td style="padding:18px 20px">
                                         <p style="margin:0;color:#555;font-size:14px;line-height:1.6">
-                                            📦 Te mantendremos informado sobre el estado de tu pedido. Recibirás notificaciones cuando cambie a <strong style="color:#667eea">Enviado</strong> y <strong style="color:#667eea">Entregado</strong>.
+                                            📦 Te mantendremos informado sobre el estado de tu pedido. Recibirás notificaciones cuando cambie a 
+                                            <strong style="color:#667eea">Enviado</strong> y <strong style="color:#667eea">Entregado</strong>.
                                         </p>
                                     </td>
                                 </tr>
@@ -86,6 +116,29 @@
                             </p>
                         </td>
                     </tr>
+                    <!-- 🟢 INFORMACIÓN DEL CUPÓN -->
+                    {% if order.coupon %}
+                    <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px;background-color:#fef9ef;border-left:4px solid #f4c542;border-radius:8px">
+                        <tr>
+                            <td style="padding:18px 20px">
+                                <h3 style="margin:0;color:#333;font-size:17px;font-weight:600;">🎟️ Cupón aplicado</h3>
+                                <p style="margin:6px 0 0 0;color:#555;font-size:15px;">
+                                    <strong>Código:</strong> {{ order.coupon.code }}
+                                </p>
+                                {% if order.discount %}
+                                <p style="margin:4px 0 0 0;color:#555;font-size:15px;">
+                                    <strong>Descuento aplicado:</strong> S/ {{ order.discount|floatformat:2 }}
+                                </p>
+                                {% endif %}
+                                {% if order.coupon.discount_percent %}
+                                <p style="margin:4px 0 0 0;color:#555;font-size:15px;">
+                                    <strong>Porcentaje de descuento:</strong> {{ order.coupon.discount_percent }}%
+                                </p>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                    {% endif %}
                 </table>
             </td>
         </tr>
