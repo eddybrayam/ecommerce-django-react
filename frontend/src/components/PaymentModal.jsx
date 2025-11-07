@@ -1,7 +1,7 @@
 // src/components/PaymentModal.jsx
 import { useState } from "react";
 // ⬇️ Seguimos usando tus endpoints existentes
-import { pagarConTarjeta, pagarConYape, confirmarPago } from "../api/api"; // NUEVO: importar confirmarPago
+import { pagarConTarjeta, pagarConYape, confirmarPago } from "../api/api";
 
 export default function PaymentModal({ cartItems, total, onClose, onSuccess }) {
     const [metodo, setMetodo] = useState("tarjeta");
@@ -16,6 +16,7 @@ export default function PaymentModal({ cartItems, total, onClose, onSuccess }) {
     });
 
     const [comprobante, setComprobante] = useState(null);
+    const [cuponAplicado, setCuponAplicado] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -23,110 +24,115 @@ export default function PaymentModal({ cartItems, total, onClose, onSuccess }) {
         setMensaje("");
 
         try {
-        // Construimos el arreglo que usa el backend para crear el pedido
-        const productos = cartItems.map((item) => ({
-            id: item.id,
-            cantidad: item.quantity,
-        }));
+            const productos = cartItems.map((item) => ({
+                id: item.id,
+                cantidad: item.quantity,
+            }));
 
-        if (metodo === "tarjeta") {
-            // 1) Mantiene tu flujo actual de tarjeta
-            const res = await pagarConTarjeta(productos, tarjeta);
-            setMensaje(res.data?.mensaje || "Pago con tarjeta aprobado");
+            if (metodo === "tarjeta") {
+                const res = await pagarConTarjeta(productos, tarjeta);
+                setMensaje(res.data?.mensaje || "Pago con tarjeta aprobado");
 
-            // 2) NUEVO: crea el pedido y dispara el correo en el backend
-            await confirmarPago(productos);
-            // 3) Devolvemos el control al caller (limpiar carrito / navegar)
-            onSuccess?.();
-        } else if (metodo === "yape") {
-            // 1) Mantiene tu flujo actual de Yape
-            const formData = new FormData();
-            formData.append("producto_id", cartItems[0].id); // (tu lógica original)
-            formData.append("monto", total);
-            formData.append("comprobante", comprobante);
-            const res = await pagarConYape(formData);
-            setMensaje(res.data?.mensaje || "Pago Yape recibido");
+                // ✅ Enviar también el cupón al backend
+                await confirmarPago(productos, cuponAplicado);
 
-            // 2) NUEVO: crea el pedido y dispara el correo en el backend
-            await confirmarPago(productos);
-            // 3) Callback original
-            onSuccess?.();
-        }
+                onSuccess?.();
+            } else if (metodo === "yape") {
+                const formData = new FormData();
+                formData.append("producto_id", cartItems[0].id);
+                formData.append("monto", total);
+                formData.append("comprobante", comprobante);
+                const res = await pagarConYape(formData);
+                setMensaje(res.data?.mensaje || "Pago Yape recibido");
+
+                // ✅ Enviar también el cupón al backend
+                await confirmarPago(productos, cuponAplicado);
+
+                onSuccess?.();
+            }
         } catch (err) {
-        setMensaje(err.response?.data?.error || "Error procesando pago");
+            setMensaje(err.response?.data?.error || "Error procesando pago");
         } finally {
-        setLoading(false);
+            setLoading(false);
         }
     };
 
     return (
         <div className="modal-overlay">
-        <div className="modal">
-            <h2>Pagar Pedido</h2>
-            <p>
-            Total: <strong>S/ {total.toFixed(2)}</strong>
-            </p>
+            <div className="modal">
+                <h2>Pagar Pedido</h2>
+                <p>Total: <strong>S/ {total.toFixed(2)}</strong></p>
 
-            <select value={metodo} onChange={(e) => setMetodo(e.target.value)}>
-            <option value="tarjeta">💳 Tarjeta</option>
-            <option value="yape">📱 Yape / Plin</option>
-            </select>
+                <select value={metodo} onChange={(e) => setMetodo(e.target.value)}>
+                    <option value="tarjeta">💳 Tarjeta</option>
+                    <option value="yape">📱 Yape / Plin</option>
+                </select>
 
-            <form onSubmit={handleSubmit}>
-            {metodo === "tarjeta" && (
-                <div className="tarjeta-fields">
-                <input
-                    type="text"
-                    placeholder="Número de tarjeta"
-                    value={tarjeta.numero}
-                    onChange={(e) => setTarjeta({ ...tarjeta, numero: e.target.value })}
-                    required
-                />
-                <input
-                    type="text"
-                    placeholder="Mes (MM)"
-                    value={tarjeta.mes}
-                    onChange={(e) => setTarjeta({ ...tarjeta, mes: e.target.value })}
-                    required
-                />
-                <input
-                    type="text"
-                    placeholder="Año (YYYY)"
-                    value={tarjeta.anio}
-                    onChange={(e) => setTarjeta({ ...tarjeta, anio: e.target.value })}
-                    required
-                />
-                <input
-                    type="text"
-                    placeholder="CVC"
-                    value={tarjeta.cvc}
-                    onChange={(e) => setTarjeta({ ...tarjeta, cvc: e.target.value })}
-                    required
-                />
-                </div>
-            )}
+                <form onSubmit={handleSubmit}>
+                    {metodo === "tarjeta" && (
+                        <div className="tarjeta-fields">
+                            <input
+                                type="text"
+                                placeholder="Número de tarjeta"
+                                value={tarjeta.numero}
+                                onChange={(e) => setTarjeta({ ...tarjeta, numero: e.target.value })}
+                                required
+                            />
+                            <input
+                                type="text"
+                                placeholder="Mes (MM)"
+                                value={tarjeta.mes}
+                                onChange={(e) => setTarjeta({ ...tarjeta, mes: e.target.value })}
+                                required
+                            />
+                            <input
+                                type="text"
+                                placeholder="Año (YYYY)"
+                                value={tarjeta.anio}
+                                onChange={(e) => setTarjeta({ ...tarjeta, anio: e.target.value })}
+                                required
+                            />
+                            <input
+                                type="text"
+                                placeholder="CVC"
+                                value={tarjeta.cvc}
+                                onChange={(e) => setTarjeta({ ...tarjeta, cvc: e.target.value })}
+                                required
+                            />
+                        </div>
+                    )}
 
-            {metodo === "yape" && (
-                <div className="yape-fields">
-                <label>Subir comprobante:</label>
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => setComprobante(e.target.files[0])}
-                    required
-                />
-                </div>
-            )}
+                    {metodo === "yape" && (
+                        <div className="yape-fields">
+                            <label>Subir comprobante:</label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => setComprobante(e.target.files[0])}
+                                required
+                            />
+                        </div>
+                    )}
 
-            <button type="submit" disabled={loading}>
-                {loading ? "Procesando..." : "Confirmar pago"}
-            </button>
-            </form>
+                    {/* ← Input de cupón agregado */}
+                    <div className="coupon-field">
+                        <input
+                            type="text"
+                            placeholder="Código de cupón"
+                            value={cuponAplicado}
+                            onChange={(e) => setCuponAplicado(e.target.value)}
+                        />
+                    </div>
 
-            {mensaje && <p className="message">{mensaje}</p>}
+                    <button type="submit" disabled={loading}>
+                        {loading ? "Procesando..." : "Confirmar pago"}
+                    </button>
+                </form>
 
-            <button onClick={onClose}>Cerrar</button>
-        </div>
+                {mensaje && <p className="message">{mensaje}</p>}
+
+                <button onClick={onClose}>Cerrar</button>
+            </div>
         </div>
     );
 }

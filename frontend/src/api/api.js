@@ -21,8 +21,8 @@ export const pagarConYape = async (formData) => {
 
 
 // --- NUEVO: confirmar pedido y enviar correo en backend ---
-export const confirmarPago = (productos) =>
-  api.post("/api/payments/confirm/", { productos });
+export const confirmarPago = (productos,cupon) =>
+  api.post("/api/payments/confirm/", { productos,cupon });
 
 
 // 🟨 =========================
