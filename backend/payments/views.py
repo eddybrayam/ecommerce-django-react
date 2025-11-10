@@ -14,7 +14,10 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from rest_framework.decorators import permission_classes
+from .models import PagoCupon
 from products.models import Coupon
+from .utils import _create_order, _send_order_email  # Ajusta si tus helpers están en otro archivo
+from payments.models import PagoCupon  # Importar el modelo de registro
 # 🧠 Detectar marca de tarjeta (simulado)
 def detectar_brand(numero):
     if not numero:
@@ -223,7 +226,8 @@ def _send_order_email(user, order):
         to=[user.email],
     )
     msg.attach_alternative(html, "text/html")
-        # 🟢 Agregar información del cupón (si existe)
+
+    # 🟢 Agregar información del cupón (si existe)
     if hasattr(order, "coupon") and order.coupon:
         try:
             coupon = order.coupon
@@ -231,42 +235,98 @@ def _send_order_email(user, order):
             msg.body += f"\n\n🎟️ Cupón aplicado: {coupon.code}\nDescuento: S/ {descuento:.2f}"
         except Exception as e:
             print(f"Error agregando cupón al correo: {e}")
+
     msg.send(fail_silently=True)
 
 
 @api_view(["POST"])
-@permission_classes([IsAuthenticated])
 def confirmar_pago_y_crear_pedido(request):
     """
     Endpoint genérico para tu pago con tarjeta/Yape.
-    Espera: {"productos":[{"id":1,"cantidad":2}, ...]}
+    Espera: {"productos":[{"id":1,"cantidad":2}, ...], "cupon": "NAVIDAD15"}
     """
+    usuario = request.user if request.user.is_authenticated else User.objects.first()
+
     productos = request.data.get("productos", [])
+    cupon_code = request.data.get("cupon")  # <- recibimos el cupón
+
     if not productos:
         return Response({"error": "Productos vacíos"}, status=400)
-    order = _create_order(request.user, productos)
-    _send_order_email(request.user, order)
-    return Response({"mensaje": "Pago confirmado y pedido creado", "order_id": order.id})
+
+    # 1️⃣ Crear la orden
+    order = _create_order(usuario, productos)
+
+    # 2️⃣ Aplicar cupón si existe
+    if cupon_code:
+        coupon = Coupon.objects.filter(code=cupon_code, active=True).first()
+        if coupon:
+            monto_original = order.total
+            # ✅ Corregido: usar Decimal para evitar TypeError
+            descuento = (Decimal(coupon.discount_percent) / 100) * order.total
+            order.total = monto_original - descuento
+            order.coupon = coupon
+            order.discount = descuento
+            order.save()
+
+            # 3️⃣ Guardar registro en PagoCupon
+            productos_lista = [f"{item.product.nombre} (x{item.quantity})" for item in order.items.all()]
+            PagoCupon.objects.create(
+                usuario=usuario,
+                productos=", ".join(productos_lista),
+                cupon_usado=coupon.code,
+                monto_original=monto_original,
+                monto_con_descuento=order.total
+            )
+
+    # 4️⃣ Enviar correo
+    _send_order_email(usuario, order)
+
+    return Response({
+        "mensaje": "Pago confirmado y pedido creado",
+        "order_id": order.id,
+        "total_con_descuento": order.total
+    })
+
 
 # backend/products/views_coupon.py  o  backend/orders/views.py
 @api_view(['POST'])
 def apply_coupon(request):
     code = request.data.get('code')
     order_id = request.data.get('order_id')
-    order = Order.objects.get(id=order_id)
-    coupon = Coupon.objects.filter(code=code, active=True).first()
 
+    try:
+        order = Order.objects.get(id=order_id)
+    except Order.DoesNotExist:
+        return Response({'error': 'Orden no encontrada'}, status=404)
+
+    coupon = Coupon.objects.filter(code=code, active=True).first()
     if not coupon:
         return Response({'error': 'Cupón inválido o vencido'}, status=400)
 
-    descuento = (coupon.discount_percent / 100) * order.total
+    monto_original = order.total
+    descuento = (Decimal(coupon.discount_percent) / Decimal(100)) * monto_original
+    monto_con_descuento = monto_original - descuento
+
+    # Lista de productos del pedido
+    productos_lista = [f"{item.product.nombre} (x{item.quantity})" for item in order.items.all()]
+
+    # Guardar registro del uso del cupón
+    PagoCupon.objects.create(
+        usuario=order.user,
+        productos=", ".join(productos_lista),
+        cupon_usado=coupon.code,
+        monto_original=monto_original,
+        monto_con_descuento=monto_con_descuento,
+    )
+
+    # Actualizar la orden
     order.discount = descuento
-    order.total -= descuento
-    order.coupon = coupon  # 🟢 Guarda el cupón en la orden
+    order.total = monto_con_descuento
+    order.coupon = coupon
     order.save()
 
     return Response({
-        'message': 'Cupón aplicado',
+        'message': 'Cupón aplicado correctamente',
         'discount_applied': True,
         'new_total': order.total
     })

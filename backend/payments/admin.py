@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import PagoSimulado, OrdenPagoSimulada, OrdenItem
-
+from .models import PagoCupon
 
 # 🧾 --- PAGOS INDIVIDUALES ---
 @admin.register(PagoSimulado)
@@ -70,3 +70,9 @@ class OrdenPagoSimuladaAdmin(admin.ModelAdmin):
             "fields": ("creado_en",)
         }),
     )
+
+
+@admin.register(PagoCupon)
+class PagoCuponAdmin(admin.ModelAdmin):
+    list_display = ('id', 'usuario', 'cupon_usado', 'monto_original', 'monto_con_descuento', 'creado_en')
+    search_fields = ('usuario__username', 'cupon_usado')
