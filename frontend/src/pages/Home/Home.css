@@ -1,0 +1,41 @@
+/* ========================================================== */
+/* Home.css (NUEVO LAYOUT DE UNA SOLA COLUMNA) */
+/* ========================================================== */
+
+/* Estilos Generales para el Contenido Principal */
+.home-page-content {
+    /* Mantenemos el MAX-WIDTH para centrar el contenido en monitores grandes */
+    max-width:100%;
+    margin: 40px auto; 
+    
+    /* 🎯 Padding lateral para separar el contenido de los bordes de la página */
+    padding: 0 20px; 
+    
+    /* Asegurar que el contenedor fluya verticalmente */
+    display: block; 
+    width: 100%; /* Ocupa el 100% del ancho disponible (hasta max-width) */
+    box-sizing: border-box;
+}
+
+/* Contenedor de Filtros Superiores */
+.filters-container-top {
+    /* Puedes añadir margen si quieres separar los filtros del título H1 */
+    margin-bottom: 30px; 
+}
+
+/* Título de la Sección */
+.products-section-full h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* COMENTARIO: No necesitamos la clase .filters-sidebar ni .home-layout flexbox */
+/* @media (max-width: 992px) { ... } */
+
+@media (max-width: 992px) {
+    .home-page-content {
+        padding: 0 15px; 
+        margin: 20px 0;
+    }
+}

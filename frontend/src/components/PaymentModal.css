@@ -1,0 +1,83 @@
+/* Contenedor principal dentro de la tarjeta "Método de pago" */
+.pay-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+/* Texto de total */
+.pay-form-total {
+  font-size: 0.95rem;
+  color: #4b5563;
+}
+.pay-form-total span {
+  font-weight: 700;
+  color: #111827;
+}
+
+/* Grupo de campos */
+.pay-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.pay-form-group label {
+  font-size: 0.82rem;
+  color: #4b5563;
+}
+
+/* Inputs y selects */
+.pay-form-group input,
+.pay-form-group select {
+  padding: 0.55rem 0.65rem;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.pay-form-group input:focus,
+.pay-form-group select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.25);
+}
+
+/* Fila MM / YYYY / CVC */
+.pay-form-row {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.pay-form-group.small input {
+  text-align: center;
+}
+
+/* Formulario en general */
+.pay-form-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+/* Mensaje de error / éxito */
+.pay-form-message {
+  font-size: 0.85rem;
+  color: #047857;
+}
+
+/* Botones (usan las clases .btn-primary / .btn-secondary
+   que ya tienes en PaymentPage.css para mantener estilo) */
+.pay-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 0.3rem;
+}
+
+@media (max-width: 640px) {
+  .pay-form-row {
+    flex-direction: column;
+  }
+}

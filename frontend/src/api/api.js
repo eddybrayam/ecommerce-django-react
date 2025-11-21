@@ -54,4 +54,11 @@ export const deleteMyReview = async (productId, token) => {
     },
   });
   return res.data;
+  
+};
+
+
+// usando el cliente axios "api" que ya tienes con baseURL = backend
+export const sendSupportMessage = (payload) => {
+  return api.post("/support/contact/", payload); // 👈 sin /api
 };

@@ -49,11 +49,15 @@ INSTALLED_APPS = [
     "orders",
 
 
+
     # Apps del proyecto
     "accounts",
     'products',
 
     "payments",
+
+    #area de soporte
+    "support",
    
 
 ]
@@ -223,7 +227,6 @@ FRONTEND_URL = "http://localhost:5173"           # tu frontend React en local
 
 
 
-
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),   # antes 5-15m
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),      # o 30 días
@@ -232,3 +235,19 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
     "LEEWAY":  30,
 }
+
+
+SUPPORT_EMAIL = "klinsman.flores@tecsup.edu.pe"
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+# 👇 el MISMO Gmail con el que creaste la contraseña de aplicación
+EMAIL_HOST_USER = "klinsman.flores@tecsup.edu.pe"
+
+# 👇 el app password (16 caracteres pegados)
+EMAIL_HOST_PASSWORD = "lhoqacvqhdiogybx"
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

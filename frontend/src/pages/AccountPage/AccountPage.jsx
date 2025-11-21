@@ -1,129 +1,200 @@
 import { Link } from "react-router-dom";
-import Navbar from "../../components/Navbar";
+import { useState } from "react";
+import Navbar from "../../components/Navbar"; 
 import Footer from "../../components/Footer";
+import "./AccountPage.css"; 
 
-export default function AccountPage() {
+// COMENTARIO: Asumimos que useAuth se puede importar desde la ruta correcta
+import { useAuth } from "../../context/AuthContext"; 
+
+// --- Importación de iconos de la librería react-icons/hi2 (Heroicons) ---
+import { 
+  HiOutlineArchiveBox, 
+  HiOutlineMapPin, 
+  HiOutlineHeart, 
+  HiOutlineTruck, 
+  HiOutlineUser,
+  HiOutlineEnvelope,
+  HiOutlineListBullet,
+  HiOutlineUserCircle
+} from "react-icons/hi2"; 
+// -----------------------------------------------------------------------
+
+// =====================================================================
+// Componente Modal Simulado para Direcciones
+// =====================================================================
+const AddressModal = ({ isOpen, onClose }) => {
+  if (!isOpen) return null;
+
+  // COMENTARIO: Aquí se cargaría dinámicamente la dirección principal
+  const sampleAddress = "Av. Las Flores 123, Urb. Primavera, Lima, Perú (Dirección principal)";
+
   return (
-    <>
-      <Navbar />
-
-      <div
-        style={{
-          minHeight: "80vh",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "flex-start",
-          padding: "4rem 2rem",
-          background: "linear-gradient(to bottom, #f9fafb, #f1f5f9)",
-        }}
-      >
-        <div
-          style={{
-            backgroundColor: "#fff",
-            padding: "2rem 3rem",
-            borderRadius: "16px",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-            width: "100%",
-            maxWidth: "700px",
-          }}
-        >
-          <h2
-            style={{
-              fontSize: "1.8rem",
-              fontWeight: "bold",
-              marginBottom: "1rem",
-              textAlign: "center",
-            }}
-          >
-            Mi Cuenta 👤
-          </h2>
-
-          <p
-            style={{
-              textAlign: "center",
-              color: "#555",
-              marginBottom: "2rem",
-              fontSize: "1rem",
-            }}
-          >
-            Bienvenido a tu panel personal. Desde aquí puedes revisar tus pedidos,
-            tus datos y la actividad de tu cuenta.
-          </p>
-
-          <ul
-            style={{
-              listStyle: "none",
-              padding: 0,
-              display: "flex",
-              flexDirection: "column",
-              gap: "1rem",
-            }}
-          >
-            <li>
-              <Link
-                to="/account/orders"
-                style={{
-                  display: "block",
-                  padding: "1rem 1.5rem",
-                  backgroundColor: "#007bff",
-                  color: "white",
-                  borderRadius: "8px",
-                  textDecoration: "none",
-                  fontWeight: "500",
-                  transition: "0.3s",
-                }}
-                onMouseEnter={(e) => (e.target.style.backgroundColor = "#0056b3")}
-                onMouseLeave={(e) => (e.target.style.backgroundColor = "#007bff")}
-              >
-                📦 Mis pedidos
-              </Link>
-            </li>
-
-            <li>
-              <Link
-                to="/account/settings"
-                style={{
-                  display: "block",
-                  padding: "1rem 1.5rem",
-                  backgroundColor: "#f3f4f6",
-                  color: "#333",
-                  borderRadius: "8px",
-                  textDecoration: "none",
-                  fontWeight: "500",
-                  transition: "0.3s",
-                }}
-                onMouseEnter={(e) => (e.target.style.backgroundColor = "#e5e7eb")}
-                onMouseLeave={(e) => (e.target.style.backgroundColor = "#f3f4f6")}
-              >
-                ⚙️ Configuración de cuenta
-              </Link>
-            </li>
-
-            <li>
-              <Link
-                to="/logout"
-                style={{
-                  display: "block",
-                  padding: "1rem 1.5rem",
-                  backgroundColor: "#fee2e2",
-                  color: "#b91c1c",
-                  borderRadius: "8px",
-                  textDecoration: "none",
-                  fontWeight: "500",
-                  transition: "0.3s",
-                }}
-                onMouseEnter={(e) => (e.target.style.backgroundColor = "#fecaca")}
-                onMouseLeave={(e) => (e.target.style.backgroundColor = "#fee2e2")}
-              >
-                🚪 Cerrar sesión
-              </Link>
-            </li>
-          </ul>
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <h3>📍 Mis Direcciones de Envío</h3>
+        <p>Tu dirección principal registrada para envíos.</p>
+        
+        <div className="current-address">
+            <strong>Dirección Principal:</strong>
+            <p>{sampleAddress}</p>
         </div>
+        
+        <button className="modal-close-btn" onClick={onClose}>Cerrar</button>
       </div>
-
-      <Footer />
-    </>
+    </div>
   );
+};
+
+// =====================================================================
+// Componente Principal AccountPage
+// =====================================================================
+export default function AccountPage() {
+    
+    const { user, loading } = useAuth() || {};
+    const [isAddressesModalOpen, setIsAddressesModalOpen] = useState(false);
+
+    // Acceso seguro a los datos del usuario
+    const displayUserName = user?.first_name || user?.username || 'Usuario';
+    const displayUserEmail = user?.email || 'email@no-disponible.com';
+    
+    // Variables Fijas/Simuladas
+    const latestOrder = "Pedido #1 — Entregado"; 
+    const latestOrderDate = "15/05/2025";
+    const wishlistCount = 5; 
+
+    const handleOpenAddressesModal = () => setIsAddressesModalOpen(true);
+    const handleCloseAddressesModal = () => setIsAddressesModalOpen(false);
+
+
+    // LÓGICA DE CARGA Y AUTENTICACIÓN
+    if (loading) {
+        return (
+             <div style={{ padding: '50px', textAlign: 'center', fontSize: '1.2em', color: '#007bff' }}>
+                Cargando información de la cuenta... 🔄
+            </div>
+        );
+    }
+    
+    if (!user) {
+        return (
+            <div style={{ padding: '50px', textAlign: 'center', color: '#dc3545', fontSize: '1.2em' }}>
+                Acceso denegado: Debes iniciar sesión para ver tu cuenta.
+            </div>
+        );
+    }
+
+    // RENDERIZADO PRINCIPAL
+    return (
+        <>
+            <Navbar />
+
+            <div className="account-wrapper">
+
+                {/* Encabezado con Icono y Bienvenida */}
+                <header className="account-header-modern">
+                    <div className="header-icon-container">
+                        <HiOutlineUserCircle size={50} className="user-icon-large" />
+                    </div>
+                    <div>
+                        <h1>Hola, {displayUserName} 👋</h1>
+                        <p className="account-subtitle">
+                            Bienvenido a tu panel personal. Gestiona tus actividades de compra.
+                        </p>
+                    </div>
+                </header>
+                
+                {/* LAYOUT PRINCIPAL: FLEX (70% - 30%) */}
+                <div className="account-main-layout">
+                    
+                    {/* Columna Principal (70%): Pedidos y Datos */}
+                    <main className="main-content-section">
+                        
+                        {/* Bloque: Información Personal (Fondo más prominente) */}
+                        <section className="account-box personal-info-box-modern">
+                            <h3 className="section-title">Información de Contacto</h3>
+                            
+                            <div className="info-details-container">
+                                <div className="info-detail-item">
+                                    <HiOutlineUser size={20} className="detail-icon" />
+                                    <div className="detail-text">
+                                        <strong>Nombre Completo</strong>
+                                        <p>{displayUserName}</p>
+                                    </div>
+                                </div>
+
+                                <div className="info-detail-item">
+                                    <HiOutlineEnvelope size={20} className="detail-icon" />
+                                    <div className="detail-text">
+                                        <strong>Correo Electrónico</strong>
+                                        <p>{displayUserEmail}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <p className="note">
+                                *Contacta a soporte si necesitas cambiar tu nombre o correo.
+                            </p>
+                        </section>
+
+                        {/* Bloque: Último Pedido (Destacado) */}
+                        <section className="account-box latest-order-box-modern">
+                            <div className="order-summary">
+                                <div className="order-status-badge">
+                                    <HiOutlineTruck size={24} />
+                                    <span>{latestOrder}</span>
+                                </div>
+                                <p className="order-date">Fecha: **{latestOrderDate}**</p>
+                            </div>
+
+                            <div className="order-actions-footer">
+                                <Link to="/account/orders" className="link-btn primary-compact">
+                                    <HiOutlineArchiveBox size={18} className="btn-icon" /> Ver Historial Completo
+                                </Link>
+                            </div>
+                        </section>
+
+                    </main>
+
+                    {/* Columna Lateral (30%): Acciones Rápidas */}
+                    <aside className="sidebar-info-section">
+                        
+                        {/* Bloque de Acciones Rápidas */}
+                        <section className="account-box quick-actions-box">
+                            <h3 className="section-title">Acciones Rápidas</h3>
+                            
+                            <div className="quick-action-list">
+                                <button 
+                                    onClick={handleOpenAddressesModal} 
+                                    className="action-tile addresses-tile"
+                                >
+                                    <HiOutlineMapPin size={24} />
+                                    <span>Direcciones de Envío</span>
+                                </button>
+                                
+                                <Link to="/account/wishlist" className="action-tile wishlist-tile">
+                                    <HiOutlineHeart size={24} />
+                                    <span>Lista de Deseos ({wishlistCount})</span>
+                                </Link>
+                                
+                                <Link to="/account/orders" className="action-tile orders-tile">
+                                    <HiOutlineListBullet size={24} />
+                                    <span>Detalles de Pedidos</span>
+                                </Link>
+                            </div>
+                        </section>
+
+                    </aside>
+                </div>
+            </div>
+
+            {/* Modal */}
+            <AddressModal 
+                isOpen={isAddressesModalOpen}
+                onClose={handleCloseAddressesModal}
+            />
+
+            <Footer />
+        </>
+    );
 }
