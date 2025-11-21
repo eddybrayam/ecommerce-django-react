@@ -3,6 +3,7 @@
 import axios from "axios";
 import { API_BASE, getAccess, getRefresh, setSession, isExpired, clearSession } from "./auth";
 
+
 const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://127.0.0.1:8000";
 
 // -------------------------
@@ -238,4 +239,9 @@ export async function addReviewComment(productId, reviewId, payload) {
   ensureAuthOrThrow();
   const r = await api.post(`/api/products/${productId}/reviews/${reviewId}/comments/`, payload);
   return r.data;
+}
+
+
+export const sendSupportMessage =(payload) => {
+  return api.post("/support/contact/",payload);
 }

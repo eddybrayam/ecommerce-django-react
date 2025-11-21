@@ -13,6 +13,7 @@ import OrdersPage from "./pages/OrdersPage/OrdersPage";
 import FavoritesPage from "./pages/FavoritesPage/FavoritesPage";
 import Checkout from "./pages/Checkout";
 import PaymentPage from "./pages/PaymentPage";
+import SupportPage from "./pages/SupportPage/SupportPage";
 
 
 function App() {
@@ -37,6 +38,11 @@ function App() {
         {/* 🧾 Nueva ruta de pago */}
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/payment" element={<PaymentPage />} />
+
+        {/**rutas de soporte */}
+        <Route path="/soporte" element={<SupportPage/>}/>
+
+
       </Routes>
     </BrowserRouter>
   );

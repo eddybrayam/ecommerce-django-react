@@ -3,8 +3,6 @@ import React from "react";
 import "./Stars.css";
 
 
-
-
 const Stars = ({ value = 0, size = 20, showNumber = true }) => {
   const fullStars = Math.floor(value);
   const hasHalfStar = value - fullStars >= 0.5;

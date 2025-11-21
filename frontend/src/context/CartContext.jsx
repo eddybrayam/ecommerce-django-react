@@ -36,19 +36,17 @@ export const CartProvider = ({ children }) => {
     }
   }, [cartItems, ready]);
 
-  // ✅ Actualizado: respeta cantidad seleccionada desde el producto
+  // ✅ Suma cantidad desde ProductDetail
   const addToCart = (product) => {
     setCartItems((prev) => {
       const itemExists = prev.find((p) => p.id === product.id);
       if (itemExists) {
-        // si ya existe, suma la cantidad enviada (product.quantity)
         return prev.map((p) =>
           p.id === product.id
             ? { ...p, quantity: p.quantity + (product.quantity || 1) }
             : p
         );
       }
-      // si no existe, lo agrega con la cantidad seleccionada
       return [...prev, { ...product, quantity: product.quantity || 1 }];
     });
   };
@@ -62,9 +60,25 @@ export const CartProvider = ({ children }) => {
     localStorage.removeItem("cartItems");
   };
 
+  // ⭐⭐⭐ NUEVO: actualizar cantidad desde el carrito
+  const updateQuantity = (id, newQty) => {
+    setCartItems((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, quantity: newQty } : item
+      )
+    );
+  };
+
   return (
     <CartContext.Provider
-      value={{ cartItems, addToCart, removeFromCart, clearCart, total }}
+      value={{
+        cartItems,
+        addToCart,
+        removeFromCart,
+        clearCart,
+        total,
+        updateQuantity,   // 👈 Exportamos la nueva función
+      }}
     >
       {children}
     </CartContext.Provider>

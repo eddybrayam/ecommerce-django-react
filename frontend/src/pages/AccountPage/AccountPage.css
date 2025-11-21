@@ -1,0 +1,332 @@
+/* ------------------------------------------------------------------- */
+/* Estilos Generales y Layout Principal */
+/* ------------------------------------------------------------------- */
+
+.account-wrapper {
+    max-width: 1280px; /* Un poco más ancho */
+    margin: 40px auto;
+    padding: 0 30px;
+}
+
+/* Header Moderno (con icono y texto) */
+.account-header-modern {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 40px;
+    padding-bottom: 25px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.user-icon-large {
+    color: #007bff; /* Color primario */
+}
+
+.account-header-modern h1 {
+    font-size: 2.8em;
+    color: #333;
+    margin: 0;
+}
+
+.account-subtitle {
+    color: #666;
+    font-size: 1.1em;
+    margin-top: 5px;
+}
+
+/* LAYOUT PRINCIPAL (Flexbox) */
+.account-main-layout {
+    display: flex;
+    gap: 30px; /* Espacio entre las dos columnas */
+    align-items: flex-start;
+}
+
+/* Columna Principal (70% - Pedidos y Contacto) */
+.main-content-section {
+    flex: 3; /* Ocupa ~70% del espacio */
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Columna Lateral (30% - Acciones) */
+.sidebar-info-section {
+    flex: 1; /* Ocupa ~30% del espacio */
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Estilos Comunes de Bloques */
+.account-box {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e0e0e0;
+}
+
+.section-title {
+    font-size: 1.5em;
+    color: #007bff;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+
+/* ------------------------------------------------------------------- */
+/* Bloque de Información Personal */
+/* ------------------------------------------------------------------- */
+
+.personal-info-box-modern {
+    background-color: #f7f9fc; /* Fondo ligeramente diferente para destacar */
+    border: 1px solid #dcdcdc;
+}
+
+.info-details-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.info-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.detail-icon {
+    color: #007bff;
+    flex-shrink: 0;
+}
+
+.detail-text strong {
+    display: block;
+    font-size: 0.9em;
+    color: #888;
+}
+
+.detail-text p {
+    margin: 0;
+    font-weight: 600;
+    color: #333;
+}
+
+.note {
+    font-size: 0.9em;
+    color: #999;
+    padding-top: 15px;
+    border-top: 1px dashed #e0e0e0;
+    margin-top: auto;
+}
+
+/* ------------------------------------------------------------------- */
+/* Bloque Último Pedido */
+/* ------------------------------------------------------------------- */
+
+.latest-order-box-modern {
+    padding: 25px 30px;
+}
+
+.order-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.order-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #28a745; /* Verde para 'Entregado' */
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-bottom: 10px;
+}
+
+.order-date {
+    color: #666;
+    font-size: 0.95em;
+    margin: 0;
+}
+
+/* ------------------------------------------------------------------- */
+/* Bloque Acciones Rápidas (Tiles) */
+/* ------------------------------------------------------------------- */
+
+.quick-action-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.action-tile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.05em;
+    transition: background-color 0.2s, transform 0.2s;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    color: #333;
+    background-color: #fff;
+}
+
+.action-tile:hover {
+    background-color: #f0f8ff; /* Fondo claro al pasar el ratón */
+    color: #007bff;
+    transform: translateY(-2px);
+    border-color: #007bff;
+}
+
+.action-tile svg {
+    color: #007bff;
+}
+
+.action-tile:hover svg {
+    color: #0056b3;
+}
+
+
+/* ------------------------------------------------------------------- */
+/* Botones y Enlaces */
+/* ------------------------------------------------------------------- */
+
+.link-btn {
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    margin-top: 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    transition: background-color 0.2s, opacity 0.2s;
+    width: 100%; 
+    border: none;
+    cursor: pointer;
+}
+
+.link-btn.primary-compact {
+    background-color: #007bff;
+    color: white;
+}
+
+.link-btn.primary-compact:hover {
+    background-color: #0056b3;
+}
+
+.link-btn.secondary {
+    background-color: white;
+    color: #007bff;
+    border: 1px solid #007bff;
+    margin-top: 0; /* Ajuste para el tile de direcciones */
+}
+
+/* ------------------------------------------------------------------- */
+/* Estilos del Modal (mantener la misma apariencia) */
+/* ------------------------------------------------------------------- */
+
+.modal-overlay {
+    /* ... (Mismo estilo) */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    /* ... (Mismo estilo) */
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.current-address {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f8f8f8;
+    margin-bottom: 25px;
+    color: #444;
+}
+
+.modal-close-btn {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+    display: block;
+    width: 100%;
+}
+
+.modal-close-btn:hover {
+    background-color: #5a6268;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ------------------------------------------------------------------- */
+/* Media Queries (Móvil/Tablet) */
+/* ------------------------------------------------------------------- */
+@media (max-width: 992px) {
+    .account-main-layout {
+        /* En tablet, el layout sigue siendo de dos columnas pero más ajustado */
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* En móvil, apilamos las columnas */
+    .account-main-layout {
+        flex-direction: column;
+    }
+
+    .main-content-section, .sidebar-info-section {
+        flex: 1; /* Ocupan el ancho completo */
+        width: 100%;
+    }
+
+    .account-header-modern {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .account-header-modern h1 {
+        font-size: 2em;
+    }
+    
+    .quick-action-list {
+        /* En móvil, los tiles se pueden mantener en una columna simple */
+        flex-direction: column;
+    }
+}

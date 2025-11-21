@@ -133,3 +133,44 @@
 .btn-checkout:hover {
   background: linear-gradient(135deg, #1e40af, #1e3a8a);
 }
+
+.cart-qty {
+  margin-top: 0.5rem;
+}
+
+.cart-qty-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-left: 0.5rem;
+}
+
+.qty-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #f5f5f5;
+  cursor: pointer;
+}
+
+.qty-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.qty-input {
+  width: 40px;
+  text-align: center;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  padding: 2px 4px;
+}
+
+.stock-hint {
+  display: block;
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 0.2rem;
+}
+

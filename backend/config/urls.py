@@ -44,6 +44,9 @@ urlpatterns = [
     # ✅ Nueva ruta para validar cupones
     path("api/coupon/", validate_coupon, name="validate-coupon"),
 
+    #URLS DE SIPORTE DE CONTACTO
+    path('support/', include('support.urls')),
+
 ]
 
 if settings.DEBUG:

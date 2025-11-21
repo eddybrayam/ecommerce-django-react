@@ -1,26 +1,29 @@
-import { useEffect, useState, useCallback } from "react"; // ✅ 1. Importa useCallback
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import Filters from "../../components/Filters";
 import ProductList from "../../components/ProductList";
+import PromoCarousel from "../../components/PromoCarousel";
+
+// COMENTARIO: Asegúrate de que este archivo CSS se actualice
+import './Home.css'; 
+
 
 export default function Home() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // ✅ 2. Estado de filtros dividido para evitar bucles
     const [activeFilters, setActiveFilters] = useState({
         categories: ["all"],
         marcas: [],
         priceRange: [0, 10000],
     });
     const [searchTerm, setSearchTerm] = useState("");
-    const [sortBy, setSortBy] = useState("featured"); // Añadido para 'onSort'
+    const [sortBy, setSortBy] = useState("featured");
 
     const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
-    // ✅ 3. useEffect ahora vigila los 3 estados
     useEffect(() => {
         fetchProducts();
     }, [activeFilters, searchTerm, sortBy]); 
@@ -35,9 +38,9 @@ export default function Home() {
                 url += `search=${searchTerm}&`;
             }
 
-             // 🔸 2. Ordenar
+            // 🔸 2. Ordenar
             if (sortBy && sortBy !== "featured") {
-                url += `sort_by=${sortBy}&`; // Ajusta 'sort_by' al nombre de tu parámetro de API
+                url += `sort_by=${sortBy}&`; 
             }
 
             // ✅ 4. Lógica de array para categorías
@@ -70,7 +73,6 @@ export default function Home() {
                 category: p.categoria_nombre || (p.categoria ? `Cat. ${p.categoria}` : "Sin categoría"),
                 inStock: p.stock > 0,
                 badge: p.stock <= 0 ? "out-of-stock" : undefined,
-                // Pasa también estos datos por si ProductCard los usa
                 rating_avg: p.rating_avg, 
                 rating_count: p.rating_count,
                 ...p
@@ -83,42 +85,56 @@ export default function Home() {
         }
     };
 
-    // ✅ 6. USA USECALLBACK para "memorizar" las funciones
-    // Esto es lo que rompe el bucle infinito.
     const handleFilterChange = useCallback((newFilters) => {
         setActiveFilters(newFilters);
-    }, []); // El array vacío [] significa que esta función NUNCA cambia
+    }, []);
 
     const handleSearch = useCallback((value) => {
         setSearchTerm(value);
-    }, []); // Esta función NUNCA cambia
+    }, []);
 
     const handleSort = useCallback((value) => {
         setSortBy(value);
-    }, []); // Esta función NUNCA cambia
+    }, []);
+
+    const promoImages = [
+        "/banners/black-friday.jpg",
+        "/banners/navidad.jpg",
+        "/banners/vuelta-clases.jpg",
+    ];
+
 
     return (
         <div>
             <Navbar />
-            <main className="home-layout">
-                <aside className="filters-sidebar">
-                    {/* ✅ 7. Pasa los 3 handlers memorizados */}
+            
+            <PromoCarousel images={promoImages} />
+            
+            {/* COMENTARIO: Usamos la clase 'home-page-content' para el contenedor principal
+                           y quitamos el layout flex de dos columnas. */}
+            <main className="home-page-content">
+                
+                {/* 🎯 FILTROS AHORA EN LA PARTE SUPERIOR */}
+                <div className="filters-container-top">
                     <Filters
                         onFilterChange={handleFilterChange}
                         onSearch={handleSearch}
                         onSort={handleSort}
                     />
-                </aside>
+                </div>
 
-                <section className="products-section">
-                    <h1>Página principal de TechStore</h1>
+                <section className="products-section-full">
+                    
+                    
                     {loading ? (
                         <p style={{ textAlign: "center" }}>Cargando productos...</p>
                     ) : (
                         <ProductList products={products} />
                     )}
                 </section>
+                
             </main>
+            
             <Footer />
         </div>
     );

@@ -1,0 +1,97 @@
+.promo-carousel {
+  width: 100%;
+  max-width: 1200px;
+  margin: 1rem auto 2rem;
+  padding: 0 1.5rem;
+}
+
+/* Contenedor principal */
+.promo-inner {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: #020617;
+  height: 280px;
+}
+
+/* La “diapositiva” es solo la imagen */
+.promo-slide {
+  width: 100%;
+}
+
+/* Imagen responsive, ocupa todo el ancho */
+.promo-image {
+
+  width: 100%;
+  height: auto;
+  display: flexbox;
+  object-fit: scale-down;
+  background:#ffffff;
+}
+
+/* Si quieres asegurar proporción tipo banner: */
+@media (min-width: 768px) {
+  .promo-image {
+    max-height: 320px;
+  }
+}
+
+/* Flechas */
+.promo-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.8);
+  color: #e5e7eb;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.promo-arrow.left {
+  left: 0.5rem;
+}
+
+.promo-arrow.right {
+  right: 0.5rem;
+}
+
+.promo-arrow:hover {
+  background: rgba(15, 23, 42, 1);
+}
+
+/* Dots */
+.promo-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.promo-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: none;
+  background: #cbd5f5;
+  cursor: pointer;
+  padding: 0;
+}
+
+.promo-dot.active {
+  background: #2563eb;
+  width: 18px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .promo-carousel {
+    padding: 0 1rem;
+  }
+}

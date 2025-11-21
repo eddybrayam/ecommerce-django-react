@@ -1,7 +1,7 @@
 // src/pages/ProductDetail.jsx
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { ShoppingCart, ArrowLeft, Check } from "lucide-react";
+import { ShoppingCart, ArrowLeft, Check, Star, Package, Truck } from "lucide-react";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import { useCart } from "../../context/CartContext";
@@ -9,7 +9,7 @@ import Stars from "../../components/Stars";
 import { getProductReviews, createOrUpdateReview, deleteMyReview } from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
 import ReviewComments from "../../components/ReviewComments";
-import Agotado from "../../components/Agotado/Agotado"; // 🟢 AGREGADO
+import Agotado from "../../components/Agotado/Agotado";
 import "./ProductDetail.css";
 
 const API = "http://127.0.0.1:8000/api";
@@ -30,7 +30,7 @@ export default function ProductDetail() {
   const [myRating, setMyRating] = useState(5);
   const [myComment, setMyComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [cantidad, setCantidad] = useState(1); // 🟢 AGREGADO
+  const [cantidad, setCantidad] = useState(1);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -38,26 +38,12 @@ export default function ProductDetail() {
         const res = await fetch(`${API}/products/${id}/`);
         if (!res.ok) throw new Error("Producto no encontrado");
         const data = await res.json();
-
         let extraImgs = [];
-        try {
-          extraImgs = JSON.parse(data.imagenes || "[]");
-        } catch {
-          extraImgs = [];
-        }
-
+        try { extraImgs = JSON.parse(data.imagenes || "[]"); } catch { extraImgs = []; }
         setProduct({ ...data, imagenes: extraImgs });
-        setSelectedImage(
-          data.imagen_principal ||
-            data.imagen_url ||
-            (extraImgs.length > 0 ? extraImgs[0] : "")
-        );
-      } catch (err) {
-        console.error(err);
-        setProduct(null);
-      } finally {
-        setLoading(false);
-      }
+        setSelectedImage(data.imagen_principal || data.imagen_url || (extraImgs.length > 0 ? extraImgs[0] : ""));
+      } catch (err) { console.error(err); setProduct(null); }
+      finally { setLoading(false); }
     };
     fetchProduct();
   }, [id]);
@@ -68,20 +54,14 @@ export default function ProductDetail() {
         const data = await getProductReviews(id);
         setReviews(data || []);
         const mine = (data || []).find(r => r.usuario === user?.id);
-        if (mine) {
-          setMyRating(mine.calificacion);
-          setMyComment(mine.comentario || "");
-        }
-      } catch (e) {
-        console.error("Error cargando reseñas:", e);
-      }
+        if (mine) { setMyRating(mine.calificacion); setMyComment(mine.comentario || ""); }
+      } catch (e) { console.error("Error cargando reseñas:", e); }
     };
     if (id) loadReviews();
   }, [id, user?.id]);
 
   useEffect(() => {
     if (!product?.imagenes || product.imagenes.length === 0) return;
-
     let currentIndex = 0;
     const interval = setInterval(() => {
       if (isPaused) return;
@@ -90,7 +70,6 @@ export default function ProductDetail() {
       currentIndex = (currentIndex + 1) % allImages.length;
       setSelectedImage(allImages[currentIndex]);
     }, 5000);
-
     return () => clearInterval(interval);
   }, [product, isPaused]);
 
@@ -100,46 +79,37 @@ export default function ProductDetail() {
       try {
         const res = await fetch(`${API}/products/`);
         const all = await res.json();
-        const filtered = all.filter(
-          (p) =>
-            p.categoria_id === product.categoria_id &&
-            p.producto_id !== product.producto_id
-        );
+        const filtered = all.filter(p => p.categoria_id === product.categoria_id && p.producto_id !== product.producto_id);
         setRelated(filtered.slice(0, 6));
-      } catch (error) {
-        console.error("Error cargando relacionados:", error);
-      }
+      } catch (error) { console.error("Error cargando relacionados:", error); }
     };
     fetchRelated();
   }, [product]);
 
-  const ratingAvg = useMemo(
-    () => Number(product?.rating_avg ?? 0) || 0,
-    [product]
-  );
-  const ratingCount = useMemo(
-    () => Number(product?.rating_count ?? 0) || 0,
-    [product]
-  );
+  const ratingAvg = useMemo(() => Number(product?.rating_avg ?? 0) || 0, [product]);
+  const ratingCount = useMemo(() => Number(product?.rating_count ?? 0) || 0, [product]);
 
   const handleAddToCart = () => {
-    if (cantidad > product.stock) {
-      alert(`Solo hay ${product.stock} unidades disponibles.`);
-      return;
-    }
+  if (cantidad > product.stock) {
+    alert(`Solo hay ${product.stock} unidades disponibles.`);
+    return;
+  }
 
-    const formatted = {
-      id: product.producto_id,
-      name: product.nombre,
-      price: parseFloat(product.precio),
-      image: selectedImage,
-      description: product.descripcion,
-      quantity: cantidad,
-    };
-    addToCart(formatted);
-    setAdded(true);
-    setTimeout(() => setAdded(false), 1500);
+  const formatted = {
+    id: product.producto_id,
+    name: product.nombre,
+    price: parseFloat(product.precio),
+    image: selectedImage,
+    description: product.descripcion,
+    quantity: cantidad,
+    stock: product.stock,          // 🔹 NUEVO
   };
+
+  addToCart(formatted);
+  setAdded(true);
+  setTimeout(() => setAdded(false), 1500);
+};
+
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
@@ -153,11 +123,8 @@ export default function ProductDetail() {
       const res = await fetch(`${API}/products/${id}/`);
       const prod = await res.json();
       setProduct(prod);
-    } catch (err) {
-      console.error("Error guardando reseña:", err);
-    } finally {
-      setSubmitting(false);
-    }
+    } catch (err) { console.error("Error guardando reseña:", err); }
+    finally { setSubmitting(false); }
   };
 
   const handleDeleteMyReview = async () => {
@@ -172,19 +139,17 @@ export default function ProductDetail() {
       const res = await fetch(`${API}/products/${id}/`);
       const prod = await res.json();
       setProduct(prod);
-    } catch (err) {
-      console.error("Error borrando reseña:", err);
-    }
+    } catch (err) { console.error("Error borrando reseña:", err); }
   };
 
   if (loading) {
     return (
       <>
         <Navbar />
-        <div className="loading-center">
-          <div className="loading-spinner"></div>
-          <p>Cargando producto...</p>
-        </div>
+        <main className="pd-loading">
+          <div className="pd-loading__spinner"></div>
+          <p className="pd-loading__text">Cargando producto...</p>
+        </main>
         <Footer />
       </>
     );
@@ -194,10 +159,16 @@ export default function ProductDetail() {
     return (
       <>
         <Navbar />
-        <div className="product-detail-empty">
-          <p>Producto no encontrado</p>
-          <button onClick={() => navigate(-1)}>Volver</button>
-        </div>
+        <main className="pd-empty">
+          <div className="pd-empty__content">
+            <Package size={64} strokeWidth={1.5} />
+            <h2 className="pd-empty__title">Producto no encontrado</h2>
+            <p className="pd-empty__text">El producto que buscas no existe o fue eliminado.</p>
+            <button className="pd-empty__btn" onClick={() => navigate(-1)}>
+              <ArrowLeft size={18} /> Volver atrás
+            </button>
+          </div>
+        </main>
         <Footer />
       </>
     );
@@ -207,175 +178,223 @@ export default function ProductDetail() {
     <>
       <Navbar />
 
-      <div className="product-detail-page">
-        <button className="back-btn" onClick={() => navigate(-1)}>
-          <ArrowLeft size={22} /> Volver
-        </button>
+      <main className="pd-container">
+        {/* Breadcrumb / Back */}
+        <nav className="pd-nav">
+          <button className="pd-nav__back" onClick={() => navigate(-1)}>
+            <ArrowLeft size={20} />
+            <span>Volver</span>
+          </button>
+        </nav>
 
-        <div className="product-main">
-          <div
-            className="product-gallery"
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-          >
-            <img src={selectedImage} alt={product.nombre} className="main-image" />
+        {/* Product Section */}
+        <section className="pd-product">
+          {/* Gallery */}
+          <div className="pd-gallery" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
+            <figure className="pd-gallery__main">
+              <img src={selectedImage} alt={product.nombre} className="pd-gallery__image" />
+            </figure>
 
-            <div className="thumbnail-row">
+            <div className="pd-gallery__thumbs">
               {[product.imagen_principal, product.imagen_url, ...(product.imagenes || [])]
                 .filter(Boolean)
                 .map((img, i) => (
-                  <img
+                  <button
                     key={i}
-                    src={img.startsWith("http") ? img : `http://127.0.0.1:8000${img}`}
-                    alt={`Imagen ${i + 1}`}
-                    className={`thumb ${img === selectedImage ? "active" : ""}`}
+                    className={`pd-gallery__thumb ${img === selectedImage ? "pd-gallery__thumb--active" : ""}`}
                     onClick={() => setSelectedImage(img)}
-                  />
+                  >
+                    <img src={img.startsWith("http") ? img : `http://127.0.0.1:8000${img}`} alt={`Vista ${i + 1}`} />
+                  </button>
                 ))}
             </div>
           </div>
 
-          <div className="product-info">
-            <h2>{product.nombre}</h2>
+          {/* Info */}
+          <article className="pd-info">
+            <header className="pd-info__header">
+              <h1 className="pd-info__title">{product.nombre}</h1>
+              
+              <div className="pd-info__rating">
+                <Stars value={ratingAvg} />
+                <span className="pd-info__rating-value">{Number(ratingAvg || 0).toFixed(1)}</span>
+                <span className="pd-info__rating-count">({ratingCount} reseñas)</span>
+              </div>
+            </header>
 
-            <div className="rating">
-              <Stars value={ratingAvg} />
-              <span className="rating-value">{Number(ratingAvg || 0).toFixed(1)} / 5</span>
-              <span className="rating-count">
-                {ratingCount > 0 ? `(${ratingCount} reseñas)` : "(0 reseñas)"}
-              </span>
+            <div className="pd-info__price-box">
+              <span className="pd-info__price">S/ {parseFloat(product.precio).toFixed(2)}</span>
             </div>
 
-            <h3 className="price">S/ {parseFloat(product.precio).toFixed(2)}</h3>
-            <p className="description">{product.descripcion}</p>
+            <p className="pd-info__description">{product.descripcion}</p>
 
-            {/* 🟢 Mostrar aviso de stock */}
+            {/* Stock Status */}
             <Agotado stock={product.stock} cantidad={cantidad} />
 
-            {/* 🟢 Selector de cantidad */}
-            <div className="quantity-selector">
-              <label>Cantidad:</label>
-              <input
-                type="number"
-                min="1"
-                value={cantidad}
-                onChange={(e) => setCantidad(Number(e.target.value))}
-              />
-            </div>
+            {/* Purchase Controls */}
+            <div className="pd-purchase">
+              <div className="pd-purchase__quantity">
+                <label className="pd-purchase__label" htmlFor="cantidad">Cantidad</label>
+                <div className="pd-purchase__input-wrap">
+                  <button 
+                    className="pd-purchase__qty-btn" 
+                    onClick={() => setCantidad(Math.max(1, cantidad - 1))}
+                    disabled={cantidad <= 1}
+                  >−</button>
+                  <input
+                    id="cantidad"
+                    type="number"
+                    className="pd-purchase__input"
+                    min="1"
+                    value={cantidad}
+                    onChange={(e) => setCantidad(Math.max(1, Number(e.target.value)))}
+                  />
+                  <button 
+                    className="pd-purchase__qty-btn" 
+                    onClick={() => setCantidad(cantidad + 1)}
+                    disabled={cantidad >= product.stock}
+                  >+</button>
+                </div>
+              </div>
 
-            <div className="action-buttons">
               <button
-                className={`add-cart-btn ${added ? "added" : ""}`}
+                className={`pd-purchase__cart-btn ${added ? "pd-purchase__cart-btn--added" : ""}`}
                 onClick={handleAddToCart}
                 disabled={product.stock === 0}
               >
                 {added ? (
-                  <>
-                    <Check size={22} /> Agregado
-                  </>
+                  <><Check size={20} /> Agregado</>
                 ) : (
-                  <>
-                    <ShoppingCart size={22} /> Agregar al carrito
-                  </>
+                  <><ShoppingCart size={20} /> Agregar al carrito</>
                 )}
               </button>
             </div>
-          </div>
-        </div>
 
-        {/* resto de tu código sin cambios */}
-        <div className="reviews-section">
-          <h3>Reseñas de clientes</h3>
+            {/* Shipping Info */}
+            <div className="pd-shipping">
+              <div className="pd-shipping__item">
+                <Truck size={20} />
+                <span>Envío a todo el país</span>
+              </div>
+              <div className="pd-shipping__item">
+                <Package size={20} />
+                <span>Stock disponible: {product.stock} unidades</span>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        {/* Reviews Section */}
+        <section className="pd-reviews">
+          <header className="pd-reviews__header">
+            <h2 className="pd-reviews__title">Reseñas de clientes</h2>
+            <div className="pd-reviews__summary">
+              <span className="pd-reviews__avg">{Number(ratingAvg || 0).toFixed(1)}</span>
+              <Stars value={ratingAvg} />
+              <span className="pd-reviews__total">{ratingCount} reseñas</span>
+            </div>
+          </header>
 
           {reviews.length === 0 ? (
-            <p className="no-reviews">No hay reseñas aún. ¡Sé el primero en opinar!</p>
+            <div className="pd-reviews__empty">
+              <Star size={48} strokeWidth={1.5} />
+              <p>No hay reseñas aún. ¡Sé el primero en opinar!</p>
+            </div>
           ) : (
-            <ul className="reviews-list">
+            <ul className="pd-reviews__list">
               {reviews.map((r) => (
-                <li key={r.id} className="review-item">
-                  <div className="review-header">
-                    <strong>{r.usuario_nombre || `Usuario #${r.usuario}`}</strong>
-                    <span className="review-date">
-                      {new Date(r.creado_en).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <div className="review-stars">
-                    <Stars value={r.calificacion} showNumber={false} size={20} />
-                  </div>
-                  {r.comentario && <p className="review-comment">{r.comentario}</p>}
+                <li key={r.id} className="pd-review">
+                  <header className="pd-review__header">
+                    <div className="pd-review__user">
+                      <div className="pd-review__avatar">
+                        {(r.usuario_nombre || "U")[0].toUpperCase()}
+                      </div>
+                      <div className="pd-review__meta">
+                        <strong className="pd-review__name">{r.usuario_nombre || `Usuario #${r.usuario}`}</strong>
+                        <time className="pd-review__date">{new Date(r.creado_en).toLocaleDateString()}</time>
+                      </div>
+                    </div>
+                    <div className="pd-review__stars">
+                      <Stars value={r.calificacion} showNumber={false} size={18} />
+                    </div>
+                  </header>
+                  {r.comentario && <p className="pd-review__comment">{r.comentario}</p>}
                   <ReviewComments productId={id} reviewId={r.id} canComment={!!user} />
                 </li>
               ))}
             </ul>
           )}
 
+          {/* Review Form */}
           {!user ? (
-            <div className="login-hint">
-              <p>
-                Inicia sesión para dejar tu reseña.{" "}
-                <Link to="/login">Ir a iniciar sesión</Link>
-              </p>
+            <div className="pd-reviews__login">
+              <p>¿Ya probaste este producto? <Link to="/login">Inicia sesión</Link> para dejar tu reseña.</p>
             </div>
           ) : (
-            <form className="review-form" onSubmit={handleSubmitReview}>
-              <h4>{reviews.some(r => r.usuario === user?.id) ? "Editar mi reseña" : "Escribir una reseña"}</h4>
+            <form className="pd-review-form" onSubmit={handleSubmitReview}>
+              <h3 className="pd-review-form__title">
+                {reviews.some(r => r.usuario === user?.id) ? "Editar mi reseña" : "Escribir una reseña"}
+              </h3>
 
-              <label>Calificación</label>
-              <select
-                value={myRating}
-                onChange={(e) => setMyRating(Number(e.target.value))}
-              >
-                {[5, 4, 3, 2, 1].map((v) => (
-                  <option key={v} value={v}>{v} estrellas</option>
-                ))}
-              </select>
+              <div className="pd-review-form__field">
+                <label className="pd-review-form__label">Tu calificación</label>
+                <select
+                  className="pd-review-form__select"
+                  value={myRating}
+                  onChange={(e) => setMyRating(Number(e.target.value))}
+                >
+                  {[5, 4, 3, 2, 1].map((v) => (
+                    <option key={v} value={v}>{v} {v === 1 ? "estrella" : "estrellas"}</option>
+                  ))}
+                </select>
+              </div>
 
-              <label>Comentario (opcional)</label>
-              <textarea
-                rows={5}
-                value={myComment}
-                onChange={(e) => setMyComment(e.target.value)}
-                placeholder="¿Qué te pareció este producto?"
-              />
+              <div className="pd-review-form__field">
+                <label className="pd-review-form__label">Tu comentario <span>(opcional)</span></label>
+                <textarea
+                  className="pd-review-form__textarea"
+                  rows={4}
+                  value={myComment}
+                  onChange={(e) => setMyComment(e.target.value)}
+                  placeholder="Cuéntanos tu experiencia con este producto..."
+                />
+              </div>
 
-              <div className="review-actions">
-                <button type="submit" disabled={submitting}>
-                  {submitting ? "Guardando..." : "Guardar reseña"}
+              <div className="pd-review-form__actions">
+                <button type="submit" className="pd-review-form__submit" disabled={submitting}>
+                  {submitting ? "Guardando..." : "Publicar reseña"}
                 </button>
 
                 {reviews.some(r => r.usuario === user?.id) && (
-                  <button
-                    type="button"
-                    className="danger"
-                    onClick={handleDeleteMyReview}
-                  >
+                  <button type="button" className="pd-review-form__delete" onClick={handleDeleteMyReview}>
                     Eliminar mi reseña
                   </button>
                 )}
               </div>
             </form>
           )}
-        </div>
+        </section>
 
+        {/* Related Products */}
         {related.length > 0 && (
-          <div className="related-section">
-            <h3>Productos similares</h3>
-            <div className="related-carousel">
+          <section className="pd-related">
+            <h2 className="pd-related__title">Productos similares</h2>
+            <div className="pd-related__grid">
               {related.map((item) => (
-                <Link
-                  key={item.producto_id}
-                  to={`/product/${item.producto_id}`}
-                  className="related-card"
-                >
-                  <img src={item.imagen_url} alt={item.nombre} />
-                  <p>{item.nombre}</p>
-                  <span>S/ {parseFloat(item.precio).toFixed(2)}</span>
+                <Link key={item.producto_id} to={`/product/${item.producto_id}`} className="pd-related__card">
+                  <figure className="pd-related__image">
+                    <img src={item.imagen_url} alt={item.nombre} />
+                  </figure>
+                  <div className="pd-related__info">
+                    <h3 className="pd-related__name">{item.nombre}</h3>
+                    <span className="pd-related__price">S/ {parseFloat(item.precio).toFixed(2)}</span>
+                  </div>
                 </Link>
               ))}
             </div>
-          </div>
+          </section>
         )}
-      </div>
+      </main>
 
       <Footer />
     </>

@@ -1,215 +1,172 @@
-/* Product List Container */
-.product-list-container {
+/* ========================================================== */
+/* Estilos del Mensaje de "No hay productos" (Mantener) */
+/* ========================================================== */
+.no-products {
+    text-align: center;
+    padding: 60px 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    background-color: #fcfcfc;
+    margin-top: 40px;
+}
+
+.no-products-icon {
+    color: #007bff; 
+    margin-bottom: 20px;
+}
+
+.no-products h3 {
+    font-size: 1.8em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.no-products p {
+    color: #777;
+    font-size: 1.1em;
+}
+
+/* ========================================================== */
+/* Estilos del Header y Controles (Mantener) */
+/* ========================================================== */
+.product-list-wrapper {
     width: 100%;
-    padding: 2rem 0;
-    }
+    margin-top: 20px;
+}
 
-    /* Header */
-    .product-list-header {
+.list-controls-header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    margin-bottom: 2rem;
-    padding: 0 1rem;
-    flex-wrap: wrap;
-    gap: 1rem;
-    }
+    align-items: center;
+    padding: 15px 0;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #ddd;
+}
 
-    .results-count {
+.results-summary {
     display: flex;
     align-items: baseline;
-    gap: 0.5rem;
-    }
-
-    .count-number {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #2563eb;
-    }
-
-    .count-text {
-    font-size: 1rem;
-    color: #6b7280;
+    font-size: 1.3em;
     font-weight: 500;
-    }
+    margin: 0;
+}
 
-    /* View Toggle Buttons */
-    .view-toggle {
+.count-number {
+    font-weight: 700;
+    color: #007bff;
+    margin-right: 8px;
+    font-size: 1.2em;
+}
+
+.count-text {
+    color: #555;
+    font-size: 0.9em;
+}
+
+/* Botones de Alternancia */
+.view-toggle-buttons {
     display: flex;
-    gap: 0.5rem;
-    background: #f3f4f6;
-    padding: 0.25rem;
-    border-radius: 10px;
-    }
+    gap: 8px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    padding: 4px;
+}
 
-    .view-btn {
-    padding: 0.5rem 0.75rem;
+.view-btn {
     background: transparent;
     border: none;
-    border-radius: 8px;
+    color: #888;
+    padding: 8px;
+    border-radius: 6px;
     cursor: pointer;
-    color: #6b7280;
-    transition: all 0.3s ease;
+    transition: all 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
-    }
+}
 
-    .view-btn:hover {
-    color: #2563eb;
-    }
+.view-btn.active {
+    background-color: white;
+    color: #007bff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
 
-    .view-btn.active {
-    background: white;
-    color: #2563eb;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
+.view-btn:hover:not(.active) {
+    color: #333;
+}
 
-    /* Product Grid */
-    .product-grid {
+
+/* ========================================================== */
+/* Estilos del Contenedor de Productos (Grid/List) */
+/* ========================================================== */
+
+/* --- 1. Vista de Cuadrícula (Grid View) por defecto --- */
+.product-results-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 2rem;
-    padding: 0 1rem;
-    }
+    /* AUMENTAMOS EL ESPACIO (GAP) ENTRE PRODUCTOS */
+    gap: 40px; 
+    
+    /* Configuración de cuadrícula responsiva: 
+       Mantenemos 4 columnas, pero más espaciadas */
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
 
-    /* List View */
-    .product-grid.list-view {
-    grid-template-columns: 1fr;
-    max-width: 1000px;
-    margin: 0 auto;
-    }
+.product-item-card {
+    opacity: 0; 
+    transform: translateY(20px);
+    animation: fadeInSlide 0.5s forwards;
+}
 
-    .product-grid.list-view .product-item {
-    animation: slideInLeft 0.5s ease forwards;
-    }
-
-    /* Product Item with Animation */
-    .product-item {
-    opacity: 0;
-    animation: fadeInUp 0.6s ease forwards;
-    }
-
-    @keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
+@keyframes fadeInSlide {
     to {
         opacity: 1;
         transform: translateY(0);
     }
-    }
+}
 
-    @keyframes slideInLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-    }
 
-    /* No Products State */
-    .no-products {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 4rem 2rem;
-    text-align: center;
-    min-height: 400px;
-    }
+/* --- 2. Vista de Lista (List View) --- */
+.product-results-grid.list-view-enabled {
+    /* Mantenemos una sola columna */
+    grid-template-columns: 1fr;
+    /* REDUCIMOS EL ESPACIO VERTICAL */
+    gap: 15px; 
+}
 
-    .no-products-icon {
-    color: #d1d5db;
-    margin-bottom: 1.5rem;
-    }
+/* 🚨 ¡CRÍTICO! 🚨 
+   Para que la vista de lista se vea bien y "no tan grande", 
+   el componente ProductCard (dentro de .product-item-card)
+   debe cambiar su diseño interno de columna a fila (flex-direction: row)
+   cuando su contenedor tiene la clase `list-view-enabled`.
 
-    .no-products h3 {
-    font-size: 1.5rem;
-    color: #1f2937;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    }
+   **Necesitas ajustar el CSS interno de `ProductCard` (o su wrapper) así:**
+   
+   .list-view-enabled .product-card-inner {
+       display: flex; 
+       flex-direction: row; 
+       align-items: center;
+       padding: 15px;
+       border: 1px solid #ddd;
+       border-radius: 8px;
+   }
+*/
 
-    .no-products p {
-    font-size: 1rem;
-    color: #6b7280;
-    max-width: 400px;
-    }
 
-    /* Responsive Adjustments */
-    @media (max-width: 1200px) {
-    .product-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 1.5rem;
-    }
-    }
+/* ========================================================== */
+/* Media Queries (Ajustes de Grid) */
+/* ========================================================== */
 
-    @media (max-width: 768px) {
-    .product-list-container {
-        padding: 1.5rem 0;
+@media (max-width: 992px) {
+    .product-results-grid.grid-view-enabled {
+        /* Aumentamos el mínimo para asegurar que no se vean demasiado juntos */
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+        gap: 25px;
     }
+}
 
-    .product-list-header {
-        margin-bottom: 1.5rem;
-    }
-
-    .count-number {
-        font-size: 1.5rem;
-    }
-
-    .count-text {
-        font-size: 0.875rem;
-    }
-
-    .product-grid {
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 1.25rem;
-        padding: 0 0.75rem;
-    }
-
-    .product-grid.list-view {
-        grid-template-columns: 1fr;
-    }
-    }
-
-    @media (max-width: 480px) {
-    .product-list-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .view-toggle {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .product-grid {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        gap: 1rem;
-        padding: 0 0.5rem;
-    }
-
-    .no-products {
-        padding: 3rem 1rem;
-    }
-
-    .no-products h3 {
-        font-size: 1.25rem;
-    }
-
-    .no-products p {
-        font-size: 0.875rem;
-    }
-    }
-
-    /* Extra small devices */
-    @media (max-width: 360px) {
-    .product-grid {
-        grid-template-columns: 1fr;
+@media (max-width: 600px) {
+    .product-results-grid.grid-view-enabled {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); /* 2 columnas en móvil */
+        gap: 20px;
     }
 }
