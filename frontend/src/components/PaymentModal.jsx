@@ -18,12 +18,25 @@ export default function PaymentModal({ cartItems, total, onSuccess, onClose }) {
   const [comprobante, setComprobante] = useState(null);
   const [cuponAplicado, setCuponAplicado] = useState("");
 
+  // 🔹 NUEVO: datos del cliente
+  const [cliente, setCliente] = useState({
+    nombre: "",
+    dni: "",
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMensaje("");
 
     try {
+      // Validar nombre y DNI básicos
+      if (!cliente.nombre.trim() || !cliente.dni.trim()) {
+        setMensaje("Por favor ingresa tu nombre completo y DNI.");
+        setLoading(false);
+        return;
+      }
+
       const productos = cartItems.map((item) => ({
         id: item.id,
         cantidad: item.quantity,
@@ -34,7 +47,12 @@ export default function PaymentModal({ cartItems, total, onSuccess, onClose }) {
         setMensaje(res.data?.mensaje || "Pago con tarjeta aprobado");
 
         await confirmarPago(productos, cuponAplicado);
-        onSuccess?.();
+
+        // 🔹 Pasamos nombre y DNI reales al padre
+        onSuccess?.({
+          customerName: cliente.nombre,
+          customerDni: cliente.dni,
+        });
       } else if (metodo === "yape") {
         const formData = new FormData();
         formData.append("producto_id", cartItems[0].id);
@@ -45,7 +63,12 @@ export default function PaymentModal({ cartItems, total, onSuccess, onClose }) {
         setMensaje(res.data?.mensaje || "Pago Yape recibido");
 
         await confirmarPago(productos, cuponAplicado);
-        onSuccess?.();
+
+        // 🔹 También aquí pasamos nombre y DNI
+        onSuccess?.({
+          customerName: cliente.nombre,
+          customerDni: cliente.dni,
+        });
       }
     } catch (err) {
       setMensaje(err?.response?.data?.error || "Error procesando pago");
@@ -59,6 +82,33 @@ export default function PaymentModal({ cartItems, total, onSuccess, onClose }) {
       <p className="pay-form-total">
         Total a pagar: <span>S/ {total.toFixed(2)}</span>
       </p>
+
+      {/* 🔹 NUEVO: Datos del comprador */}
+      <div className="pay-form-group">
+        <label>Nombre completo</label>
+        <input
+          type="text"
+          placeholder="Ej: Juan Pérez García"
+          value={cliente.nombre}
+          onChange={(e) =>
+            setCliente({ ...cliente, nombre: e.target.value })
+          }
+          required
+        />
+      </div>
+
+      <div className="pay-form-group">
+        <label>DNI</label>
+        <input
+          type="text"
+          placeholder="Ej: 71234567"
+          value={cliente.dni}
+          onChange={(e) =>
+            setCliente({ ...cliente, dni: e.target.value })
+          }
+          required
+        />
+      </div>
 
       {/* Selector de método */}
       <div className="pay-form-group">

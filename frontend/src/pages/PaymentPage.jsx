@@ -13,15 +13,6 @@ import autoTable from "jspdf-autotable";
 // Cupón
 import CouponInput from "../components/Coupon/CouponInput";
 
-// Clientes de ejemplo
-const sampleCustomers = [
-  { name: "Juan Pérez García", dni: "71234567" },
-  { name: "María López Rodríguez", dni: "72345678" },
-  { name: "Carlos Sánchez Quispe", dni: "73456789" },
-  { name: "Ana Torres Mendoza", dni: "74567890" },
-  { name: "Luis Gonzales Flores", dni: "75678901" },
-];
-
 export default function PaymentPage() {
   const { cartItems, total, clearCart } = useCart();
 
@@ -47,7 +38,7 @@ export default function PaymentPage() {
       const doc = new jsPDF();
       const { items, orderTotal } = completedOrder;
 
-      const storeName = "TechStore";
+      const storeName = "SmartShop";
       const storeRUC = "20123456789";
       const storeAddress = "Av. Siempre Viva 123, Arequipa, Perú";
 
@@ -72,10 +63,10 @@ export default function PaymentPage() {
       doc.setFont("helvetica", "normal");
       doc.text(`Fecha: ${date}`, 20, 55);
 
-      // Cliente aleatorio
-      const randomCustomer = sampleCustomers[Math.floor(Math.random() * sampleCustomers.length)];
-      doc.text(`Cliente: ${randomCustomer.name}`, 20, 62);
-      doc.text(`DNI: ${randomCustomer.dni}`, 20, 69);
+      // Cliente REAL desde completedOrder
+      doc.text(`Cliente: ${completedOrder.customerName || "Cliente"}`, 20, 62);
+      doc.text(`DNI: ${completedOrder.customerDni || "-"}`, 20, 69);
+
 
       // Tabla de productos
       const tableColumn = ["Cant.", "Descripción", "P. Unit.", "Total"];
@@ -310,15 +301,18 @@ export default function PaymentPage() {
                     cartItems={cartItems}
                     total={discountedTotal}
                     onClose={() => {}}
-                    onSuccess={() => {
+                    onSuccess={(customerData) => {
                       setCompletedOrder({
                         items: cartItems,
                         orderTotal: discountedTotal,
+                        customerName: customerData.customerName,
+                        customerDni: customerData.customerDni,
                       });
                       clearCart();
                       setPaid(true);
                     }}
                   />
+
                 </div>
               </div>
             </div>
