@@ -18,6 +18,7 @@ import './Navbar.css';
 import { useCart } from "../../context/CartContext";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx";
+import { useFavorites } from "../../context/FavoritesContext"; // 🟡 NUEVO
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -32,7 +33,7 @@ const Navbar = () => {
     const isLoggedIn = !!user;
 
     const { cartItems, total } = useCart();
-    const favoritesCount = 0;
+    const { favoritesCount } = useFavorites(); // 🟡 NUEVO
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
     const toggleUserMenu = () => setIsUserMenuOpen(!isUserMenuOpen);
@@ -59,6 +60,16 @@ const Navbar = () => {
         }
         navigate("/cart");
         setIsCartOpen(false);
+    };
+
+    // 👉 Manejar click en favoritos (icono corazón)
+    const handleFavoritesClick = () => {
+        if (!isLoggedIn) {
+            alert("Debes iniciar sesión para ver tus favoritos.");
+            navigate("/login");
+            return;
+        }
+        navigate("/favorites"); // 🟡 usamos la ruta que ya tienes en App.jsx
     };
 
     // Persistencia modo oscuro
@@ -116,9 +127,14 @@ const Navbar = () => {
                     </button>
 
                     {/* Favoritos */}
-                    <button className="action-btn favorites-btn" onClick={() => navigate('/account/wishlist')}>
+                    <button
+                        className="action-btn favorites-btn"
+                        onClick={handleFavoritesClick} // 🟡 AHORA usa handler
+                    >
                         <Heart size={20} />
-                        {favoritesCount > 0 && <span className="badge">{favoritesCount}</span>}
+                        {favoritesCount > 0 && (
+                            <span className="badge">{favoritesCount}</span>
+                        )}
                     </button>
 
                     {/* Usuario */}
@@ -148,13 +164,19 @@ const Navbar = () => {
                                         <Package size={16} /> Mis Pedidos
                                     </Link>
 
-                                    <Link to="/account/wishlist" onClick={() => setIsUserMenuOpen(false)}>
+                                    <Link
+                                        to="/favorites"          // 🟡 ruta corregida
+                                        onClick={() => setIsUserMenuOpen(false)}
+                                    >
                                         <Heart size={16} /> Favoritos
                                     </Link>
 
                                     <div className="dropdown-divider" />
 
-                                    <button className="logout-button" onClick={() => { logout(); navigate('/'); }}>
+                                    <button
+                                        className="logout-button"
+                                        onClick={() => { logout(); navigate('/'); }}
+                                    >
                                         <LogOut size={16} /> Cerrar Sesión
                                     </button>
                                 </div>
@@ -224,8 +246,10 @@ const Navbar = () => {
             <div className={`mobile-menu ${isMenuOpen ? "active" : ""}`}>
                 <ul>
                     <li><Link to="/" onClick={toggleMenu}>Inicio</Link></li>
-                    
                     <li><Link to="/soporte" onClick={toggleMenu}>Soporte</Link></li>
+                    {isLoggedIn && (
+                        <li><Link to="/favorites" onClick={toggleMenu}>Favoritos</Link></li> // 🟡 opcional
+                    )}
 
                     {isLoggedIn ? (
                         <>
@@ -234,7 +258,10 @@ const Navbar = () => {
                             <li><Link to="/account/orders" onClick={toggleMenu}>Mis Pedidos</Link></li>
 
                             <li>
-                                <button className="mobile-logout-btn" onClick={() => { logout(); toggleMenu(); navigate('/'); }}>
+                                <button
+                                    className="mobile-logout-btn"
+                                    onClick={() => { logout(); toggleMenu(); navigate('/'); }}
+                                >
                                     <LogOut size={16} /> Cerrar Sesión
                                 </button>
                             </li>

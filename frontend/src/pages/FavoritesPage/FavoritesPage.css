@@ -1,0 +1,92 @@
+/* Contenedor general */
+.favorites-page {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem 3rem;
+}
+
+/* Header */
+.favorites-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.favorites-header h1 {
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.favorites-subtitle {
+  margin: 0.25rem 0 0;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.favorites-count {
+  font-size: 0.9rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+/* Grid de productos */
+.favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Estado vacío */
+.favorites-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 120px);
+}
+
+.favorites-empty-box {
+  text-align: center;
+  max-width: 420px;
+  padding: 2.5rem 2rem;
+  border-radius: 1rem;
+  background: #ffffff;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+}
+
+.favorites-empty-box h1 {
+  margin-bottom: 0.5rem;
+}
+
+.favorites-empty-box p {
+  margin: 0.25rem 0;
+}
+
+.favorites-empty-sub {
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.favorites-back-btn {
+  margin-top: 1.5rem;
+  display: inline-block;
+  padding: 0.6rem 1.4rem;
+  border-radius: 999px;
+  text-decoration: none;
+}
+
+/* Responsivo */
+@media (max-width: 640px) {
+  .favorites-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.favorites-page-wrapper {
+  padding-top: 90px;   /* separa del navbar */
+}
